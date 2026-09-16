@@ -237,7 +237,7 @@ export default function SyllabiQDashboard() {
   const progressPercent = totalTasks > 0 ? Math.round((completedCount / totalTasks) * 100) : 0;
 
   return (
-    <div className="relative min-h-screen w-full max-w-full overflow-x-hidden bg-[#F8FAFC] dark:bg-[#0B0F19] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col selection:bg-yellow-300 selection:text-slate-900 pb-28 sm:pb-20 pb-safe transition-colors duration-200">
+    <div className="relative min-h-screen w-full max-w-full overflow-x-hidden bg-[#F8FAFC] dark:bg-[#0B0F19] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col selection:bg-yellow-300 selection:text-slate-900 pb-36 sm:pb-28 pb-safe transition-colors duration-200">
       {/* Background Wallpaper Layer */}
       <BackgroundLayer config={backgroundConfig} />
 

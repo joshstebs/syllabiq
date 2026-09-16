@@ -81,7 +81,7 @@ export function MorningDispatchModal({ tasks, onClose }: Props) {
         initial={{ scale: 0.95, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         exit={{ scale: 0.95, opacity: 0 }}
-        className="w-full max-w-xl rounded-3xl bg-white dark:bg-[#0E1526] border border-slate-200 dark:border-slate-800 p-6 shadow-2xl space-y-5 max-h-[90vh] overflow-y-auto"
+        className="w-full max-w-xl rounded-3xl bg-white dark:bg-[#0E1526] border border-slate-200 dark:border-slate-800 p-5 sm:p-6 shadow-2xl space-y-5 max-h-[85dvh] sm:max-h-[90vh] overflow-y-auto pb-6"
       >
         {/* Header */}
         <div className="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4">

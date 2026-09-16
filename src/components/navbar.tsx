@@ -83,6 +83,7 @@ export function Navbar({
   const desktopToolsRef = useRef<HTMLDivElement>(null);
   const mobileToolsRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
+  const mobileUserRef = useRef<HTMLDivElement>(null);
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -93,7 +94,9 @@ export function Navbar({
       if (mobileToolsRef.current && !mobileToolsRef.current.contains(event.target as Node)) {
         setShowMobileTools(false);
       }
-      if (userRef.current && !userRef.current.contains(event.target as Node)) {
+      const isOutsideDesktopUser = !userRef.current || !userRef.current.contains(event.target as Node);
+      const isOutsideMobileUser = !mobileUserRef.current || !mobileUserRef.current.contains(event.target as Node);
+      if (isOutsideDesktopUser && isOutsideMobileUser) {
         setShowUserMenu(false);
       }
     }
@@ -101,10 +104,119 @@ export function Navbar({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const renderUserDropdownContent = () => {
+    if (!user) return null;
+    return (
+      <div className="absolute right-0 top-full mt-2.5 w-64 rounded-2xl bg-white dark:bg-[#0E1526] border border-slate-200 dark:border-slate-800 shadow-2xl p-3 space-y-3 z-50 animate-fade-in">
+        <div className="flex items-center space-x-2.5 pb-2 border-b border-slate-100 dark:border-slate-800">
+          <div className="h-9 w-9 rounded-xl bg-blue-50 dark:bg-blue-950 flex items-center justify-center text-lg overflow-hidden border border-blue-200 dark:border-blue-900 shrink-0">
+            {user.photoUrl ? (
+              <img src={user.photoUrl} alt="Avatar" className="h-full w-full object-cover" />
+            ) : (
+              user.avatar
+            )}
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="text-xs font-black text-slate-900 dark:text-white truncate">
+              {user.name}
+            </div>
+            <div className="text-[10px] text-slate-400 truncate">
+              {user.email}
+            </div>
+            <span className={`inline-block mt-0.5 px-1.5 py-0.5 rounded-md text-[9px] font-extrabold ${
+              user.isPro
+                ? "bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200"
+                : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
+            }`}>
+              {user.role} · {user.isPro ? "30-Day Pro Trial" : "Free Plan"}
+            </span>
+          </div>
+        </div>
+
+        <div className="space-y-1 text-xs">
+          {/* Settings Menu Item */}
+          <button
+            onClick={() => {
+              setShowUserMenu(false);
+              onOpenSettingsModal?.();
+            }}
+            className="w-full flex items-center space-x-2 px-2.5 py-2 rounded-xl text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/50 font-bold transition text-left cursor-pointer"
+          >
+            <Settings className="h-3.5 w-3.5" />
+            <span>Settings (Profile, Theme, Timezone)</span>
+          </button>
+
+          {user.role === "ADMIN" && (
+            <button
+              onClick={() => {
+                setShowUserMenu(false);
+                onOpenAdminPanel?.();
+              }}
+              className="w-full flex items-center space-x-2 px-2.5 py-2 rounded-xl text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 font-bold transition text-left cursor-pointer"
+            >
+              <Shield className="h-3.5 w-3.5" />
+              <span>Admin Diagnostic Center</span>
+            </button>
+          )}
+
+          <button
+            onClick={() => {
+              if (user.role === "ADMIN") {
+                loginWithTesterPreset();
+              } else {
+                loginWithAdminPreset();
+              }
+              setShowUserMenu(false);
+            }}
+            className="w-full flex items-center space-x-2 px-2.5 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold transition text-left cursor-pointer"
+          >
+            <RefreshCw className="h-3.5 w-3.5" />
+            <span>
+              Switch to {user.role === "ADMIN" ? "Tester (Alex)" : "Admin (Josh)"}
+            </span>
+          </button>
+
+          <button
+            onClick={() => {
+              setShowUserMenu(false);
+              onOpenPaywallModal();
+            }}
+            className="w-full flex items-center space-x-2 px-2.5 py-2 rounded-xl text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/50 font-semibold transition text-left cursor-pointer"
+          >
+            <Zap className="h-3.5 w-3.5" />
+            <span>Manage Pro ($5/mo Trial)</span>
+          </button>
+
+          <button
+            onClick={() => {
+              setShowUserMenu(false);
+              onOpenAuthModal?.();
+            }}
+            className="w-full flex items-center space-x-2 px-2.5 py-2 rounded-xl text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/50 font-semibold transition text-left cursor-pointer"
+          >
+            <User className="h-3.5 w-3.5" />
+            <span>Switch or Sign In Other</span>
+          </button>
+
+          <button
+            onClick={() => {
+              logout();
+              setShowUserMenu(false);
+            }}
+            className="w-full flex items-center space-x-2 px-2.5 py-2 rounded-xl text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 font-semibold transition text-left cursor-pointer border-t border-slate-100 dark:border-slate-800 mt-1 pt-1.5"
+          >
+            <LogOut className="h-3.5 w-3.5" />
+            <span>Sign Out</span>
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-[#131B2E]/95 backdrop-blur-md transition-colors duration-200">
+    <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-[#131B2E]/95 backdrop-blur-md transition-colors duration-200 pt-[env(safe-area-inset-top,0px)]">
       {/* Top Banner with Pro Promotion */}
-      <div className={`py-1.5 px-3 sm:px-6 text-xs text-white flex items-center justify-between shadow-2xs overflow-hidden ${
+      <div className={`py-1 sm:py-1.5 px-3 sm:px-6 text-xs text-white flex items-center justify-between shadow-2xs overflow-hidden ${
         user?.isPro
           ? "bg-gradient-to-r from-emerald-600 via-teal-600 to-blue-600"
           : "bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500"
@@ -123,9 +235,9 @@ export function Navbar({
         </button>
       </div>
 
-      <div className="mx-auto flex h-14 md:h-16 max-w-7xl items-center justify-between px-3 sm:px-6 lg:px-8 gap-2">
+      <div className="mx-auto flex min-h-[3.75rem] md:min-h-[4rem] py-1.5 max-w-7xl items-center justify-between px-3 sm:px-6 lg:px-8 gap-1.5 sm:gap-2">
         {/* 1. BRAND LOGO (Always visible on far left, never squished) */}
-        <div className="flex items-center gap-2 shrink-0 min-w-[125px] sm:min-w-[140px]">
+        <div className="flex items-center gap-2 shrink-0 min-w-[110px] sm:min-w-[140px]">
           <Link href="/" className="flex items-center gap-2 group cursor-pointer select-none">
             <div className="flex items-center bg-white px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-xl shadow-xs border border-slate-200/80 hover:border-blue-400 transition-all shrink-0">
               <img
@@ -155,25 +267,25 @@ export function Navbar({
           </div>
         </div>
 
-        {/* 2. MOBILE ACTIONS (< md: PRO, Sync, Tools) */}
-        <div className="flex md:hidden items-center gap-1.5 shrink-0">
+        {/* 2. MOBILE ACTIONS (< md: PRO, Sync, Tools, Direct Sign In / Account) */}
+        <div className="flex md:hidden items-center gap-1 sm:gap-1.5 shrink-0">
           <button
             onClick={onOpenPaywallModal}
-            className={`text-xs font-black px-2.5 py-1.5 rounded-xl flex items-center gap-1 shadow-xs transition cursor-pointer shrink-0 ${
+            className={`text-xs font-black px-2 sm:px-2.5 py-1.5 rounded-xl flex items-center gap-1 shadow-xs transition cursor-pointer shrink-0 ${
               user?.isPro
                 ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white"
                 : "bg-gradient-to-r from-indigo-600 to-blue-600 text-white"
             }`}
             title="SyllabiQ Pro Subscription"
           >
-            <Zap className="h-3.5 w-3.5 fill-white" />
-            <span>{user?.isPro ? "PRO" : "Upgrade"}</span>
+            <Zap className="h-3.5 w-3.5 fill-white shrink-0" />
+            <span className="hidden xs:inline">{user?.isPro ? "PRO" : "Upgrade"}</span>
           </button>
 
           <button
             onClick={onSyncAll}
             disabled={isSyncing}
-            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer shrink-0"
+            className="p-1.5 sm:p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer shrink-0"
             title="Sync all deadlines"
           >
             <RefreshCw className={`h-4 w-4 ${isSyncing ? "animate-spin" : ""}`} />
@@ -181,32 +293,35 @@ export function Navbar({
 
           <div className="relative" ref={mobileToolsRef}>
             <button
-              onClick={() => setShowMobileTools(!showMobileTools)}
-              className={`p-2 rounded-xl border flex items-center gap-1 text-xs font-bold transition cursor-pointer shrink-0 ${
+              onClick={() => {
+                setShowMobileTools(!showMobileTools);
+                setShowUserMenu(false);
+              }}
+              className={`px-2 py-1.5 sm:px-2.5 rounded-xl border flex items-center gap-1 text-xs font-bold transition cursor-pointer shrink-0 ${
                 showMobileTools
                   ? "bg-blue-50 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700 shadow-xs"
-                  : "bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200"
+                  : "bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700"
               }`}
               title="Open Campus Tools"
             >
-              <Layers className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              <Layers className="h-4 w-4 text-blue-600 dark:text-blue-400 shrink-0" />
               <span>Tools</span>
-              <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${showMobileTools ? "rotate-180" : ""}`} />
+              <ChevronDown className={`h-3 w-3 transition-transform duration-200 shrink-0 ${showMobileTools ? "rotate-180" : ""}`} />
             </button>
 
             {/* Mobile Tools Dropdown Popover */}
             {showMobileTools && (
-              <div className="absolute right-0 mt-2 w-72 sm:w-80 rounded-2xl bg-white dark:bg-[#0E1526] border border-slate-200 dark:border-slate-800 shadow-2xl p-2.5 space-y-2 z-50 animate-fade-in">
+              <div className="absolute right-0 top-full mt-2.5 w-72 sm:w-80 rounded-2xl bg-white dark:bg-[#0E1526] border border-slate-200 dark:border-slate-800 shadow-2xl p-3 space-y-2.5 z-50 animate-fade-in max-h-[75vh] overflow-y-auto">
                 {/* Mobile Quick Setting Row: Theme & Profile */}
-                <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                <div className="flex items-center justify-between pb-2.5 border-b border-slate-100 dark:border-slate-800 pt-0.5">
                   <button
                     onClick={toggleTheme}
                     className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold transition cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700"
                   >
                     {resolvedTheme === "dark" ? (
-                      <Sun className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                      <Sun className="h-3.5 w-3.5 fill-amber-400 text-amber-400 shrink-0" />
                     ) : (
-                      <Moon className="h-3.5 w-3.5 fill-slate-700 text-slate-700" />
+                      <Moon className="h-3.5 w-3.5 fill-slate-700 text-slate-700 shrink-0" />
                     )}
                     <span>{resolvedTheme === "dark" ? "Light Mode" : "Dark Mode"}</span>
                   </button>
@@ -234,7 +349,7 @@ export function Navbar({
                       }}
                       className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold transition cursor-pointer"
                     >
-                      <User className="h-3.5 w-3.5" />
+                      <User className="h-3.5 w-3.5 shrink-0" />
                       <span>Sign In</span>
                     </button>
                   )}
@@ -474,6 +589,40 @@ export function Navbar({
                 </div>
               </div>
             )}
+          </div>
+
+          {/* Mobile Direct Sign In / Profile Avatar */}
+          <div className="relative" ref={mobileUserRef}>
+            {user && user.id !== "guest-visitor" ? (
+              <button
+                onClick={() => {
+                  setShowUserMenu(!showUserMenu);
+                  setShowMobileTools(false);
+                }}
+                className="flex items-center gap-1 p-1 sm:px-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-xs font-bold transition cursor-pointer shrink-0 hover:bg-slate-200 dark:hover:bg-slate-700"
+                title="Account Menu"
+              >
+                <div className="h-6 w-6 rounded-lg bg-blue-100 dark:bg-blue-900 text-xs flex items-center justify-center overflow-hidden shrink-0 border border-blue-200 dark:border-blue-900">
+                  {user.photoUrl ? (
+                    <img src={user.photoUrl} alt="Avatar" className="h-full w-full object-cover" />
+                  ) : (
+                    <span>{user.avatar}</span>
+                  )}
+                </div>
+                <ChevronDown className="h-3 w-3 text-slate-400 shrink-0" />
+              </button>
+            ) : (
+              <button
+                onClick={onOpenAuthModal}
+                className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-black transition cursor-pointer shrink-0 shadow-xs hover:opacity-90 active:scale-95"
+                title="Sign In"
+              >
+                <User className="h-3.5 w-3.5 shrink-0" />
+                <span>Sign In</span>
+              </button>
+            )}
+
+            {showUserMenu && renderUserDropdownContent()}
           </div>
         </div>
 
@@ -791,111 +940,7 @@ export function Navbar({
             )}
 
             {/* Profile Dropdown Menu */}
-            {showUserMenu && user && (
-              <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-[#0E1526] border border-slate-200 dark:border-slate-800 shadow-2xl p-3 space-y-3 z-50 animate-fade-in">
-                <div className="flex items-center space-x-2.5 pb-2 border-b border-slate-100 dark:border-slate-800">
-                  <div className="h-9 w-9 rounded-xl bg-blue-50 dark:bg-blue-950 flex items-center justify-center text-lg overflow-hidden border border-blue-200 dark:border-blue-900">
-                    {user.photoUrl ? (
-                      <img src={user.photoUrl} alt="Avatar" className="h-full w-full object-cover" />
-                    ) : (
-                      user.avatar
-                    )}
-                  </div>
-                  <div className="min-w-0 flex-1">
-                    <div className="text-xs font-black text-slate-900 dark:text-white truncate">
-                      {user.name}
-                    </div>
-                    <div className="text-[10px] text-slate-400 truncate">
-                      {user.email}
-                    </div>
-                    <span className={`inline-block mt-0.5 px-1.5 py-0.5 rounded-md text-[9px] font-extrabold ${
-                      user.isPro
-                        ? "bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200"
-                        : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
-                    }`}>
-                      {user.role} · {user.isPro ? "30-Day Pro Trial" : "Free Plan"}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="space-y-1 text-xs">
-                  {/* Settings Menu Item */}
-                  <button
-                    onClick={() => {
-                      setShowUserMenu(false);
-                      onOpenSettingsModal?.();
-                    }}
-                    className="w-full flex items-center space-x-2 px-2.5 py-2 rounded-xl text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/50 font-bold transition text-left cursor-pointer"
-                  >
-                    <Settings className="h-3.5 w-3.5" />
-                    <span>Settings (Profile, Theme, Timezone)</span>
-                  </button>
-
-                  {user.role === "ADMIN" && (
-                    <button
-                      onClick={() => {
-                        setShowUserMenu(false);
-                        onOpenAdminPanel?.();
-                      }}
-                      className="w-full flex items-center space-x-2 px-2.5 py-2 rounded-xl text-indigo-600 dark:text-indigo-400 hover:bg-indigo-50 dark:hover:bg-indigo-950/50 font-bold transition text-left cursor-pointer"
-                    >
-                      <Shield className="h-3.5 w-3.5" />
-                      <span>Admin Diagnostic Center</span>
-                    </button>
-                  )}
-
-                  <button
-                    onClick={() => {
-                      if (user.role === "ADMIN") {
-                        loginWithTesterPreset();
-                      } else {
-                        loginWithAdminPreset();
-                      }
-                      setShowUserMenu(false);
-                    }}
-                    className="w-full flex items-center space-x-2 px-2.5 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold transition text-left cursor-pointer"
-                  >
-                    <RefreshCw className="h-3.5 w-3.5" />
-                    <span>
-                      Switch to {user.role === "ADMIN" ? "Tester (Alex)" : "Admin (Josh)"}
-                    </span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setShowUserMenu(false);
-                      onOpenPaywallModal();
-                    }}
-                    className="w-full flex items-center space-x-2 px-2.5 py-2 rounded-xl text-amber-600 dark:text-amber-400 hover:bg-amber-50 dark:hover:bg-amber-950/50 font-semibold transition text-left cursor-pointer"
-                  >
-                    <Zap className="h-3.5 w-3.5" />
-                    <span>Manage Pro ($5/mo Trial)</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      setShowUserMenu(false);
-                      onOpenAuthModal?.();
-                    }}
-                    className="w-full flex items-center space-x-2 px-2.5 py-2 rounded-xl text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/50 font-semibold transition text-left cursor-pointer"
-                  >
-                    <User className="h-3.5 w-3.5" />
-                    <span>Switch or Sign In Other</span>
-                  </button>
-
-                  <button
-                    onClick={() => {
-                      logout();
-                      setShowUserMenu(false);
-                    }}
-                    className="w-full flex items-center space-x-2 px-2.5 py-2 rounded-xl text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/50 font-semibold transition text-left cursor-pointer border-t border-slate-100 dark:border-slate-800 mt-1 pt-1.5"
-                  >
-                    <LogOut className="h-3.5 w-3.5" />
-                    <span>Sign Out</span>
-                  </button>
-                </div>
-              </div>
-            )}
+            {showUserMenu && renderUserDropdownContent()}
           </div>
         </div>
       </div>
