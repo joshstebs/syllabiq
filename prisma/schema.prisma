@@ -1,0 +1,212 @@
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [pgvector(map: "vector")]
+}
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+enum TaskType {
+  ASSIGNMENT
+  QUIZ
+  EXAM
+  READING
+  PROJECT
+  MILESTONE
+  OTHER
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum LMSProvider {
+  CANVAS
+  BLACKBOARD
+  BRIGHTSPACE
+  MOODLE
+  ICAL_FEED
+}
+
+model User {
+  id              String           @id @default(uuid())
+  email           String           @unique
+  name            String?
+  avatarUrl       String?
+  timezone        String           @default("America/New_York")
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+
+  courses         Course[]
+  lmsConnections  LMSConnection[]
+  googleSyncState GoogleSyncState?
+  dispatchProfile DispatchProfile?
+
+  @@map("users")
+}
+
+model Course {
+  id                String             @id @default(uuid())
+  userId            String
+  name              String
+  code              String             // e.g. "CS 3110"
+  colorHex          String             @default("#6366F1")
+  term              String?            // e.g. "Fall 2026"
+  googleCalendarId  String?            // Dedicated secondary Google Calendar ID
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  instructor        Instructor?
+  weightCategories  WeightCategory[]
+  tasks             Task[]
+  syllabi           SyllabusDocument[]
+
+  @@unique([userId, code])
+  @@map("courses")
+}
+
+model Instructor {
+  id             String   @id @default(uuid())
+  courseId       String   @unique
+  name           String
+  email          String?
+  officeHours    String?
+  officeLocation String?
+
+  course         Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@map("instructors")
+}
+
+model WeightCategory {
+  id         String   @id @default(uuid())
+  courseId   String
+  category   String   // e.g. "Homework", "Midterm Exams", "Final Project"
+  percentage Float    // 0.0 to 100.0
+
+  course     Course   @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  tasks      Task[]
+
+  @@map("weight_categories")
+}
+
+model Task {
+  id                  String          @id @default(uuid())
+  courseId            String
+  categoryId          String?
+  title               String
+  description         String?
+  type                TaskType        @default(ASSIGNMENT)
+  dueDate             DateTime
+  estimatedHours      Float?          @default(2.0)
+  weightPercent       Float?          @default(0.0)
+  status              TaskStatus      @default(TODO)
+  gradeReceived       Float?          // e.g. 94.5
+  gradeMax            Float?          @default(100.0)
+
+  // External Sync References
+  googleEventId       String?         // Due date event ID in Google Calendar
+  googleBufferEventId String?         // AI "Start Working" milestone event ID
+  lmsTaskId           String?         // External LMS assignment/item ID
+  lmsSource           LMSProvider?
+  sheetsRowIndex      Int?            // Row pointer in Google Sheets Master Tracker
+  normalizedHash      String?         // Dedup hash
+
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  course              Course          @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  category            WeightCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+  subtasks            SubTask[]
+
+  @@index([courseId, dueDate])
+  @@index([googleEventId])
+  @@index([lmsTaskId])
+  @@index([normalizedHash])
+  @@map("tasks")
+}
+
+model SubTask {
+  id            String    @id @default(uuid())
+  taskId        String
+  title         String
+  scheduledDate DateTime?
+  isCompleted   Boolean   @default(false)
+  orderIndex    Int       @default(0)
+
+  task          Task      @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@map("subtasks")
+}
+
+model SyllabusDocument {
+  id         String                      @id @default(uuid())
+  courseId   String
+  fileName   String
+  fileSize   Int
+  mimeType   String
+  storageUrl String
+  parsedJson Json?
+  rawText    String?
+  embedding  Unsupported("vector(1536)")? // pgvector embedding for policy & Q&A
+  createdAt  DateTime                    @default(now())
+
+  course     Course                      @relation(fields: [courseId], references: [id], onDelete: Cascade)
+
+  @@map("syllabus_documents")
+}
+
+model LMSConnection {
+  id                   String       @id @default(uuid())
+  userId               String
+  provider             LMSProvider
+  apiEndpoint          String?
+  accessToken          String?      // AES-256 encrypted
+  feedUrl              String?      // Private iCal WebCal URL
+  lastSyncedAt         DateTime?
+  syncFrequencyMinutes Int          @default(360) // 6 hours
+  isActive             Boolean      @default(true)
+
+  user                 User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("lms_connections")
+}
+
+model GoogleSyncState {
+  id                  String    @id @default(uuid())
+  userId              String    @unique
+  accessToken         String    // AES-256 encrypted
+  refreshToken        String    // AES-256 encrypted
+  tokenExpiry         DateTime
+  spreadsheetId       String?   // Google Sheets Master Tracker ID
+  spreadsheetUrl      String?
+  sheetsSyncEnabled   Boolean   @default(true)
+  calendarSyncEnabled Boolean   @default(true)
+  lastSyncedAt        DateTime?
+
+  user                User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("google_sync_states")
+}
+
+model DispatchProfile {
+  id             String    @id @default(uuid())
+  userId         String    @unique
+  enabled        Boolean   @default(true)
+  deliveryHour   Int       @default(7) // 7:00 AM
+  channel        String    @default("push") // "push" | "discord" | "whatsapp"
+  webhookUrl     String?
+  phoneNumber    String?
+  includeWeather Boolean   @default(true)
+  commuteOrigin  String?
+
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("dispatch_profiles")
+}

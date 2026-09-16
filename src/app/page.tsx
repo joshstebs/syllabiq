@@ -1,0 +1,995 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import {
+  Send,
+  Calendar,
+  Layers,
+  Table2,
+  Brain,
+  Sun,
+  Share2,
+  Mic,
+  Smartphone,
+  CheckCircle2,
+  AlertTriangle,
+  ArrowRight,
+  RefreshCw,
+  Plus,
+  Clock,
+  BookOpen,
+  FolderLock,
+  Palette,
+  CheckSquare,
+  Square,
+  Sparkles,
+  Bell,
+  MoreVertical,
+  GraduationCap
+} from "lucide-react";
+import confetti from "canvas-confetti";
+import Link from "next/link";
+import { Course, TaskItem, BackgroundConfig } from "@/lib/types";
+import { Navbar } from "@/components/navbar";
+import { SyllabusDropzone } from "@/components/syllabus-dropzone";
+import { WorkloadHeatmap } from "@/components/workload-heatmap";
+import { ScheduleTimeline } from "@/components/schedule-timeline";
+import { CoursicleScheduleView } from "@/components/coursicle-schedule-view";
+import { PhoneNotificationsStrip } from "@/components/phone-notifications-strip";
+import { BottomTabBar, TabMode } from "@/components/bottom-tab-bar";
+import { DormwayStartWidget } from "@/components/dormway-start-widget";
+import { SemesterTimelineView } from "@/components/semester-timeline-view";
+import { DormwayShowcaseSections } from "@/components/dormway-showcase-sections";
+import { LMSSyncModal } from "@/components/lms-sync-modal";
+import { GoogleSheetsModal } from "@/components/google-sheets-modal";
+import { GradeCalculatorModal } from "@/components/grade-calculator-modal";
+import { MorningDispatchModal } from "@/components/morning-dispatch-modal";
+import { AudioTranscriberModal } from "@/components/audio-transcriber-modal";
+import { ShareScheduleModal } from "@/components/share-schedule-modal";
+import { MobilePreviewModal } from "@/components/mobile-preview-modal";
+import { ClassLockerModal } from "@/components/class-locker-modal";
+import { AIChatDrawer } from "@/components/ai-chat-drawer";
+import { NotificationBar } from "@/components/notification-bar";
+import { HomeworkPhotoModal } from "@/components/homework-photo-modal";
+import { ColorCustomizerModal } from "@/components/color-customizer-modal";
+import { CampusPeerHubModal } from "@/components/campus-peer-hub-modal";
+import { StripePaywallModal } from "@/components/stripe-paywall-modal";
+import { BackgroundLayer } from "@/components/background-layer";
+import { BackgroundCustomizerModal } from "@/components/background-customizer-modal";
+import { GoogleCloudVaultModal } from "@/components/google-cloud-vault-modal";
+import { ContactModal } from "@/components/contact-modal";
+import { Footer } from "@/components/footer";
+
+export default function SyllabiQDashboard() {
+  const [courses, setCourses] = useState<Course[]>([]);
+  const [tasks, setTasks] = useState<TaskItem[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSyncing, setIsSyncing] = useState(false);
+  const [activeMainTab, setActiveMainTab] = useState<TabMode>("TIMELINE");
+  const [showDropzone, setShowDropzone] = useState(false);
+
+  // Background state
+  const [backgroundConfig, setBackgroundConfig] = useState<BackgroundConfig>({
+    type: "default",
+    templateId: "default-grid",
+    blurPx: 0,
+    overlayOpacity: 0.35,
+    overlayTint: "auto"
+  });
+
+  // Modals state
+  const [showLmsModal, setShowLmsModal] = useState(false);
+  const [showSheetsModal, setShowSheetsModal] = useState(false);
+  const [showGradeModal, setShowGradeModal] = useState(false);
+  const [showDispatchModal, setShowDispatchModal] = useState(false);
+  const [showAudioModal, setShowAudioModal] = useState(false);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [showMobileModal, setShowMobileModal] = useState(false);
+  const [showLockerModal, setShowLockerModal] = useState(false);
+  const [showHomeworkModal, setShowHomeworkModal] = useState(false);
+  const [showColorModal, setShowColorModal] = useState(false);
+  const [showPeerModal, setShowPeerModal] = useState(false);
+  const [showPaywallModal, setShowPaywallModal] = useState(false);
+  const [showBackgroundModal, setShowBackgroundModal] = useState(false);
+  const [showCloudVaultModal, setShowCloudVaultModal] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
+
+  const fetchDashboardData = async () => {
+    try {
+      const res = await fetch("/api/courses");
+      const data = await res.json();
+      setCourses(data.courses || []);
+      setTasks(data.tasks || []);
+
+      // Also fetch background config
+      const bgRes = await fetch("/api/background");
+      const bgData = await bgRes.json();
+      if (bgData.config) {
+        setBackgroundConfig(bgData.config);
+      }
+    } catch (err) {
+      console.error("Failed to load dashboard data", err);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDashboardData();
+  }, []);
+
+  const handleSyncAll = async () => {
+    setIsSyncing(true);
+    try {
+      const res = await fetch("/api/google/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "sync_all" })
+      });
+      if (res.ok) {
+        confetti({ particleCount: 70, spread: 60, origin: { y: 0.5 } });
+        await fetchDashboardData();
+      }
+    } finally {
+      setIsSyncing(false);
+    }
+  };
+
+  const handleUpdateTask = async (taskId: string, patch: any) => {
+    try {
+      const res = await fetch("/api/tasks", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ taskId, ...patch })
+      });
+      if (res.ok) {
+        await fetchDashboardData();
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleDeconstructTask = async (taskId: string) => {
+    const res = await fetch("/api/ai/deconstruct", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ taskId })
+    });
+    if (res.ok) {
+      confetti({ particleCount: 50, spread: 50 });
+      await fetchDashboardData();
+    }
+  };
+
+  const completedCount = tasks.filter((t) => t.status === "DONE").length;
+  const totalTasks = tasks.length;
+  const progressPercent = totalTasks > 0 ? Math.round((completedCount / totalTasks) * 100) : 0;
+
+  return (
+    <div className="relative min-h-screen bg-[#F8FAFC] dark:bg-[#0B0F19] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col selection:bg-yellow-300 selection:text-slate-900 pb-12 transition-colors duration-200">
+      {/* Background Wallpaper Layer */}
+      <BackgroundLayer config={backgroundConfig} />
+
+      {/* Top Navbar */}
+      <Navbar
+        onOpenLmsModal={() => setShowLmsModal(true)}
+        onOpenSheetsModal={() => setShowSheetsModal(true)}
+        onOpenGradeModal={() => setShowGradeModal(true)}
+        onOpenDispatchModal={() => setShowDispatchModal(true)}
+        onOpenLockerModal={() => setShowLockerModal(true)}
+        onOpenAudioModal={() => setShowAudioModal(true)}
+        onOpenShareModal={() => setShowShareModal(true)}
+        onOpenMobileModal={() => setShowMobileModal(true)}
+        onOpenHomeworkModal={() => setShowHomeworkModal(true)}
+        onOpenColorModal={() => setShowColorModal(true)}
+        onOpenPeerModal={() => setShowPeerModal(true)}
+        onOpenPaywallModal={() => setShowPaywallModal(true)}
+        onOpenBackgroundModal={() => setShowBackgroundModal(true)}
+        onOpenCloudVaultModal={() => setShowCloudVaultModal(true)}
+        onSyncAll={handleSyncAll}
+        isSyncing={isSyncing}
+      />
+
+      <main className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6 space-y-10 w-full">
+        {/* TOP NOTIFICATION BAR: Urgent countdown & phone alerts */}
+        <NotificationBar
+          tasks={tasks}
+          onOpenPaywall={() => setShowPaywallModal(true)}
+        />
+
+        {/* HERO SECTION combining DormWay & Due Gooder punch */}
+        <section className="relative text-center py-4 sm:py-6 space-y-4 max-w-3xl mx-auto">
+          {/* Social Proof Pill Badge */}
+          <div className="inline-flex items-center space-x-2 rounded-full bg-white px-4 py-1.5 border border-slate-200 shadow-xs">
+            <GraduationCap className="h-4 w-4 text-blue-600" />
+            <span className="text-xs font-bold text-slate-700">
+              Never Wonder What&apos;s Due · Free for Students
+            </span>
+          </div>
+
+          {/* Headline with Yellow Marker Highlighter */}
+          <h1 className="text-4xl sm:text-6xl font-black text-slate-900 tracking-tight leading-[1.15]">
+            Never Wonder <br />
+            <span className="marker-highlight text-slate-950 font-black px-4 py-0.5 rounded-lg shadow-xs">
+              What&apos;s Due
+            </span>{" "}
+            This Semester
+          </h1>
+
+          <p className="text-base sm:text-lg text-slate-600 font-medium max-w-xl mx-auto">
+            Drop a syllabus or connect Canvas. SyllabiQ builds your semester timeline automatically, syncs with Google Calendar, and keeps you organized.
+          </p>
+
+          {/* CTA Buttons */}
+          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+            <button
+              onClick={() => setShowDropzone(!showDropzone)}
+              className="rounded-full bg-white px-6 py-2.5 text-sm font-bold text-slate-800 border border-slate-300 shadow-xs hover:bg-slate-50 transition cursor-pointer"
+            >
+              {showDropzone ? "Hide Upload Area" : "How It Works"}
+            </button>
+
+            <button
+              onClick={() => setShowDropzone(true)}
+              className="rounded-full bg-blue-600 px-7 py-2.5 text-sm font-extrabold text-white shadow-md shadow-blue-500/30 hover:bg-blue-700 transition cursor-pointer"
+            >
+              Upload Syllabus Here
+            </button>
+
+            <button
+              onClick={() => setShowLmsModal(true)}
+              className="rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-6 py-2.5 text-sm font-extrabold shadow-xs hover:bg-slate-800 dark:hover:bg-slate-200 transition cursor-pointer"
+            >
+              Connect Canvas
+            </button>
+          </div>
+
+          {/* Real Student Community Strip with Attached User Photos */}
+          <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-xl mx-auto">
+            <div className="inline-flex items-center space-x-3 bg-white/95 dark:bg-[#131B2E]/95 border border-slate-200 dark:border-slate-800 rounded-full py-1.5 px-4 shadow-sm backdrop-blur-xs">
+              <div className="flex -space-x-2 overflow-hidden">
+                <img
+                  src="/images/student-studying.jpg"
+                  alt="Student studying with laptop"
+                  className="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-slate-900 object-cover"
+                />
+                <img
+                  src="/images/student-group.jpg"
+                  alt="College students smiling together on campus"
+                  className="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-slate-900 object-cover"
+                />
+                <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-[10px] font-black text-white ring-2 ring-white dark:ring-slate-900">
+                  +48k
+                </div>
+              </div>
+              <div className="text-left text-[11px] leading-tight">
+                <span className="font-extrabold text-slate-900 dark:text-white block">
+                  Built for Real College Students
+                </span>
+                <span className="text-slate-500 dark:text-slate-400 font-medium">
+                  Cornell · NYU · UCLA · Harvard · 120+ campuses
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Dropzone Area (Expandable or always accessible) */}
+        {showDropzone && (
+          <section className="max-w-4xl mx-auto animate-fade-in">
+            <SyllabusDropzone
+              onCommitSuccess={async () => {
+                await fetchDashboardData();
+                setShowDropzone(false);
+              }}
+            />
+          </section>
+        )}
+
+        {/* REAL CAMPUS LIFE & STUDENT PHOTO GALLERY BANNER */}
+        <section className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#131B2E]/90 p-6 sm:p-8 backdrop-blur-md shadow-sm space-y-6">
+          <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-100 dark:border-slate-800 pb-4">
+            <div>
+              <div className="inline-flex items-center space-x-1.5 text-[11px] font-black uppercase tracking-wider text-blue-600 dark:text-blue-400">
+                <Sparkles className="h-3.5 w-3.5" />
+                <span>Life on Campus with SyllabiQ</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-black text-slate-900 dark:text-white">
+                Study Smarter, Stress Less, Together
+              </h3>
+            </div>
+            <Link
+              href="/who-its-for"
+              className="text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline flex items-center gap-1"
+            >
+              <span>See student stories across every major</span>
+              <span>&rarr;</span>
+            </Link>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            {/* Photo 1: User's Study photo */}
+            <div className="relative rounded-2xl overflow-hidden group border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 shadow-xs">
+              <div className="h-52 w-full overflow-hidden">
+                <img
+                  src="/images/student-studying.jpg"
+                  alt="Student preparing for exams in campus cafe"
+                  className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent flex flex-col justify-end p-4 text-white space-y-1">
+                <span className="text-[10px] font-extrabold bg-blue-600 px-2 py-0.5 rounded-md w-fit">
+                  FOCUSED STUDY
+                </span>
+                <h4 className="text-sm font-black">Never Miss an 11:59 PM Deadline</h4>
+                <p className="text-[11px] text-slate-200 line-clamp-2">
+                  Break big term papers and problem sets into daily achievable milestones.
+                </p>
+              </div>
+            </div>
+
+            {/* Photo 2: User's Student Group photo */}
+            <div className="relative rounded-2xl overflow-hidden group border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 shadow-xs">
+              <div className="h-52 w-full overflow-hidden">
+                <img
+                  src="/images/student-group.jpg"
+                  alt="College friends walking on campus quad"
+                  className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent flex flex-col justify-end p-4 text-white space-y-1">
+                <span className="text-[10px] font-extrabold bg-emerald-600 px-2 py-0.5 rounded-md w-fit">
+                  CAMPUS PEER HUB
+                </span>
+                <h4 className="text-sm font-black">Collaborate with Classmates</h4>
+                <p className="text-[11px] text-slate-200 line-clamp-2">
+                  Share conceptual homework hints, study guides, and lecture audio notes.
+                </p>
+              </div>
+            </div>
+
+            {/* Photo 3: College Library Study Session */}
+            <div className="relative rounded-2xl overflow-hidden group border border-slate-200 dark:border-slate-700 bg-slate-100 dark:bg-slate-800 shadow-xs">
+              <div className="h-52 w-full overflow-hidden">
+                <img
+                  src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?q=80&w=800&auto=format&fit=crop"
+                  alt="College friends studying in library"
+                  className="h-full w-full object-cover group-hover:scale-105 transition-transform duration-500"
+                />
+              </div>
+              <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/35 to-transparent flex flex-col justify-end p-4 text-white space-y-1">
+                <span className="text-[10px] font-extrabold bg-purple-600 px-2 py-0.5 rounded-md w-fit">
+                  AUTOMATED SYNC
+                </span>
+                <h4 className="text-sm font-black">Syncs to Google Calendar &amp; Cloud</h4>
+                <p className="text-[11px] text-slate-200 line-clamp-2">
+                  Your whole semester color-coded and organized across iPhone, iPad, and laptop.
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* DORMWAY "CHOOSE HOW YOU START" INTERACTIVE SELECTOR WIDGET */}
+        <section className="space-y-3">
+          <DormwayStartWidget
+            onOpenUpload={() => setShowDropzone(true)}
+            onOpenCanvas={() => setShowLmsModal(true)}
+          />
+        </section>
+
+        {/* DUE GOODER PHONE NOTIFICATIONS SHOWCASE STRIP */}
+        <section className="space-y-3">
+          <PhoneNotificationsStrip />
+        </section>
+
+        {/* 3-WAY VIEW SWITCHER: DormWay Timeline vs Coursicle Timetable vs Due Gooder Dashboard */}
+        <div className="flex items-center justify-center space-x-2 pt-2">
+          <div className="bg-slate-200/80 p-1.5 rounded-2xl flex flex-wrap items-center justify-center gap-1.5 shadow-inner">
+            <button
+              onClick={() => setActiveMainTab("TIMELINE")}
+              className={`flex items-center space-x-2 px-4 sm:px-5 py-2 rounded-xl text-xs font-black transition cursor-pointer ${
+                activeMainTab === "TIMELINE"
+                  ? "bg-white text-blue-700 shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <Calendar className="h-4 w-4 text-blue-600" />
+              <span>Semester Timeline (DormWay)</span>
+            </button>
+
+            <button
+              onClick={() => setActiveMainTab("SCHEDULE")}
+              className={`flex items-center space-x-2 px-4 sm:px-5 py-2 rounded-xl text-xs font-black transition cursor-pointer ${
+                activeMainTab === "SCHEDULE"
+                  ? "bg-white text-blue-700 shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <Calendar className="h-4 w-4 text-indigo-600" />
+              <span>Coursicle Timetable View</span>
+            </button>
+
+            <button
+              onClick={() => setActiveMainTab("TASKS")}
+              className={`flex items-center space-x-2 px-4 sm:px-5 py-2 rounded-xl text-xs font-black transition cursor-pointer ${
+                activeMainTab === "TASKS"
+                  ? "bg-white text-blue-700 shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <CheckSquare className="h-4 w-4 text-emerald-600" />
+              <span>Due Gooder Dashboard View</span>
+            </button>
+          </div>
+        </div>
+
+        {/* VIEW 1: DORMWAY AUTOMATED SEMESTER TIMELINE */}
+        {activeMainTab === "TIMELINE" && (
+          <section className="space-y-4 animate-fade-in">
+            <SemesterTimelineView
+              tasks={tasks}
+              courses={courses}
+              onUpdateTask={handleUpdateTask}
+              onDeconstructTask={handleDeconstructTask}
+              onOpenGradeModal={() => setShowGradeModal(true)}
+            />
+          </section>
+        )}
+
+        {/* VIEW 2: COURSICLE WEEKLY TIMETABLE */}
+        {activeMainTab === "SCHEDULE" && (
+          <section className="space-y-4 animate-fade-in">
+            <CoursicleScheduleView />
+          </section>
+        )}
+
+        {/* VIEW 3: DUE GOODER DASHBOARD & TIMELINE */}
+        {activeMainTab === "TASKS" && (
+          <section className="rounded-3xl border border-slate-300/80 bg-white shadow-xl overflow-hidden animate-fade-in">
+            {/* Mockup Browser Bar */}
+            <div className="bg-slate-100 border-b border-slate-200 px-4 py-2.5 flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <div className="h-3 w-3 rounded-full bg-rose-400" />
+                <div className="h-3 w-3 rounded-full bg-amber-400" />
+                <div className="h-3 w-3 rounded-full bg-emerald-400" />
+              </div>
+
+              <div className="text-xs font-semibold text-slate-500 bg-white px-6 py-1 rounded-full border border-slate-200 shadow-2xs">
+                syllabiq.app/dashboard
+              </div>
+
+              <div className="text-xs text-slate-400 font-medium hidden sm:block">
+                Fall 2026 Active
+              </div>
+            </div>
+
+            <div className="p-4 sm:p-8 space-y-6">
+              {/* Student Welcome Header & Progress Ring */}
+              <div className="bg-gradient-to-r from-slate-50 via-white to-indigo-50/40 p-5 rounded-2xl border border-slate-200 flex flex-col md:flex-row items-start md:items-center justify-between gap-4 shadow-xs">
+                <div className="flex items-center space-x-4">
+                  <div className="relative">
+                    <div className="h-16 w-16 rounded-full bg-amber-100 border-2 border-amber-300 flex items-center justify-center text-3xl shadow-xs">
+                      🧑‍🎓
+                    </div>
+                    <span className="absolute -bottom-1 -right-1 text-sm">✨</span>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <span className="text-[10px] uppercase font-black text-slate-400 tracking-wider block">
+                      WEDNESDAY, SEPT 16
+                    </span>
+                    <h2 className="text-2xl font-black text-slate-900">
+                      Howdy, Alex Student 👋
+                    </h2>
+
+                    <div className="flex flex-wrap items-center gap-2 pt-0.5">
+                      <span className="bg-slate-100 text-slate-700 font-bold text-xs px-2.5 py-0.5 rounded-full border border-slate-200">
+                        <strong>0</strong> due today
+                      </span>
+                      <span className="bg-blue-50 text-blue-700 font-bold text-xs px-2.5 py-0.5 rounded-full border border-blue-200">
+                        <strong>{tasks.length}</strong> this week
+                      </span>
+                      <span className="bg-emerald-50 text-emerald-700 font-bold text-xs px-2.5 py-0.5 rounded-full border border-emerald-200">
+                        <strong>{completedCount}</strong> completed
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Circular Donut Progress Ring */}
+                <div className="flex items-center space-x-3 self-center sm:self-auto bg-white p-3 rounded-2xl border border-slate-200 shadow-2xs">
+                  <div className="relative h-14 w-14 flex items-center justify-center">
+                    <svg className="h-14 w-14 transform -rotate-90" viewBox="0 0 36 36">
+                      <path
+                        className="text-slate-100"
+                        strokeWidth="3.5"
+                        stroke="currentColor"
+                        fill="none"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      />
+                      <path
+                        className="text-amber-500"
+                        strokeDasharray={`${progressPercent}, 100`}
+                        strokeWidth="3.5"
+                        strokeLinecap="round"
+                        stroke="currentColor"
+                        fill="none"
+                        d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                      />
+                    </svg>
+                    <div className="absolute inset-0 flex items-center justify-center text-xs font-black text-slate-900">
+                      {progressPercent}%
+                    </div>
+                  </div>
+
+                  <div className="text-left">
+                    <span className="text-sm font-black text-slate-900 block">
+                      {completedCount}/{totalTasks}
+                    </span>
+                    <span className="text-xs text-slate-500 font-medium">This week</span>
+                  </div>
+                </div>
+              </div>
+
+              {/* Action Buttons Bar */}
+              <div className="flex flex-wrap items-center gap-2 pt-1">
+                <button
+                  onClick={() => setShowLockerModal(true)}
+                  className="flex items-center space-x-2 rounded-xl bg-slate-900 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-slate-800 transition cursor-pointer"
+                >
+                  <FolderLock className="h-4 w-4" />
+                  <span>Upload to Locker</span>
+                </button>
+
+                <button
+                  onClick={() => setShowDropzone(true)}
+                  className="flex items-center space-x-2 rounded-xl bg-slate-900 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-slate-800 transition cursor-pointer"
+                >
+                  <Plus className="h-4 w-4" />
+                  <span>Add Class</span>
+                </button>
+
+                <button
+                  onClick={() => setShowGradeModal(true)}
+                  className="flex items-center space-x-2 rounded-xl bg-slate-900 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-slate-800 transition cursor-pointer"
+                >
+                  <Palette className="h-4 w-4" />
+                  <span>Color Preset</span>
+                </button>
+
+                <button
+                  onClick={handleSyncAll}
+                  disabled={isSyncing}
+                  className="flex items-center space-x-2 rounded-xl bg-slate-900 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-slate-800 transition cursor-pointer disabled:opacity-50"
+                >
+                  <Calendar className="h-4 w-4" />
+                  <span>{isSyncing ? "Syncing..." : "Sync to Calendar"}</span>
+                </button>
+              </div>
+
+              {/* SIDE-BY-SIDE WORKSPACE */}
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 pt-2">
+                {/* Left Column (7 cols): To-do this week */}
+                <div className="lg:col-span-7 space-y-4">
+                  <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                    <h3 className="text-base font-extrabold text-slate-900">To-do this week</h3>
+                    <span className="text-xs font-bold text-slate-500">{completedCount}/{totalTasks} this week</span>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    {tasks.map((t) => (
+                      <div
+                        key={t.id}
+                        className="group bg-white rounded-xl border border-slate-200 p-3.5 flex items-center justify-between hover:border-slate-300 shadow-2xs transition"
+                      >
+                        <div className="flex items-start space-x-3 max-w-[75%]">
+                          <button
+                            onClick={() =>
+                              handleUpdateTask(t.id, {
+                                status: t.status === "DONE" ? "TODO" : "DONE"
+                              })
+                            }
+                            className="mt-0.5 text-slate-400 hover:text-emerald-600 transition cursor-pointer"
+                          >
+                            {t.status === "DONE" ? (
+                              <CheckSquare className="h-5 w-5 text-emerald-600" />
+                            ) : (
+                              <Square className="h-5 w-5 text-slate-300 hover:text-blue-500" />
+                            )}
+                          </button>
+
+                          <div className="space-y-0.5">
+                            <h4
+                              className={`text-sm font-bold text-slate-900 leading-tight ${
+                                t.status === "DONE" ? "line-through text-slate-400" : ""
+                              }`}
+                            >
+                              {t.title}
+                            </h4>
+                            <p className="text-xs font-medium text-slate-500">
+                              {t.courseName}
+                            </p>
+                          </div>
+                        </div>
+
+                        <div className="flex items-center space-x-2">
+                          <span className="text-[11px] font-bold px-2.5 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-100">
+                            {new Date(t.dueDate).toLocaleDateString([], {
+                              weekday: "short",
+                              month: "numeric",
+                              day: "numeric"
+                            })}
+                          </span>
+                          <button
+                            onClick={() => handleDeconstructTask(t.id)}
+                            className="text-slate-400 hover:text-slate-700 p-1 cursor-pointer"
+                            title="Break down with AI"
+                          >
+                            <Sparkles className="h-4 w-4 text-indigo-500" />
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Right Column (5 cols): Today's Schedule Timeline & iPhone Widget */}
+                <div className="lg:col-span-5 space-y-4">
+                  <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                    <h3 className="text-base font-extrabold text-slate-900">Today</h3>
+                    <span className="text-xs font-semibold text-slate-500">Wednesday, Sept 16</span>
+                  </div>
+
+                  {/* Hour-by-Hour Timeline with Colored Blocks */}
+                  <div className="bg-slate-50/80 rounded-2xl border border-slate-200 p-4 space-y-4 font-mono text-xs">
+                    <div className="flex items-start space-x-3">
+                      <span className="text-slate-400 w-12 text-right text-[11px] pt-1">11AM</span>
+                      <div className="flex-1 bg-purple-100 border border-purple-300 rounded-xl p-3 text-purple-900 font-sans shadow-2xs">
+                        <div className="font-extrabold text-xs">CS 3110: Functional Programming</div>
+                        <div className="text-[11px] text-purple-700">11:00 AM - 12:15 PM (Gates Hall 314)</div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center space-x-3">
+                      <span className="text-red-500 font-bold w-12 text-right text-[11px]">12PM</span>
+                      <div className="flex-1 flex items-center">
+                        <div className="h-2 w-2 rounded-full bg-red-500 ring-4 ring-red-100" />
+                        <div className="h-[2px] w-full bg-red-500 shadow-xs" />
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <span className="text-slate-400 w-12 text-right text-[11px] pt-1">2PM</span>
+                      <div className="flex-1 bg-emerald-100 border border-emerald-300 rounded-xl p-3 text-emerald-900 font-sans shadow-2xs">
+                        <div className="font-extrabold text-xs">ECON 1010: Principles of Microeconomics</div>
+                        <div className="text-[11px] text-emerald-700">2:00 PM - 3:15 PM (Uris Hall 468)</div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-start space-x-3">
+                      <span className="text-slate-400 w-12 text-right text-[11px] pt-1">4PM</span>
+                      <div className="flex-1 bg-amber-100 border border-amber-300 rounded-xl p-3 text-amber-900 font-sans shadow-2xs">
+                        <div className="font-extrabold text-xs">⚡ AI Prep Buffer Block</div>
+                        <div className="text-[11px] text-amber-700">Start OCaml Warmup draft (5 days early)</div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* iPhone Notification Center Mockup */}
+                  <div className="rounded-2xl border border-slate-300 bg-white p-4 shadow-sm space-y-3">
+                    <div className="flex items-center justify-between text-xs font-bold text-slate-700">
+                      <div className="flex items-center space-x-1.5">
+                        <Smartphone className="h-4 w-4 text-blue-600" />
+                        <span>Lockscreen Notification Center</span>
+                      </div>
+                      <span className="text-[10px] text-slate-400">9:02 AM</span>
+                    </div>
+
+                    <div className="space-y-2">
+                      <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs space-y-1">
+                        <div className="flex items-center justify-between font-bold text-slate-900">
+                          <span className="flex items-center gap-1.5">
+                            🔔 Class Starting Soon!
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-normal">3m ago</span>
+                        </div>
+                        <p className="text-[11px] text-slate-600">
+                          Principles of Economics starts in 30 minutes at Room 108, Business Building.
+                        </p>
+                      </div>
+
+                      <div className="bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs space-y-1">
+                        <div className="flex items-center justify-between font-bold text-slate-900">
+                          <span className="flex items-center gap-1.5">
+                            📝 2 Things DUE TODAY
+                          </span>
+                          <span className="text-[10px] text-slate-400 font-normal">7m ago</span>
+                        </div>
+                        <p className="text-[11px] text-slate-600">
+                          • Programming Assignment 1<br />• Chapter Review 2
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* WORKLOAD CRUNCH DETECTOR & HEATMAP */}
+        <section className="space-y-3">
+          <WorkloadHeatmap tasks={tasks} />
+        </section>
+
+        {/* SCHEDULE TIMELINE & DEADLINE LIST */}
+        <section className="space-y-3">
+          <ScheduleTimeline
+            tasks={tasks}
+            onUpdateTask={handleUpdateTask}
+            onDeconstructTask={handleDeconstructTask}
+          />
+        </section>
+
+        {/* DORMWAY HALLMARK SHOWCASE SECTIONS: Canvas Sync Without IT, Forward a Syllabus Breakdown, Founder Story */}
+        <section className="space-y-12">
+          <DormwayShowcaseSections
+            onOpenCanvas={() => setShowLmsModal(true)}
+            onOpenUpload={() => setShowDropzone(true)}
+          />
+        </section>
+
+        {/* 5 FEATURE CARDS */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+          <div
+            onClick={() => setShowDropzone(true)}
+            className="paper-card-interactive p-5 space-y-2 cursor-pointer"
+          >
+            <div className="text-2xl">📅</div>
+            <h4 className="text-base font-extrabold text-slate-900">Syllabus Import</h4>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              AI turns your syllabus into a full semester plan in seconds. Supports PDF, DOCX, and mobile scans.
+            </p>
+          </div>
+
+          <div
+            onClick={() => setShowHomeworkModal(true)}
+            className="paper-card-interactive p-5 space-y-2 cursor-pointer border-indigo-200 bg-indigo-50/20"
+          >
+            <div className="text-2xl">📸</div>
+            <h4 className="text-base font-extrabold text-slate-900">Snap Homework</h4>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Photo OCR extracts problem sets, questions, and auto-schedules milestones into your calendar.
+            </p>
+          </div>
+
+          <div
+            onClick={() => setShowPeerModal(true)}
+            className="paper-card-interactive p-5 space-y-2 cursor-pointer border-emerald-200 bg-emerald-50/20"
+          >
+            <div className="text-2xl">👥</div>
+            <h4 className="text-base font-extrabold text-slate-900">Campus Peer Hub</h4>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Share homework hints, lecture audio notes, and exam study guides with students in your school.
+            </p>
+          </div>
+
+          <div
+            onClick={() => setShowAudioModal(true)}
+            className="paper-card-interactive p-5 space-y-2 cursor-pointer"
+          >
+            <div className="text-2xl">🎙️</div>
+            <h4 className="text-base font-extrabold text-slate-900">AI Lecture Notes</h4>
+            <p className="text-xs text-slate-600 leading-relaxed">
+              Record class live, get chapter-marked notes, and export directly into Google Docs and Word.
+            </p>
+          </div>
+
+          <div
+            onClick={() => setShowGradeModal(true)}
+            className="paper-card-interactive p-5 space-y-2 cursor-pointer"
+          >
+            <div className="text-2xl">✨</div>
+            <h4 className="text-base font-extrabold text-slate-900 dark:text-white">Grade &amp; What-If</h4>
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              Track running grades by syllabus weight and simulate the exact final exam score needed for an A.
+            </p>
+          </div>
+
+          <div
+            onClick={() => setShowCloudVaultModal(true)}
+            className="paper-card-interactive p-5 space-y-2 cursor-pointer border-blue-200 dark:border-blue-800 bg-blue-50/20 dark:bg-blue-950/20"
+          >
+            <div className="text-2xl">☁️</div>
+            <h4 className="text-base font-extrabold text-slate-900 dark:text-white">Google Cloud Papers Vault</h4>
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              Store papers, reports, and homework drafts on GCS with versioning and 1-click Google Docs launch.
+            </p>
+          </div>
+
+          <div
+            onClick={() => setShowBackgroundModal(true)}
+            className="paper-card-interactive p-5 space-y-2 cursor-pointer border-purple-200 dark:border-purple-800 bg-purple-50/20 dark:bg-purple-950/20"
+          >
+            <div className="text-2xl">🖼️</div>
+            <h4 className="text-base font-extrabold text-slate-900 dark:text-white">Wallpapers &amp; Themes</h4>
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              10 curated aesthetic wallpapers or custom photo uploads with live blur and opacity contrast sliders.
+            </p>
+          </div>
+
+          <Link
+            href="/features"
+            className="paper-card-interactive p-5 space-y-2 cursor-pointer border-slate-200 dark:border-slate-800 block"
+          >
+            <div className="text-2xl">📖</div>
+            <h4 className="text-base font-extrabold text-slate-900 dark:text-white">Product Tour &amp; Q&amp;A</h4>
+            <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
+              Full breakdown of features, app pictures, who it&apos;s for across college majors, and student FAQ.
+            </p>
+          </Link>
+        </section>
+      </main>
+
+      {/* BOTTOM TAB BAR */}
+      <BottomTabBar
+        activeTab={activeMainTab}
+        onSelectTab={(tab) => {
+          if (tab === "TIMELINE" || tab === "SCHEDULE" || tab === "TASKS") {
+            setActiveMainTab(tab);
+          } else if (tab === "REMINDERS") {
+            setShowDispatchModal(true);
+          } else if (tab === "CHAT") {
+            const chatBtn = document.querySelector("button[title='Ask Syllabird']") as HTMLButtonElement;
+            chatBtn?.click();
+          }
+        }}
+      />
+
+      {/* Floating Syllabird Mascot Chatbot */}
+      <AIChatDrawer />
+
+      {/* Modals */}
+      {showLmsModal && (
+        <LMSSyncModal
+          onClose={() => setShowLmsModal(false)}
+          onSyncComplete={async () => {
+            await fetchDashboardData();
+          }}
+        />
+      )}
+
+      {showSheetsModal && (
+        <GoogleSheetsModal
+          onClose={() => setShowSheetsModal(false)}
+          onSyncUpdated={async () => {
+            await fetchDashboardData();
+          }}
+        />
+      )}
+
+      {showGradeModal && (
+        <GradeCalculatorModal
+          courses={courses}
+          tasks={tasks}
+          onClose={() => setShowGradeModal(false)}
+        />
+      )}
+
+      {showDispatchModal && (
+        <MorningDispatchModal
+          tasks={tasks}
+          onClose={() => setShowDispatchModal(false)}
+        />
+      )}
+
+      {showAudioModal && (
+        <AudioTranscriberModal
+          onClose={() => setShowAudioModal(false)}
+        />
+      )}
+
+      {showShareModal && (
+        <ShareScheduleModal
+          onClose={() => setShowShareModal(false)}
+        />
+      )}
+
+      {showMobileModal && (
+        <MobilePreviewModal
+          tasks={tasks}
+          courses={courses}
+          onClose={() => setShowMobileModal(false)}
+        />
+      )}
+
+      {showLockerModal && (
+        <ClassLockerModal
+          courses={courses}
+          onClose={() => setShowLockerModal(false)}
+        />
+      )}
+
+      {showHomeworkModal && (
+        <HomeworkPhotoModal
+          courses={courses}
+          onClose={() => setShowHomeworkModal(false)}
+          onOpenPaywall={() => {
+            setShowHomeworkModal(false);
+            setShowPaywallModal(true);
+          }}
+          onHomeworkAdded={async () => {
+            await fetchDashboardData();
+          }}
+        />
+      )}
+
+      {showColorModal && (
+        <ColorCustomizerModal
+          courses={courses}
+          onClose={() => setShowColorModal(false)}
+          onColorsUpdated={async () => {
+            await fetchDashboardData();
+          }}
+        />
+      )}
+
+      {showPeerModal && (
+        <CampusPeerHubModal
+          courses={courses}
+          onClose={() => setShowPeerModal(false)}
+        />
+      )}
+
+      {showPaywallModal && (
+        <StripePaywallModal
+          onClose={() => setShowPaywallModal(false)}
+          onSubscriptionUpdated={async () => {
+            await fetchDashboardData();
+          }}
+        />
+      )}
+
+      {showBackgroundModal && (
+        <BackgroundCustomizerModal
+          config={backgroundConfig}
+          onClose={() => setShowBackgroundModal(false)}
+          onSaveConfig={async (newCfg) => {
+            setBackgroundConfig(newCfg);
+            try {
+              await fetch("/api/background", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newCfg)
+              });
+            } catch (err) {
+              console.error(err);
+            }
+          }}
+        />
+      )}
+
+      {showCloudVaultModal && (
+        <GoogleCloudVaultModal
+          courses={courses}
+          onClose={() => setShowCloudVaultModal(false)}
+        />
+      )}
+
+      {showContactModal && (
+        <ContactModal
+          onClose={() => setShowContactModal(false)}
+        />
+      )}
+
+      {/* Global Footer with Harbour and Main Company Logo */}
+      <Footer
+        onOpenContactModal={() => setShowContactModal(true)}
+        onOpenCloudVault={() => setShowCloudVaultModal(true)}
+        onOpenWallpaper={() => setShowBackgroundModal(true)}
+      />
+    </div>
+  );
+}
