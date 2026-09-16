@@ -46,17 +46,16 @@ export default function FeaturesPage() {
       <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#131B2E]/90 backdrop-blur-md">
         <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
           <Link href="/" className="flex items-center space-x-3 group">
-            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-sm shadow-indigo-500/25 rotate-[-8deg] group-hover:rotate-0 transition-transform">
-              <Send className="h-5 w-5 fill-white stroke-none" />
+            <div className="flex items-center bg-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl shadow-xs border border-slate-200/80 hover:border-blue-400 transition-all">
+              <img
+                src="/images/syllabiq-logo.png"
+                alt="SyllabiQ Logo"
+                className="h-7 sm:h-8 w-auto object-contain"
+              />
             </div>
-            <div>
-              <span className="text-xl font-extrabold tracking-tight text-slate-900 dark:text-white">
-                Syllabi<span className="text-blue-600 dark:text-blue-400">Q</span>
-              </span>
-              <span className="ml-2 rounded-full bg-blue-50 dark:bg-blue-950/80 px-2 py-0.5 text-[10px] font-bold text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
-                PRODUCT TOUR
-              </span>
-            </div>
+            <span className="hidden sm:inline-flex items-center rounded-full bg-blue-50 dark:bg-blue-950/80 px-2 py-0.5 text-[10px] font-bold text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+              PRODUCT TOUR
+            </span>
           </Link>
 
           {/* Nav Links */}
