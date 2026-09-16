@@ -64,10 +64,54 @@ export async function extractSyllabusFromContent(
   rawText: string,
   fileName = "syllabus.pdf"
 ): Promise<ParsedSyllabus> {
-  // If OpenAI or Gemini API key is present in environment, we could invoke it:
-  const apiKey = process.env.GEMINI_API_KEY || process.env.OPENAI_API_KEY;
+  const geminiApiKey = process.env.GEMINI_API_KEY;
+  const geminiModel = process.env.GEMINI_MODEL || "gemini-3.6-flash";
 
-  if (apiKey && process.env.OPENAI_API_KEY) {
+  if (geminiApiKey) {
+    try {
+      const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/${geminiModel}:generateContent?key=${geminiApiKey}`;
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [
+            {
+              role: "user",
+              parts: [
+                {
+                  text: `${SYLLABUS_EXTRACTION_SYSTEM_PROMPT}\n\nStrictly parse this document into the required JSON schema:\nFilename: ${fileName}\n\nDocument Text:\n${rawText.slice(0, 30000)}`
+                }
+              ]
+            }
+          ],
+          generationConfig: {
+            responseMimeType: "application/json",
+            temperature: 0.1
+          }
+        })
+      });
+
+      if (response.ok) {
+        const json = await response.json();
+        const content = json.candidates?.[0]?.content?.parts?.[0]?.text;
+        if (content) {
+          const parsed = JSON.parse(content);
+          const validated = ParsedSyllabusSchema.safeParse(parsed);
+          if (validated.success) {
+            return validated.data;
+          }
+        }
+      } else {
+        const errText = await response.text();
+        console.warn("Gemini API call returned non-200:", response.status, errText);
+      }
+    } catch (err) {
+      console.warn("Gemini extraction failed, attempting fallback:", err);
+    }
+  }
+
+  // Fallback if OpenAI key is present:
+  if (process.env.OPENAI_API_KEY) {
     try {
       const response = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
@@ -97,7 +141,7 @@ export async function extractSyllabusFromContent(
         }
       }
     } catch (err) {
-      console.warn("LLM API extraction failed, using heuristic regex parser:", err);
+      console.warn("OpenAI API extraction failed, using heuristic regex parser:", err);
     }
   }
 

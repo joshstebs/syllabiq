@@ -74,7 +74,7 @@ export function AIChatDrawer() {
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.94 }}
         onClick={() => setIsOpen(true)}
-        className="fixed bottom-6 right-6 z-40 flex items-center space-x-2.5 rounded-full bg-white border-2 border-slate-200 p-2 sm:px-4 sm:py-2 text-slate-800 shadow-xl hover:shadow-2xl transition cursor-pointer"
+        className="fixed bottom-20 right-6 z-40 flex items-center space-x-2.5 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 p-2 sm:px-4 sm:py-2 text-slate-800 dark:text-slate-200 shadow-xl hover:shadow-2xl transition cursor-pointer"
       >
         <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 border border-blue-200 text-xl">
           🦉

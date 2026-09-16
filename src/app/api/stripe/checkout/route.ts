@@ -25,6 +25,33 @@ export async function POST(req: Request) {
     const trialEndsAt = new Date(now + 30 * 86400000).toISOString();
     const currentPeriodEnd = new Date(now + 60 * 86400000).toISOString();
 
+    let liveCustomerId = `cus_${Math.random().toString(36).substring(2, 12)}`;
+    const stripeKey = process.env.STRIPE_SECRET_KEY;
+
+    if (stripeKey) {
+      try {
+        const stripeRes = await fetch("https://api.stripe.com/v1/customers", {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${stripeKey}`,
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: new URLSearchParams({
+            email: body.email || "student@example.edu",
+            name: body.name || "SyllabiQ Student",
+            description: "SyllabiQ Pro Subscriber (30-day Free Trial)"
+          }).toString()
+        });
+
+        if (stripeRes.ok) {
+          const cust = await stripeRes.json();
+          liveCustomerId = cust.id;
+        }
+      } catch (stripeErr) {
+        console.warn("Stripe live customer call fallback:", stripeErr);
+      }
+    }
+
     const updated = updateSubscription({
       tier: "PRO",
       status: "ACTIVE_SUBSCRIBER",
@@ -32,14 +59,14 @@ export async function POST(req: Request) {
       trialEndsAt,
       currentPeriodEnd,
       monthlyPrice: 5.0,
-      stripeCustomerId: `cus_${Math.random().toString(36).substring(2, 12)}`,
+      stripeCustomerId: liveCustomerId,
       stripeSubscriptionId: `sub_${Math.random().toString(36).substring(2, 12)}`,
       homeworkUploadsLimit: 999999
     });
 
     addActivityLog(
       "Stripe Checkout Completed",
-      `Activated SyllabiQ Pro ($5/mo with 30-day free trial). Customer: ${updated.stripeCustomerId}`
+      `Activated SyllabiQ Pro ($5/mo with 30-day free trial). Stripe Customer ID: ${updated.stripeCustomerId}`
     );
 
     return NextResponse.json({

@@ -58,6 +58,8 @@ import { BackgroundLayer } from "@/components/background-layer";
 import { BackgroundCustomizerModal } from "@/components/background-customizer-modal";
 import { GoogleCloudVaultModal } from "@/components/google-cloud-vault-modal";
 import { ContactModal } from "@/components/contact-modal";
+import { CoursicleModal } from "@/components/coursicle-modal";
+import { SemesterTimelineModal } from "@/components/semester-timeline-modal";
 import { Footer } from "@/components/footer";
 
 export default function SyllabiQDashboard() {
@@ -67,6 +69,8 @@ export default function SyllabiQDashboard() {
   const [isSyncing, setIsSyncing] = useState(false);
   const [activeMainTab, setActiveMainTab] = useState<TabMode>("TIMELINE");
   const [showDropzone, setShowDropzone] = useState(false);
+  const [showCoursicleModal, setShowCoursicleModal] = useState(false);
+  const [showTimelineModal, setShowTimelineModal] = useState(false);
 
   // Background state
   const [backgroundConfig, setBackgroundConfig] = useState<BackgroundConfig>({
@@ -117,6 +121,17 @@ export default function SyllabiQDashboard() {
   useEffect(() => {
     fetchDashboardData();
   }, []);
+
+  const scrollToMainView = () => {
+    setTimeout(() => {
+      const el = document.getElementById("main-view-container");
+      if (el) {
+        const yOffset = -85;
+        const y = el.getBoundingClientRect().top + window.pageYOffset + yOffset;
+        window.scrollTo({ top: y, behavior: "smooth" });
+      }
+    }, 60);
+  };
 
   const handleSyncAll = async () => {
     setIsSyncing(true);
@@ -385,7 +400,7 @@ export default function SyllabiQDashboard() {
         </section>
 
         {/* 3-WAY VIEW SWITCHER: DormWay Timeline vs Coursicle Timetable vs Due Gooder Dashboard */}
-        <div className="flex items-center justify-center space-x-2 pt-2">
+        <div id="main-view-container" className="flex items-center justify-center space-x-2 pt-2 scroll-mt-24">
           <div className="bg-slate-200/80 p-1.5 rounded-2xl flex flex-wrap items-center justify-center gap-1.5 shadow-inner">
             <button
               onClick={() => setActiveMainTab("TIMELINE")}
@@ -837,8 +852,17 @@ export default function SyllabiQDashboard() {
       <BottomTabBar
         activeTab={activeMainTab}
         onSelectTab={(tab) => {
-          if (tab === "TIMELINE" || tab === "SCHEDULE" || tab === "TASKS") {
-            setActiveMainTab(tab);
+          if (tab === "TIMELINE") {
+            setActiveMainTab("TIMELINE");
+            setShowTimelineModal(true);
+            scrollToMainView();
+          } else if (tab === "SCHEDULE") {
+            setActiveMainTab("SCHEDULE");
+            setShowCoursicleModal(true);
+            scrollToMainView();
+          } else if (tab === "TASKS") {
+            setActiveMainTab("TASKS");
+            scrollToMainView();
           } else if (tab === "REMINDERS") {
             setShowDispatchModal(true);
           } else if (tab === "CHAT") {
@@ -981,6 +1005,35 @@ export default function SyllabiQDashboard() {
       {showContactModal && (
         <ContactModal
           onClose={() => setShowContactModal(false)}
+        />
+      )}
+
+      {showCoursicleModal && (
+        <CoursicleModal
+          isOpen={showCoursicleModal}
+          onClose={() => setShowCoursicleModal(false)}
+          onViewOnPage={() => {
+            setShowCoursicleModal(false);
+            setActiveMainTab("SCHEDULE");
+            scrollToMainView();
+          }}
+        />
+      )}
+
+      {showTimelineModal && (
+        <SemesterTimelineModal
+          isOpen={showTimelineModal}
+          onClose={() => setShowTimelineModal(false)}
+          tasks={tasks}
+          courses={courses}
+          onUpdateTask={handleUpdateTask}
+          onDeconstructTask={handleDeconstructTask}
+          onOpenGradeModal={() => setShowGradeModal(true)}
+          onViewOnPage={() => {
+            setShowTimelineModal(false);
+            setActiveMainTab("TIMELINE");
+            scrollToMainView();
+          }}
         />
       )}
 
