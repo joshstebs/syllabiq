@@ -9,8 +9,25 @@ interface Message {
   content: string;
 }
 
-export function AIChatDrawer() {
-  const [isOpen, setIsOpen] = useState(false);
+interface AIChatDrawerProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+  onOpen?: () => void;
+}
+
+export function AIChatDrawer({ isOpen: controlledIsOpen, onClose, onOpen }: AIChatDrawerProps = {}) {
+  const [internalIsOpen, setInternalIsOpen] = useState(false);
+  const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : internalIsOpen;
+
+  const handleOpen = () => {
+    if (onOpen) onOpen();
+    else setInternalIsOpen(true);
+  };
+
+  const handleClose = () => {
+    if (onClose) onClose();
+    else setInternalIsOpen(false);
+  };
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -69,12 +86,13 @@ export function AIChatDrawer() {
 
   return (
     <>
-      {/* Floating Mascot Button matching Due Gooder's Duey character */}
+      {/* Floating Mascot Button matching Due Gooder's Duey character (hidden on mobile to prevent blocking links/buttons) */}
       <motion.button
         whileHover={{ scale: 1.08 }}
         whileTap={{ scale: 0.94 }}
-        onClick={() => setIsOpen(true)}
-        className="fixed bottom-20 right-6 z-40 flex items-center space-x-2.5 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 p-2 sm:px-4 sm:py-2 text-slate-800 dark:text-slate-200 shadow-xl hover:shadow-2xl transition cursor-pointer"
+        onClick={handleOpen}
+        title="Ask Syllabird"
+        className="hidden sm:flex fixed bottom-20 right-6 z-40 items-center space-x-2.5 rounded-full bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 p-2 sm:px-4 sm:py-2 text-slate-800 dark:text-slate-200 shadow-xl hover:shadow-2xl transition cursor-pointer"
       >
         <div className="relative flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 border border-blue-200 text-xl">
           🦉
@@ -97,7 +115,7 @@ export function AIChatDrawer() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 30, scale: 0.95 }}
             transition={{ type: "spring", damping: 25, stiffness: 250 }}
-            className="fixed bottom-20 right-4 sm:right-6 z-50 w-[92vw] sm:w-[420px] h-[560px] rounded-3xl bg-white border border-slate-200 shadow-2xl flex flex-col justify-between overflow-hidden"
+            className="fixed inset-x-3 bottom-20 sm:bottom-20 sm:right-6 sm:inset-x-auto z-50 w-auto sm:w-[420px] h-[540px] max-h-[75vh] sm:max-h-[560px] rounded-3xl bg-white border border-slate-200 shadow-2xl flex flex-col justify-between overflow-hidden"
           >
             {/* Header */}
             <div className="bg-slate-50 p-4 border-b border-slate-200 flex items-center justify-between">
@@ -116,7 +134,7 @@ export function AIChatDrawer() {
                 </div>
               </div>
               <button
-                onClick={() => setIsOpen(false)}
+                onClick={handleClose}
                 className="text-slate-400 hover:text-slate-700 p-1 rounded-full hover:bg-slate-200 transition cursor-pointer"
               >
                 <X className="h-4 w-4" />

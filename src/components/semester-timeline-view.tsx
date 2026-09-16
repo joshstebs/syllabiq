@@ -139,58 +139,58 @@ export function SemesterTimelineView({
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-full min-w-0">
       {/* DormWay Header & Tagline Banner */}
-      <div className="rounded-3xl border border-slate-200/90 bg-gradient-to-r from-blue-50/70 via-indigo-50/40 to-white p-6 sm:p-8 shadow-xs">
+      <div className="rounded-3xl border border-slate-200/90 bg-gradient-to-r from-blue-50/70 via-indigo-50/40 to-white p-4 sm:p-8 shadow-xs w-full max-w-full min-w-0 overflow-hidden">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2">
             <div className="inline-flex items-center gap-2 rounded-full border border-blue-200 bg-white px-3 py-1 text-xs font-bold text-blue-700 shadow-2xs">
               <CalendarCheck className="h-3.5 w-3.5 text-blue-600" />
               <span>DormWay Automated Semester Timeline</span>
             </div>
-            <h2 className="font-display text-2xl sm:text-4xl font-black tracking-tight text-slate-900">
+            <h2 className="font-display text-2xl sm:text-4xl font-black tracking-tight text-slate-900 break-words">
               Never wonder what&apos;s due.
             </h2>
-            <p className="text-sm sm:text-base text-slate-600 font-medium max-w-2xl leading-relaxed">
+            <p className="text-sm sm:text-base text-slate-600 font-medium max-w-2xl leading-relaxed break-words">
               Every assignment, exam, paper, and reading organized in chronological order with smart urgency countdowns and AI prep buffers.
             </p>
           </div>
 
           {/* Quick Metrics Cards */}
-          <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
-            <div className="flex-1 bg-white rounded-2xl border border-slate-200/80 p-2.5 sm:p-3.5 min-w-[85px] sm:min-w-[110px] text-center shadow-2xs">
-              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3 w-full sm:w-auto">
+            <div className="flex-1 bg-white rounded-2xl border border-slate-200/80 p-2.5 sm:p-3.5 min-w-[75px] sm:min-w-[110px] text-center shadow-2xs">
+              <span className="text-[10px] sm:text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
                 Total Due
               </span>
-              <span className="text-xl sm:text-2xl font-black text-slate-900">
+              <span className="text-lg sm:text-2xl font-black text-slate-900">
                 {totalDeadlines}
               </span>
               <span className="text-[10px] text-slate-500 font-semibold block">
-                {completedCount} completed
+                {completedCount} done
               </span>
             </div>
 
-            <div className="flex-1 bg-white rounded-2xl border border-slate-200/80 p-2.5 sm:p-3.5 min-w-[85px] sm:min-w-[110px] text-center shadow-2xs">
-              <span className="text-[11px] font-bold text-amber-500 uppercase tracking-wider block">
+            <div className="flex-1 bg-white rounded-2xl border border-slate-200/80 p-2.5 sm:p-3.5 min-w-[75px] sm:min-w-[110px] text-center shadow-2xs">
+              <span className="text-[10px] sm:text-[11px] font-bold text-amber-500 uppercase tracking-wider block">
                 High Stakes
               </span>
-              <span className="text-xl sm:text-2xl font-black text-amber-600">
+              <span className="text-lg sm:text-2xl font-black text-amber-600">
                 {highStakesCount}
               </span>
               <span className="text-[10px] text-slate-500 font-semibold block">
-                &ge; 20% of grade
+                &ge; 20%
               </span>
             </div>
 
-            <div className="flex-1 bg-white rounded-2xl border border-slate-200/80 p-2.5 sm:p-3.5 min-w-[85px] sm:min-w-[110px] text-center shadow-2xs">
-              <span className="text-[11px] font-bold text-emerald-600 uppercase tracking-wider block">
+            <div className="flex-1 bg-white rounded-2xl border border-slate-200/80 p-2.5 sm:p-3.5 min-w-[75px] sm:min-w-[110px] text-center shadow-2xs">
+              <span className="text-[10px] sm:text-[11px] font-bold text-emerald-600 uppercase tracking-wider block">
                 Safety Net
               </span>
-              <span className="text-xl sm:text-2xl font-black text-emerald-600">
+              <span className="text-lg sm:text-2xl font-black text-emerald-600">
                 100%
               </span>
               <span className="text-[10px] text-slate-500 font-semibold block">
-                Read-only sync
+                Read-only
               </span>
             </div>
           </div>

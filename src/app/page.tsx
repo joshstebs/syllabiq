@@ -25,7 +25,11 @@ import {
   Sparkles,
   Bell,
   MoreVertical,
-  GraduationCap
+  GraduationCap,
+  HelpCircle,
+  ChevronDown,
+  ChevronUp,
+  Mail
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import Link from "next/link";
@@ -66,11 +70,40 @@ import { AdminPanelModal } from "@/components/admin-panel-modal";
 import { Footer } from "@/components/footer";
 import { useAuth } from "@/lib/auth-context";
 
+const LANDING_FAQS = [
+  {
+    q: "What syllabus file formats does SyllabiQ support?",
+    a: "SyllabiQ accepts PDF files (.pdf), Word documents (.docx), plain text (.txt), Markdown (.md), and photo scans / phone camera screenshots (JPEG, PNG, HEIC). Our multimodal AI accurately extracts grade breakdowns, assignments, exam dates, and policies in under 60 seconds."
+  },
+  {
+    q: "How does the $0 First Month Free Trial and $5/month subscription work?",
+    a: "You get full SyllabiQ Pro access 100% free for your first 30 days ($0 billed today via Stripe). After 30 days, Pro is just $5.00/month. You can cancel at any time with a single click in your account settings with zero commitments or hidden fees."
+  },
+  {
+    q: "Can I sync Canvas without campus IT approval?",
+    a: "Yes! SyllabiQ connects using a read-only student access token generated directly from your Canvas profile. It takes 30 seconds to set up, requires zero administrator approvals, and auto-syncs your assignments, running grades, and deadlines bidirectionally."
+  },
+  {
+    q: "Is SyllabiQ 100% compliant with my university's Academic Integrity Code?",
+    a: "Yes, 100%. SyllabiQ is strictly an academic organization, scheduling, and study system. It never writes essays, never solves exam questions, and never submits assignments or messages professors on your behalf."
+  },
+  {
+    q: "How do Google Calendar and Google Sheets sync work?",
+    a: "SyllabiQ creates dedicated sub-calendars for each of your enrolled courses with custom color coding and emojis. Any deadline added or edited in SyllabiQ immediately syncs to your Google Calendar on your phone. You can also export a live master tracker to Google Sheets."
+  },
+  {
+    q: "Can I use SyllabiQ on my phone as a mobile app?",
+    a: "Yes! SyllabiQ is fully responsive and optimized for mobile viewports (iPhone & Android). You can tap 'Share' -> 'Add to Home Screen' in Safari or Chrome to use it just like a native mobile app with bottom navigation and push notifications."
+  }
+];
+
 export default function SyllabiQDashboard() {
   const { user } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
   const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [showChatDrawer, setShowChatDrawer] = useState(false);
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
   const [isSyncing, setIsSyncing] = useState(false);
 
   const requirePro = async (action: () => void | Promise<void>): Promise<void> => {
@@ -197,7 +230,7 @@ export default function SyllabiQDashboard() {
   const progressPercent = totalTasks > 0 ? Math.round((completedCount / totalTasks) * 100) : 0;
 
   return (
-    <div className="relative min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-[#F8FAFC] dark:bg-[#0B0F19] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col selection:bg-yellow-300 selection:text-slate-900 pb-28 sm:pb-20 pb-safe transition-colors duration-200">
+    <div className="relative min-h-screen w-full max-w-full overflow-x-hidden bg-[#F8FAFC] dark:bg-[#0B0F19] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col selection:bg-yellow-300 selection:text-slate-900 pb-28 sm:pb-20 pb-safe transition-colors duration-200">
       {/* Background Wallpaper Layer */}
       <BackgroundLayer config={backgroundConfig} />
 
@@ -766,6 +799,17 @@ export default function SyllabiQDashboard() {
           </section>
         )}
 
+        {/* VIEW 4: FLASHCARDS & STUDY DECKS */}
+        {activeMainTab === "FLASHCARDS" && (
+          <section className="space-y-4 animate-fade-in">
+            <FlashcardsTab
+              courses={courses}
+              isPro={user?.isPro}
+              onOpenPaywall={() => setShowPaywallModal(true)}
+            />
+          </section>
+        )}
+
         {/* WORKLOAD CRUNCH DETECTOR & HEATMAP */}
         <section className="space-y-3">
           <WorkloadHeatmap tasks={tasks} />
@@ -878,49 +922,112 @@ export default function SyllabiQDashboard() {
             </p>
           </Link>
         </section>
-      </main>
 
-      
-        {/* VIEW 4: FLASHCARDS & STUDY DECKS */}
-        {activeMainTab === "FLASHCARDS" && (
-          <section className="space-y-4 animate-fade-in">
-            <FlashcardsTab
-              courses={courses}
-              isPro={user?.isPro}
-              onOpenPaywall={() => setShowPaywallModal(true)}
-            />
-          </section>
-        )}
+        {/* INTERACTIVE FREQUENTLY ASKED QUESTIONS ACCORDION */}
+        <section id="faq" className="rounded-3xl border border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-[#131B2E]/95 p-5 sm:p-8 md:p-10 shadow-sm space-y-6 w-full max-w-full min-w-0 overflow-hidden scroll-mt-24">
+          <div className="max-w-3xl mx-auto text-center space-y-3">
+            <div className="inline-flex items-center gap-2 rounded-full bg-indigo-50 dark:bg-indigo-950/70 border border-indigo-200 dark:border-indigo-800 px-3.5 py-1 text-xs font-bold text-indigo-700 dark:text-indigo-300 shadow-2xs">
+              <HelpCircle className="h-3.5 w-3.5 text-indigo-600 dark:text-indigo-400" />
+              <span>Frequently Asked Questions</span>
+            </div>
+            <h2 className="font-display text-2xl sm:text-4xl font-black text-slate-900 dark:text-white tracking-tight">
+              Got questions? We&apos;ve got answers.
+            </h2>
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed font-medium">
+              Everything you need to know about syllabi parsing, Canvas integration, Google sync, academic safety, and subscriptions.
+            </p>
+          </div>
+
+          <div className="max-w-3xl mx-auto space-y-3 pt-2">
+            {LANDING_FAQS.map((faq, idx) => {
+              const isOpen = openFaqIndex === idx;
+              return (
+                <div
+                  key={idx}
+                  className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/60 dark:bg-slate-900/60 overflow-hidden transition"
+                >
+                  <button
+                    type="button"
+                    onClick={() => setOpenFaqIndex(openFaqIndex === idx ? null : idx)}
+                    className="w-full text-left p-4 sm:p-5 flex items-center justify-between font-extrabold text-xs sm:text-sm text-slate-900 dark:text-white cursor-pointer hover:bg-white dark:hover:bg-slate-800/80 transition gap-3"
+                  >
+                    <span className="leading-snug">{faq.q}</span>
+                    <span className="h-6 w-6 rounded-full bg-slate-200/70 dark:bg-slate-800 flex items-center justify-center shrink-0 text-slate-600 dark:text-slate-300">
+                      {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                    </span>
+                  </button>
+                  {isOpen && (
+                    <div className="px-4 sm:px-5 pb-5 pt-1 text-xs sm:text-sm text-slate-600 dark:text-slate-300 leading-relaxed border-t border-slate-200/70 dark:border-slate-800/80">
+                      {faq.a}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Direct Support & Full FAQ Link */}
+          <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3 border-t border-slate-100 dark:border-slate-800 text-center">
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">
+              Have a specific question not covered here?
+            </span>
+            <div className="flex items-center gap-3">
+              <button
+                type="button"
+                onClick={() => setShowContactModal(true)}
+                className="inline-flex items-center gap-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs px-4 py-2 shadow-xs transition cursor-pointer"
+              >
+                <Mail className="h-3.5 w-3.5" />
+                <span>Contact Harbour &amp; Main</span>
+              </button>
+              <Link
+                href="/faq"
+                className="inline-flex items-center gap-1 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                <span>Full Help Center</span>
+                <span>&rarr;</span>
+              </Link>
+            </div>
+          </div>
+        </section>
+      </main>
 
       {/* BOTTOM TAB BAR */}
       <BottomTabBar
-        activeTab={activeMainTab}
+        activeTab={showChatDrawer ? "CHAT" : activeMainTab}
         onSelectTab={(tab) => {
           if (tab === "TIMELINE") {
+            setShowChatDrawer(false);
             setActiveMainTab("TIMELINE");
             setShowTimelineModal(true);
             scrollToMainView();
           } else if (tab === "SCHEDULE") {
+            setShowChatDrawer(false);
             setActiveMainTab("SCHEDULE");
             setShowCoursicleModal(true);
             scrollToMainView();
           } else if (tab === "TASKS") {
+            setShowChatDrawer(false);
             setActiveMainTab("TASKS");
             scrollToMainView();
           } else if (tab === "FLASHCARDS") {
+            setShowChatDrawer(false);
             setActiveMainTab("FLASHCARDS");
             scrollToMainView();
           } else if (tab === "REMINDERS") {
             setShowDispatchModal(true);
           } else if (tab === "CHAT") {
-            const chatBtn = document.querySelector("button[title='Ask Syllabird']") as HTMLButtonElement;
-            chatBtn?.click();
+            setShowChatDrawer(true);
           }
         }}
       />
 
-      {/* Floating Syllabird Mascot Chatbot */}
-      <AIChatDrawer />
+      {/* Floating / Mobile Syllabird Mascot Chatbot */}
+      <AIChatDrawer
+        isOpen={showChatDrawer}
+        onClose={() => setShowChatDrawer(false)}
+        onOpen={() => setShowChatDrawer(true)}
+      />
 
       {/* Modals */}
       {showLmsModal && (

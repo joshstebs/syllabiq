@@ -34,8 +34,8 @@ export function DormwayStartWidget({ onOpenUpload, onOpenCanvas }: Props) {
   };
 
   return (
-    <div className="w-full max-w-4xl mx-auto">
-      <div className="rounded-2xl border border-slate-200/80 bg-white/95 backdrop-blur-sm p-4 sm:p-6 shadow-sm hover:shadow-md transition">
+    <div className="w-full max-w-4xl mx-auto min-w-0">
+      <div className="rounded-2xl border border-slate-200/80 bg-white/95 backdrop-blur-sm p-3.5 sm:p-6 shadow-sm hover:shadow-md transition w-full max-w-full min-w-0 overflow-hidden">
         {/* Top bar: Title & Source selector buttons */}
         <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between border-b border-slate-100 pb-4">
           <div>
@@ -297,10 +297,10 @@ export function DormwayStartWidget({ onOpenUpload, onOpenCanvas }: Props) {
                   </div>
                   <p className="truncate text-xs text-slate-600 font-medium">Midterm review session</p>
                 </div>
-                <span className="whitespace-nowrap text-xs font-bold text-slate-700">Tonight · 7:00 PM</span>
+                <span className="text-xs font-bold text-slate-700 shrink-0 text-right">Tonight · 7:00 PM</span>
               </div>
 
-              <div className="flex items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-50/70 px-3 py-2.5 hover:bg-slate-50 transition">
+              <div className="flex items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-50/70 px-3 py-2.5 hover:bg-slate-50 transition min-w-0">
                 <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-rose-500" />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5">
@@ -311,10 +311,10 @@ export function DormwayStartWidget({ onOpenUpload, onOpenCanvas }: Props) {
                   </div>
                   <p className="truncate text-xs text-slate-600 font-medium">Comparative essay first draft</p>
                 </div>
-                <span className="whitespace-nowrap text-xs font-bold text-slate-700">Tomorrow · 5:00 PM</span>
+                <span className="text-xs font-bold text-slate-700 shrink-0 text-right">Tomorrow · 5:00 PM</span>
               </div>
 
-              <div className="flex items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-50/70 px-3 py-2.5 hover:bg-slate-50 transition">
+              <div className="flex items-center gap-3 rounded-xl border border-slate-200/80 bg-slate-50/70 px-3 py-2.5 hover:bg-slate-50 transition min-w-0">
                 <span className="h-2.5 w-2.5 shrink-0 rounded-full bg-emerald-500" />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-1.5">
@@ -325,7 +325,7 @@ export function DormwayStartWidget({ onOpenUpload, onOpenCanvas }: Props) {
                   </div>
                   <p className="truncate text-xs text-slate-600 font-medium">Cellular respiration report</p>
                 </div>
-                <span className="whitespace-nowrap text-xs font-bold text-slate-700">Fri · 11:59 PM</span>
+                <span className="text-xs font-bold text-slate-700 shrink-0 text-right">Fri · 11:59 PM</span>
               </div>
             </div>
           </div>
@@ -333,9 +333,9 @@ export function DormwayStartWidget({ onOpenUpload, onOpenCanvas }: Props) {
 
         {/* Bottom Action Footer */}
         <div className="mt-5 flex flex-col gap-3 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500">
-            <ShieldCheck className="h-4 w-4 text-emerald-600" />
-            <span>Free for students · 100% academic integrity safe · No credit card required</span>
+          <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 min-w-0">
+            <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
+            <span className="break-words">Free for students · 100% academic integrity safe · No credit card required</span>
           </div>
 
           <div className="flex items-center gap-2">

@@ -70,7 +70,7 @@ export function ScheduleTimeline({ tasks, onUpdateTask, onDeconstructTask }: Pro
   };
 
   return (
-    <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm space-y-5">
+    <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-6 shadow-sm space-y-5 w-full max-w-full min-w-0 overflow-hidden">
       {/* Filters Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
         <div>
