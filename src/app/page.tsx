@@ -187,7 +187,7 @@ export default function SyllabiQDashboard() {
   const progressPercent = totalTasks > 0 ? Math.round((completedCount / totalTasks) * 100) : 0;
 
   return (
-    <div className="relative min-h-screen bg-[#F8FAFC] dark:bg-[#0B0F19] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col selection:bg-yellow-300 selection:text-slate-900 pb-28 sm:pb-20 pb-safe transition-colors duration-200">
+    <div className="relative min-h-screen w-full max-w-[100vw] overflow-x-hidden bg-[#F8FAFC] dark:bg-[#0B0F19] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col selection:bg-yellow-300 selection:text-slate-900 pb-28 sm:pb-20 pb-safe transition-colors duration-200">
       {/* Background Wallpaper Layer */}
       <BackgroundLayer config={backgroundConfig} />
 
@@ -213,7 +213,7 @@ export default function SyllabiQDashboard() {
         isSyncing={isSyncing}
       />
 
-      <main className="relative z-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-6 space-y-10 w-full">
+      <main className="relative z-10 mx-auto max-w-7xl px-3 sm:px-6 lg:px-8 pt-4 sm:pt-6 space-y-8 sm:space-y-10 w-full max-w-full overflow-x-hidden">
         {/* TOP NOTIFICATION BAR: Urgent countdown & phone alerts */}
         <NotificationBar
           tasks={tasks}
@@ -402,7 +402,7 @@ export default function SyllabiQDashboard() {
         </section>
 
         {/* DUE GOODER PHONE NOTIFICATIONS SHOWCASE STRIP */}
-        <section className="space-y-3">
+        <section className="space-y-3 w-full max-w-full overflow-hidden">
           <PhoneNotificationsStrip />
         </section>
 
@@ -418,7 +418,7 @@ export default function SyllabiQDashboard() {
               }`}
             >
               <Calendar className="h-4 w-4 text-blue-600" />
-              <span>Semester Timeline (DormWay)</span>
+              <span><span className="hidden sm:inline">Semester </span>Timeline</span>
             </button>
 
             <button
@@ -430,7 +430,7 @@ export default function SyllabiQDashboard() {
               }`}
             >
               <Calendar className="h-4 w-4 text-indigo-600" />
-              <span>Coursicle Timetable View</span>
+              <span>Coursicle<span className="hidden sm:inline"> Timetable</span></span>
             </button>
 
             <button
@@ -442,7 +442,7 @@ export default function SyllabiQDashboard() {
               }`}
             >
               <CheckSquare className="h-4 w-4 text-emerald-600" />
-              <span>Due Gooder Dashboard View</span>
+              <span><span className="hidden sm:inline">Due Gooder </span>Dashboard</span>
             </button>
 
             <button
@@ -454,7 +454,7 @@ export default function SyllabiQDashboard() {
               }`}
             >
               <Brain className="h-4 w-4 text-purple-600" />
-              <span>AI Flashcards &amp; Study Decks</span>
+              <span>Flashcards<span className="hidden sm:inline"> &amp; Decks</span></span>
             </button>
           </div>
         </div>

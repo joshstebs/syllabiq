@@ -92,7 +92,7 @@ export function Navbar({
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-[#131B2E]/95 backdrop-blur-md transition-colors duration-200">
       {/* Top Banner with Pro Promotion */}
-      <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 py-1.5 px-4 text-center text-xs text-white flex items-center justify-center gap-2 shadow-2xs">
+      <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 py-1 px-3 text-center text-[11px] sm:text-xs text-white flex flex-wrap items-center justify-center gap-1.5 shadow-2xs overflow-hidden">
         <span className="text-sm">✨</span>
         <span className="font-extrabold">SyllabiQ Pro:</span>
         <span className="opacity-95 hidden sm:inline">
@@ -115,7 +115,7 @@ export function Navbar({
               <img
                 src="/images/syllabiq-logo.png"
                 alt="SyllabiQ Logo"
-                className="h-7 sm:h-8 w-auto object-contain"
+                className="h-6 sm:h-8 w-auto object-contain"
               />
             </div>
             <div className="hidden sm:flex items-center space-x-2">
@@ -138,11 +138,11 @@ export function Navbar({
         </div>
 
         {/* Spacious, Decompressed Action Tools Navigation */}
-        <div className="flex items-center gap-2 sm:gap-2.5 md:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 md:gap-3 shrink-0">
           {/* Quick Action: Homework Photo Scanner */}
           <button
             onClick={onOpenHomeworkModal}
-            className="flex items-center space-x-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 px-3 py-2 text-xs font-bold text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 transition cursor-pointer shadow-2xs"
+            className="hidden sm:flex items-center space-x-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 px-3 py-2 text-xs font-bold text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 transition cursor-pointer shadow-2xs"
             title="Snap Homework Photos (OCR Problem Extraction)"
           >
             <Camera className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
@@ -343,7 +343,7 @@ export function Navbar({
           <button
             onClick={onSyncAll}
             disabled={isSyncing}
-            className="flex items-center space-x-1.5 rounded-xl bg-blue-600 px-3 sm:px-3.5 py-2 text-xs font-bold text-white shadow-sm shadow-blue-500/25 hover:bg-blue-700 transition disabled:opacity-50 cursor-pointer"
+            className="flex items-center space-x-1.5 rounded-xl bg-blue-600 p-2 sm:px-3.5 sm:py-2 text-xs font-bold text-white shadow-sm shadow-blue-500/25 hover:bg-blue-700 transition disabled:opacity-50 cursor-pointer"
             title="Sync all deadlines and calendar schedules"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isSyncing ? "animate-spin" : ""}`} />

@@ -158,7 +158,7 @@ export function SemesterTimelineView({
 
           {/* Quick Metrics Cards */}
           <div className="flex flex-wrap items-center gap-2.5 sm:gap-3">
-            <div className="bg-white rounded-2xl border border-slate-200/80 p-3.5 min-w-[110px] text-center shadow-2xs">
+            <div className="flex-1 bg-white rounded-2xl border border-slate-200/80 p-2.5 sm:p-3.5 min-w-[85px] sm:min-w-[110px] text-center shadow-2xs">
               <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider block">
                 Total Due
               </span>
@@ -170,7 +170,7 @@ export function SemesterTimelineView({
               </span>
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-200/80 p-3.5 min-w-[110px] text-center shadow-2xs">
+            <div className="flex-1 bg-white rounded-2xl border border-slate-200/80 p-2.5 sm:p-3.5 min-w-[85px] sm:min-w-[110px] text-center shadow-2xs">
               <span className="text-[11px] font-bold text-amber-500 uppercase tracking-wider block">
                 High Stakes
               </span>
@@ -182,7 +182,7 @@ export function SemesterTimelineView({
               </span>
             </div>
 
-            <div className="bg-white rounded-2xl border border-slate-200/80 p-3.5 min-w-[110px] text-center shadow-2xs">
+            <div className="flex-1 bg-white rounded-2xl border border-slate-200/80 p-2.5 sm:p-3.5 min-w-[85px] sm:min-w-[110px] text-center shadow-2xs">
               <span className="text-[11px] font-bold text-emerald-600 uppercase tracking-wider block">
                 Safety Net
               </span>
