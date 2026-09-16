@@ -14,7 +14,8 @@ import {
   BackgroundConfig,
   CloudDocument,
   CloudVaultState,
-  ContactInquiry
+  ContactInquiry,
+  ClassGroupChat
 } from "./types";
 
 export interface SyllabiQStore {
@@ -70,6 +71,12 @@ const INITIAL_STORE: SyllabiQStore = {
         fileSize: 412000,
         uploadedAt: new Date().toISOString(),
         rawPolicies: "Late policy: 10% penalty per day up to 3 days maximum. No late submissions accepted for final project."
+      },
+      groupChat: {
+        type: "DISCORD",
+        name: "CS 3110 Cornell Discord Server",
+        url: "https://discord.gg/cs3110-cornell",
+        memberCount: 148
       }
     },
     {
@@ -96,6 +103,12 @@ const INITIAL_STORE: SyllabiQStore = {
         fileSize: 328000,
         uploadedAt: new Date().toISOString(),
         rawPolicies: "Lowest problem set is dropped. Calculator permitted on prelims."
+      },
+      groupChat: {
+        type: "FACEBOOK",
+        name: "Cornell ECON 1010 Fall '26 Facebook Group",
+        url: "https://facebook.com/groups/cornell-econ1010-2026",
+        memberCount: 215
       }
     },
     {
@@ -122,6 +135,12 @@ const INITIAL_STORE: SyllabiQStore = {
         fileSize: 520000,
         uploadedAt: new Date().toISOString(),
         rawPolicies: "Attendance in labs is mandatory. Missed labs cannot be made up without physician note."
+      },
+      groupChat: {
+        type: "WHATSAPP",
+        name: "BIO 1500 Lab Study Circle",
+        url: "https://chat.whatsapp.com/bio1500studygroup",
+        memberCount: 64
       }
     }
   ],
@@ -982,3 +1001,16 @@ export function deleteCourse(courseId: string): boolean {
   addActivityLog("Course Deleted", `Removed course ${deletedCourse.code} and its tasks`);
   return true;
 }
+
+export function updateCourseGroupChat(courseId: string, groupChat: ClassGroupChat): Course | null {
+  const store = getStore();
+  const course = store.courses.find((c) => c.id === courseId);
+  if (!course) return null;
+
+  course.groupChat = groupChat;
+  saveStore(store);
+
+  addActivityLog("Class Group Linked", `Linked ${groupChat.type} study chat "${groupChat.name}" to ${course.code}`);
+  return course;
+}
+

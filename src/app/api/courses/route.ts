@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getStore, saveStore, deleteCourse } from "@/lib/storage";
+import { getStore, saveStore, deleteCourse, updateCourseGroupChat } from "@/lib/storage";
 
 export async function GET() {
   const store = getStore();
@@ -36,6 +36,30 @@ export async function POST(req: Request) {
   }
 }
 
+export async function PATCH(req: Request) {
+  try {
+    const body = await req.json();
+    const { courseId, groupChat } = body;
+
+    if (!courseId) {
+      return NextResponse.json({ error: "Missing courseId" }, { status: 400 });
+    }
+
+    const updated = updateCourseGroupChat(courseId, groupChat);
+    if (!updated) {
+      return NextResponse.json({ error: "Course not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({
+      success: true,
+      course: updated,
+      message: `Successfully linked ${groupChat.type} chat to ${updated.code}`
+    });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
+}
+
 export async function DELETE(req: Request) {
   try {
     const { searchParams } = new URL(req.url);
@@ -58,3 +82,4 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ error: err.message }, { status: 500 });
   }
 }
+

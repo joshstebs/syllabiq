@@ -15,7 +15,8 @@ import {
   Square,
   ChevronDown,
   Info,
-  CalendarCheck
+  CalendarCheck,
+  Users
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { Course, TaskItem, TaskType } from "@/lib/types";
@@ -26,6 +27,8 @@ interface Props {
   onUpdateTask: (taskId: string, patch: any) => Promise<void>;
   onDeconstructTask: (taskId: string) => Promise<void>;
   onOpenGradeModal: () => void;
+  onOpenStoryModal?: (task?: TaskItem) => void;
+  onOpenClassGroupsModal?: () => void;
 }
 
 export function SemesterTimelineView({
@@ -33,7 +36,9 @@ export function SemesterTimelineView({
   courses,
   onUpdateTask,
   onDeconstructTask,
-  onOpenGradeModal
+  onOpenGradeModal,
+  onOpenStoryModal,
+  onOpenClassGroupsModal
 }: Props) {
   const [selectedCourseId, setSelectedCourseId] = useState<string>("ALL");
   const [selectedType, setSelectedType] = useState<string>("ALL");
@@ -196,6 +201,33 @@ export function SemesterTimelineView({
           </div>
         </div>
 
+        {/* Quick Social Virality & Study Group Banner */}
+        <div className="flex flex-wrap items-center justify-between gap-3 pt-3">
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              onClick={() => onOpenStoryModal?.()}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 text-white text-xs font-black shadow-xs hover:opacity-95 transition cursor-pointer"
+              title="Generate 9:16 Instagram or Snapchat Story Card"
+            >
+              <Sparkles className="h-3.5 w-3.5" />
+              <span>Share Milestone Story (IG/Snap)</span>
+            </button>
+
+            <button
+              onClick={onOpenClassGroupsModal}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 text-xs font-bold transition cursor-pointer shadow-2xs"
+              title="Open Class Study Group Chats (Discord, FB, WhatsApp)"
+            >
+              <Users className="h-3.5 w-3.5 text-blue-600" />
+              <span>Class Study Groups</span>
+            </button>
+          </div>
+
+          <span className="text-[11px] text-slate-400 font-medium hidden sm:inline">
+            Export milestone cards or sync schedules with classmates
+          </span>
+        </div>
+
         {/* FILTERS & CONTROLS ROW */}
         <div className="mt-6 pt-5 border-t border-slate-200/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           {/* Course filter pills */}
@@ -230,6 +262,24 @@ export function SemesterTimelineView({
                 <span>{c.code}</span>
               </button>
             ))}
+
+            {/* Linked Class Group Chat Quick Pill */}
+            {selectedCourseId !== "ALL" && (() => {
+              const activeC = courses.find((c) => c.id === selectedCourseId);
+              if (!activeC?.groupChat) return null;
+              return (
+                <a
+                  href={activeC.groupChat.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-blue-50 text-blue-700 border border-blue-200 text-xs font-bold hover:bg-blue-100 transition shadow-2xs ml-1"
+                >
+                  <span>💬</span>
+                  <span>{activeC.groupChat.name}</span>
+                  <ArrowRight className="h-3 w-3" />
+                </a>
+              );
+            })()}
           </div>
 
           {/* Type and sort toggles */}
@@ -403,6 +453,15 @@ export function SemesterTimelineView({
                             title="Simulate grade impact"
                           >
                             <span>What-If</span>
+                          </button>
+
+                          <button
+                            onClick={() => onOpenStoryModal?.(task)}
+                            className="inline-flex items-center gap-1 rounded-lg bg-pink-50 hover:bg-pink-100 border border-pink-200 px-2 py-1 text-[11px] font-bold text-pink-700 transition cursor-pointer"
+                            title="Share Instagram & Snapchat Story Card"
+                          >
+                            <Sparkles className="h-3 w-3 text-pink-600" />
+                            <span>Story</span>
                           </button>
                         </div>
                       </div>

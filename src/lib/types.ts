@@ -46,6 +46,15 @@ export interface SubTaskItem {
   orderIndex: number;
 }
 
+export type ClassGroupType = "FACEBOOK" | "DISCORD" | "GROUPME" | "WHATSAPP" | "TELEGRAM";
+
+export interface ClassGroupChat {
+  type: ClassGroupType;
+  name: string;
+  url: string;
+  memberCount?: number;
+}
+
 export interface Course {
   id: string;
   name: string;
@@ -62,6 +71,7 @@ export interface Course {
     uploadedAt: string;
     rawPolicies?: string;
   };
+  groupChat?: ClassGroupChat;
 }
 
 export interface ParsedSyllabus {

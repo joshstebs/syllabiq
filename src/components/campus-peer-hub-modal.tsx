@@ -13,7 +13,8 @@ import {
   Copy,
   Check,
   MessageSquare,
-  FileText
+  FileText,
+  ExternalLink
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { Course, SharedNote } from "@/lib/types";
@@ -308,8 +309,43 @@ export function CampusPeerHubModal({ courses, onClose }: Props) {
           </form>
         )}
 
+        {/* Class Study Chat Circles (Facebook Groups, Discord, WhatsApp) */}
+        <div className="rounded-2xl border border-slate-200 dark:border-slate-800 bg-slate-50/80 dark:bg-[#131B2E]/60 p-3.5 space-y-2.5">
+          <div className="flex items-center justify-between text-xs font-bold text-slate-700 dark:text-slate-300">
+            <span className="flex items-center gap-1.5 font-black">
+              <span>💬</span> Class Study Group Chats (Student-Led)
+            </span>
+            <span className="text-[10px] text-slate-400">Discord · Facebook · WhatsApp</span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            {courses.map((c) => {
+              if (!c.groupChat) return null;
+              return (
+                <a
+                  key={c.id}
+                  href={c.groupChat.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center justify-between p-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 hover:border-blue-400 dark:hover:border-blue-500 transition group shadow-2xs cursor-pointer"
+                >
+                  <div className="min-w-0 pr-2">
+                    <span className="text-[10px] font-black uppercase text-blue-600 dark:text-blue-400 block truncate">
+                      {c.code} • {c.groupChat.type}
+                    </span>
+                    <span className="text-xs font-bold text-slate-800 dark:text-white truncate block">
+                      {c.groupChat.name}
+                    </span>
+                  </div>
+                  <ExternalLink className="h-3.5 w-3.5 text-slate-400 group-hover:text-blue-600 shrink-0" />
+                </a>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Course Filter Tabs */}
-        <div className="flex flex-wrap gap-1.5 border-b border-slate-100 pb-3">
+        <div className="flex flex-wrap gap-1.5 border-b border-slate-100 dark:border-slate-800 pb-3">
           <button
             onClick={() => setSelectedCourseId("ALL")}
             className={`px-3 py-1 rounded-xl text-xs font-bold transition cursor-pointer ${

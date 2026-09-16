@@ -41,6 +41,8 @@ interface Props {
   onOpenPaywallModal: () => void;
   onOpenBackgroundModal: () => void;
   onOpenCloudVaultModal: () => void;
+  onOpenStoryModal?: () => void;
+  onOpenClassGroupsModal?: () => void;
   onOpenAuthModal?: () => void;
   onOpenAdminPanel?: () => void;
   onSyncAll: () => void;
@@ -62,6 +64,8 @@ export function Navbar({
   onOpenPaywallModal,
   onOpenBackgroundModal,
   onOpenCloudVaultModal,
+  onOpenStoryModal,
+  onOpenClassGroupsModal,
   onOpenAuthModal,
   onOpenAdminPanel,
   onSyncAll,
@@ -235,6 +239,59 @@ export function Navbar({
                 </div>
 
                 <div className="space-y-0.5 max-h-[60vh] overflow-y-auto pr-1">
+                  {/* Story Cards Studio (IG & Snap) */}
+                  <button
+                    onClick={() => {
+                      setShowMobileTools(false);
+                      onOpenStoryModal?.();
+                    }}
+                    className="w-full flex items-center space-x-3 px-2.5 py-2 rounded-xl hover:bg-pink-50 dark:hover:bg-pink-950/50 transition text-left cursor-pointer group"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-tr from-purple-600 via-pink-600 to-amber-500 text-white group-hover:scale-105 transition-transform shadow-xs">
+                      <Sparkles className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
+                        <span>Story Cards (IG &amp; Snap)</span>
+                        <span className="text-[9px] bg-pink-100 dark:bg-pink-950 text-pink-700 dark:text-pink-300 font-extrabold px-1.5 py-0.2 rounded">VIRAL</span>
+                      </div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Export 9:16 vertical milestone graphics</div>
+                    </div>
+                  </button>
+
+                  {/* Class Study Groups (Discord & FB) */}
+                  <button
+                    onClick={() => {
+                      setShowMobileTools(false);
+                      onOpenClassGroupsModal?.();
+                    }}
+                    className="w-full flex items-center space-x-3 px-2.5 py-2 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-950/50 transition text-left cursor-pointer group"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 group-hover:scale-105 transition-transform">
+                      <Users className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-800 dark:text-white">Class Study Groups</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Discord, Facebook &amp; WhatsApp chats</div>
+                    </div>
+                  </button>
+
+                  {/* Morning Dispatch (Discord & WhatsApp Briefings) */}
+                  <button
+                    onClick={() => {
+                      setShowMobileTools(false);
+                      onOpenDispatchModal();
+                    }}
+                    className="w-full flex items-center space-x-3 px-2.5 py-2 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-950/50 transition text-left cursor-pointer group"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/60 text-amber-600 dark:text-amber-400 group-hover:scale-105 transition-transform">
+                      <Sun className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-800 dark:text-white">Morning Dispatch</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">7:00 AM Discord &amp; WhatsApp brief</div>
+                    </div>
+                  </button>
                   {/* Snap HW */}
                   <button
                     onClick={() => {
@@ -429,6 +486,59 @@ export function Navbar({
                 </div>
 
                 <div className="space-y-0.5 max-h-[75vh] overflow-y-auto pr-1">
+                  {/* Story Cards Studio (IG & Snap) */}
+                  <button
+                    onClick={() => {
+                      setShowToolsMenu(false);
+                      onOpenStoryModal?.();
+                    }}
+                    className="w-full flex items-center space-x-3 px-2.5 py-2 rounded-xl hover:bg-pink-50 dark:hover:bg-pink-950/50 transition text-left cursor-pointer group"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-tr from-purple-600 via-pink-600 to-amber-500 text-white group-hover:scale-105 transition-transform shadow-xs">
+                      <Sparkles className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
+                        <span>Story Cards Studio (IG &amp; Snap)</span>
+                        <span className="text-[9px] bg-pink-100 dark:bg-pink-950 text-pink-700 dark:text-pink-300 font-extrabold px-1.5 py-0.2 rounded">VIRAL</span>
+                      </div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Export 9:16 vertical milestone graphics</div>
+                    </div>
+                  </button>
+
+                  {/* Class Study Groups (Discord & FB) */}
+                  <button
+                    onClick={() => {
+                      setShowToolsMenu(false);
+                      onOpenClassGroupsModal?.();
+                    }}
+                    className="w-full flex items-center space-x-3 px-2.5 py-2 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-950/50 transition text-left cursor-pointer group"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 group-hover:scale-105 transition-transform">
+                      <Users className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-800 dark:text-white">Class Study Groups</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Discord, Facebook &amp; WhatsApp course chats</div>
+                    </div>
+                  </button>
+
+                  {/* Morning Dispatch (Discord & WhatsApp Briefings) */}
+                  <button
+                    onClick={() => {
+                      setShowToolsMenu(false);
+                      onOpenDispatchModal();
+                    }}
+                    className="w-full flex items-center space-x-3 px-2.5 py-2 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-950/50 transition text-left cursor-pointer group"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/60 text-amber-600 dark:text-amber-400 group-hover:scale-105 transition-transform">
+                      <Sun className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-800 dark:text-white">Morning Dispatch</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">7:00 AM Discord &amp; WhatsApp briefings</div>
+                    </div>
+                  </button>
                   {/* Cloud Papers Vault */}
                   <button
                     onClick={() => {

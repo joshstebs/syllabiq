@@ -67,6 +67,8 @@ import { CoursicleModal } from "@/components/coursicle-modal";
 import { SemesterTimelineModal } from "@/components/semester-timeline-modal";
 import { AuthModal } from "@/components/auth-modal";
 import { AdminPanelModal } from "@/components/admin-panel-modal";
+import { StoryCardModal } from "@/components/story-card-modal";
+import { ClassGroupsModal } from "@/components/class-groups-modal";
 import { Footer } from "@/components/footer";
 import { useAuth } from "@/lib/auth-context";
 
@@ -145,6 +147,9 @@ export default function SyllabiQDashboard() {
   const [showBackgroundModal, setShowBackgroundModal] = useState(false);
   const [showCloudVaultModal, setShowCloudVaultModal] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
+  const [showStoryModal, setShowStoryModal] = useState(false);
+  const [storyHighlightTask, setStoryHighlightTask] = useState<TaskItem | null>(null);
+  const [showClassGroupsModal, setShowClassGroupsModal] = useState(false);
 
   const fetchDashboardData = async () => {
     try {
@@ -250,6 +255,11 @@ export default function SyllabiQDashboard() {
         onOpenPaywallModal={() => setShowPaywallModal(true)}
         onOpenBackgroundModal={() => requirePro(() => setShowBackgroundModal(true))}
         onOpenCloudVaultModal={() => requirePro(() => setShowCloudVaultModal(true))}
+        onOpenStoryModal={() => {
+          setStoryHighlightTask(null);
+          setShowStoryModal(true);
+        }}
+        onOpenClassGroupsModal={() => setShowClassGroupsModal(true)}
         onOpenAuthModal={() => setShowAuthModal(true)}
         onOpenAdminPanel={() => setShowAdminModal(true)}
         onSyncAll={() => requirePro(handleSyncAll)}
@@ -514,6 +524,11 @@ export default function SyllabiQDashboard() {
               onUpdateTask={handleUpdateTask}
               onDeconstructTask={(id) => requirePro(() => handleDeconstructTask(id))}
               onOpenGradeModal={() => requirePro(() => setShowGradeModal(true))}
+              onOpenStoryModal={(task) => {
+                setStoryHighlightTask(task || null);
+                setShowStoryModal(true);
+              }}
+              onOpenClassGroupsModal={() => setShowClassGroupsModal(true)}
             />
           </section>
         )}
@@ -574,6 +589,17 @@ export default function SyllabiQDashboard() {
                       <span className="bg-emerald-50 text-emerald-700 font-bold text-xs px-2.5 py-0.5 rounded-full border border-emerald-200">
                         <strong>{completedCount}</strong> completed
                       </span>
+                      <button
+                        onClick={() => {
+                          setStoryHighlightTask(null);
+                          setShowStoryModal(true);
+                        }}
+                        className="inline-flex items-center gap-1 bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 text-white font-bold text-xs px-2.5 py-0.5 rounded-full shadow-2xs hover:opacity-90 transition cursor-pointer"
+                        title="Generate 9:16 Instagram & Snapchat Story Card"
+                      >
+                        <Sparkles className="h-3 w-3" />
+                        <span>Share Story Card</span>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -1205,6 +1231,25 @@ export default function SyllabiQDashboard() {
           onClose={() => setShowAdminModal(false)}
           onOpenPaywall={() => setShowPaywallModal(true)}
           onOpenDispatch={() => setShowDispatchModal(true)}
+        />
+      )}
+
+      {showStoryModal && (
+        <StoryCardModal
+          tasks={tasks}
+          courses={courses}
+          highlightTask={storyHighlightTask}
+          onClose={() => setShowStoryModal(false)}
+        />
+      )}
+
+      {showClassGroupsModal && (
+        <ClassGroupsModal
+          courses={courses}
+          onClose={() => setShowClassGroupsModal(false)}
+          onUpdateCourseGroup={async () => {
+            await fetchDashboardData();
+          }}
         />
       )}
 

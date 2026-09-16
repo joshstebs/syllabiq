@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getNotificationSettings, updateNotificationSettings, addActivityLog, getStore } from "@/lib/storage";
+import { generateDailyMorningDispatch, formatDiscordDispatchPayload } from "@/lib/intelligence/morning-dispatch";
 
 export async function GET() {
   const settings = getNotificationSettings();
@@ -84,6 +85,48 @@ export async function POST(req: Request) {
         previewText: `⚠️ SyllabiQ Alert: ${taskTitle} is due ${dueString}. Finish now to stay ahead!`,
         realSent,
         twilioSid: twilioSidResult
+      });
+    }
+
+    if (action === "discord_dispatch") {
+      const webhookUrl = patch.webhookUrl;
+      const store = getStore();
+      const dispatch = generateDailyMorningDispatch(store.tasks, patch.userName || "Alex");
+      const payload = formatDiscordDispatchPayload(dispatch);
+
+      let discordSuccess = false;
+      let note = "";
+
+      if (webhookUrl && webhookUrl.startsWith("https://discord.com/api/webhooks/")) {
+        try {
+          const dRes = await fetch(webhookUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+          discordSuccess = dRes.ok;
+          if (!dRes.ok) {
+            note = `Discord API returned ${dRes.status}: ${dRes.statusText}`;
+          }
+        } catch (e: any) {
+          note = `Discord error: ${e.message}`;
+        }
+      }
+
+      addActivityLog(
+        "Discord Dispatch",
+        discordSuccess
+          ? "Sent live academic briefing to Discord server."
+          : `Simulated Discord morning dispatch (${note || "Webhook tested"}).`
+      );
+
+      return NextResponse.json({
+        success: true,
+        sentToDiscord: discordSuccess,
+        message: discordSuccess
+          ? "Live Discord briefing sent to your channel!"
+          : "Discord briefing payload generated! Set a valid webhook URL to deliver to a live server.",
+        payload
       });
     }
 
