@@ -42,9 +42,11 @@ import { Course } from "@/lib/types";
 
 interface Props {
   courses?: Course[];
+  isPro?: boolean;
+  onOpenPaywall?: () => void;
 }
 
-export function FlashcardsTab({ courses = [] }: Props) {
+export function FlashcardsTab({ courses = [], isPro = false, onOpenPaywall }: Props) {
   const [cards, setCards] = useState<Flashcard[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
@@ -353,15 +355,32 @@ export function FlashcardsTab({ courses = [] }: Props) {
           {/* Action Buttons: New Card & AI Generate */}
           <div className="flex flex-wrap items-center gap-2 w-full md:w-auto">
             <button
-              onClick={() => setShowAiModal(true)}
+              onClick={() => {
+                if (!isPro) {
+                  onOpenPaywall?.();
+                  return;
+                }
+                setShowAiModal(true);
+              }}
               className="flex-1 md:flex-initial flex items-center justify-center space-x-1.5 rounded-xl bg-gradient-to-r from-purple-600 to-indigo-600 px-4 py-2.5 text-xs font-bold text-white shadow-sm hover:opacity-95 transition cursor-pointer"
             >
               <Brain className="h-4 w-4" />
               <span>AI Flashcard Generator</span>
+              {!isPro && (
+                <span className="text-[10px] bg-amber-400 text-slate-900 font-black px-1.5 py-0.2 rounded-md ml-1">
+                  PRO
+                </span>
+              )}
             </button>
 
             <button
-              onClick={() => setShowCreateModal(true)}
+              onClick={() => {
+                if (!isPro) {
+                  onOpenPaywall?.();
+                  return;
+                }
+                setShowCreateModal(true);
+              }}
               className="flex-1 md:flex-initial flex items-center justify-center space-x-1.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 px-4 py-2.5 text-xs font-bold shadow-xs hover:bg-slate-800 dark:hover:bg-slate-100 transition cursor-pointer"
             >
               <Plus className="h-4 w-4" />

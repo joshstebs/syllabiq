@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { SubscriptionState } from "@/lib/types";
+import { useAuth } from "@/lib/auth-context";
 
 interface Props {
   onClose: () => void;
@@ -25,6 +26,7 @@ interface Props {
 }
 
 export function StripePaywallModal({ onClose, onSubscriptionUpdated }: Props) {
+  const { user, updateUserProStatus } = useAuth();
   const [sub, setSub] = useState<SubscriptionState | null>(null);
   const [cardNumber, setCardNumber] = useState("4242 •••• •••• 4242");
   const [cardExpiry, setCardExpiry] = useState("12/28");
@@ -54,14 +56,22 @@ export function StripePaywallModal({ onClose, onSubscriptionUpdated }: Props) {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "subscribe" })
+        body: JSON.stringify({
+          action: "subscribe",
+          email: user?.email || "student@syllabiq.app",
+          name: user?.name || "SyllabiQ Student"
+        })
       });
       const data = await res.json();
       if (res.ok && data.subscription) {
         setSub(data.subscription);
+        updateUserProStatus(true);
         onSubscriptionUpdated?.(data.subscription);
         confetti({ particleCount: 80, spread: 70, origin: { y: 0.5 } });
-        setSuccessMessage("🎉 Welcome to SyllabiQ Pro! Your first 30 days are 100% free.");
+        setSuccessMessage("🎉 Welcome to SyllabiQ Pro! Your first 30 days are 100% free. All features unlocked.");
+        setTimeout(() => {
+          onClose();
+        }, 1200);
       }
     } finally {
       setIsProcessing(false);
@@ -80,6 +90,7 @@ export function StripePaywallModal({ onClose, onSubscriptionUpdated }: Props) {
       const data = await res.json();
       if (res.ok && data.subscription) {
         setSub(data.subscription);
+        updateUserProStatus(false);
         onSubscriptionUpdated?.(data.subscription);
         setSuccessMessage("Subscription cancelled. You remain on the Free plan.");
       }

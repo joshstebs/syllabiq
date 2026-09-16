@@ -64,12 +64,22 @@ import { SemesterTimelineModal } from "@/components/semester-timeline-modal";
 import { AuthModal } from "@/components/auth-modal";
 import { AdminPanelModal } from "@/components/admin-panel-modal";
 import { Footer } from "@/components/footer";
+import { useAuth } from "@/lib/auth-context";
 
 export default function SyllabiQDashboard() {
+  const { user } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
   const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSyncing, setIsSyncing] = useState(false);
+
+  const requirePro = async (action: () => void | Promise<void>): Promise<void> => {
+    if (user?.isPro) {
+      await action();
+    } else {
+      setShowPaywallModal(true);
+    }
+  };
   const [activeMainTab, setActiveMainTab] = useState<TabMode>("TIMELINE");
   const [showDropzone, setShowDropzone] = useState(false);
   const [showCoursicleModal, setShowCoursicleModal] = useState(false);
@@ -193,23 +203,23 @@ export default function SyllabiQDashboard() {
 
       {/* Top Navbar */}
       <Navbar
-        onOpenLmsModal={() => setShowLmsModal(true)}
-        onOpenSheetsModal={() => setShowSheetsModal(true)}
-        onOpenGradeModal={() => setShowGradeModal(true)}
-        onOpenDispatchModal={() => setShowDispatchModal(true)}
-        onOpenLockerModal={() => setShowLockerModal(true)}
-        onOpenAudioModal={() => setShowAudioModal(true)}
-        onOpenShareModal={() => setShowShareModal(true)}
+        onOpenLmsModal={() => requirePro(() => setShowLmsModal(true))}
+        onOpenSheetsModal={() => requirePro(() => setShowSheetsModal(true))}
+        onOpenGradeModal={() => requirePro(() => setShowGradeModal(true))}
+        onOpenDispatchModal={() => requirePro(() => setShowDispatchModal(true))}
+        onOpenLockerModal={() => requirePro(() => setShowLockerModal(true))}
+        onOpenAudioModal={() => requirePro(() => setShowAudioModal(true))}
+        onOpenShareModal={() => requirePro(() => setShowShareModal(true))}
         onOpenMobileModal={() => setShowMobileModal(true)}
-        onOpenHomeworkModal={() => setShowHomeworkModal(true)}
-        onOpenColorModal={() => setShowColorModal(true)}
-        onOpenPeerModal={() => setShowPeerModal(true)}
+        onOpenHomeworkModal={() => requirePro(() => setShowHomeworkModal(true))}
+        onOpenColorModal={() => requirePro(() => setShowColorModal(true))}
+        onOpenPeerModal={() => requirePro(() => setShowPeerModal(true))}
         onOpenPaywallModal={() => setShowPaywallModal(true)}
-        onOpenBackgroundModal={() => setShowBackgroundModal(true)}
-        onOpenCloudVaultModal={() => setShowCloudVaultModal(true)}
+        onOpenBackgroundModal={() => requirePro(() => setShowBackgroundModal(true))}
+        onOpenCloudVaultModal={() => requirePro(() => setShowCloudVaultModal(true))}
         onOpenAuthModal={() => setShowAuthModal(true)}
         onOpenAdminPanel={() => setShowAdminModal(true)}
-        onSyncAll={handleSyncAll}
+        onSyncAll={() => requirePro(handleSyncAll)}
         isSyncing={isSyncing}
       />
 
@@ -217,6 +227,7 @@ export default function SyllabiQDashboard() {
         {/* TOP NOTIFICATION BAR: Urgent countdown & phone alerts */}
         <NotificationBar
           tasks={tasks}
+          isPro={user?.isPro}
           onOpenPaywall={() => setShowPaywallModal(true)}
         />
 
@@ -253,14 +264,14 @@ export default function SyllabiQDashboard() {
             </button>
 
             <button
-              onClick={() => setShowDropzone(true)}
+              onClick={() => requirePro(() => setShowDropzone(true))}
               className="rounded-full bg-blue-600 px-7 py-2.5 text-sm font-extrabold text-white shadow-md shadow-blue-500/30 hover:bg-blue-700 transition cursor-pointer"
             >
               Upload Syllabus Here
             </button>
 
             <button
-              onClick={() => setShowLmsModal(true)}
+              onClick={() => requirePro(() => setShowLmsModal(true))}
               className="rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-6 py-2.5 text-sm font-extrabold shadow-xs hover:bg-slate-800 dark:hover:bg-slate-200 transition cursor-pointer"
             >
               Connect Canvas
@@ -301,6 +312,8 @@ export default function SyllabiQDashboard() {
         {showDropzone && (
           <section className="max-w-4xl mx-auto animate-fade-in">
             <SyllabusDropzone
+              isPro={user?.isPro}
+              onOpenPaywall={() => setShowPaywallModal(true)}
               onCommitSuccess={async () => {
                 await fetchDashboardData();
                 setShowDropzone(false);
@@ -396,8 +409,8 @@ export default function SyllabiQDashboard() {
         {/* DORMWAY "CHOOSE HOW YOU START" INTERACTIVE SELECTOR WIDGET */}
         <section className="space-y-3">
           <DormwayStartWidget
-            onOpenUpload={() => setShowDropzone(true)}
-            onOpenCanvas={() => setShowLmsModal(true)}
+            onOpenUpload={() => requirePro(() => setShowDropzone(true))}
+            onOpenCanvas={() => requirePro(() => setShowLmsModal(true))}
           />
         </section>
 
@@ -466,8 +479,8 @@ export default function SyllabiQDashboard() {
               tasks={tasks}
               courses={courses}
               onUpdateTask={handleUpdateTask}
-              onDeconstructTask={handleDeconstructTask}
-              onOpenGradeModal={() => setShowGradeModal(true)}
+              onDeconstructTask={(id) => requirePro(() => handleDeconstructTask(id))}
+              onOpenGradeModal={() => requirePro(() => setShowGradeModal(true))}
             />
           </section>
         )}
@@ -570,7 +583,7 @@ export default function SyllabiQDashboard() {
               {/* Action Buttons Bar */}
               <div className="flex flex-wrap items-center gap-2 pt-1">
                 <button
-                  onClick={() => setShowLockerModal(true)}
+                  onClick={() => requirePro(() => setShowLockerModal(true))}
                   className="flex items-center space-x-2 rounded-xl bg-slate-900 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-slate-800 transition cursor-pointer"
                 >
                   <FolderLock className="h-4 w-4" />
@@ -578,7 +591,7 @@ export default function SyllabiQDashboard() {
                 </button>
 
                 <button
-                  onClick={() => setShowDropzone(true)}
+                  onClick={() => requirePro(() => setShowDropzone(true))}
                   className="flex items-center space-x-2 rounded-xl bg-slate-900 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-slate-800 transition cursor-pointer"
                 >
                   <Plus className="h-4 w-4" />
@@ -586,7 +599,7 @@ export default function SyllabiQDashboard() {
                 </button>
 
                 <button
-                  onClick={() => setShowGradeModal(true)}
+                  onClick={() => requirePro(() => setShowGradeModal(true))}
                   className="flex items-center space-x-2 rounded-xl bg-slate-900 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-slate-800 transition cursor-pointer"
                 >
                   <Palette className="h-4 w-4" />
@@ -594,7 +607,7 @@ export default function SyllabiQDashboard() {
                 </button>
 
                 <button
-                  onClick={handleSyncAll}
+                  onClick={() => requirePro(handleSyncAll)}
                   disabled={isSyncing}
                   className="flex items-center space-x-2 rounded-xl bg-slate-900 px-4 py-2 text-xs font-bold text-white shadow-xs hover:bg-slate-800 transition cursor-pointer disabled:opacity-50"
                 >
@@ -657,7 +670,7 @@ export default function SyllabiQDashboard() {
                             })}
                           </span>
                           <button
-                            onClick={() => handleDeconstructTask(t.id)}
+                            onClick={() => requirePro(() => handleDeconstructTask(t.id))}
                             className="text-slate-400 hover:text-slate-700 p-1 cursor-pointer"
                             title="Break down with AI"
                           >
@@ -763,22 +776,22 @@ export default function SyllabiQDashboard() {
           <ScheduleTimeline
             tasks={tasks}
             onUpdateTask={handleUpdateTask}
-            onDeconstructTask={handleDeconstructTask}
+            onDeconstructTask={(id) => requirePro(() => handleDeconstructTask(id))}
           />
         </section>
 
         {/* DORMWAY HALLMARK SHOWCASE SECTIONS: Canvas Sync Without IT, Forward a Syllabus Breakdown, Founder Story */}
         <section className="space-y-12">
           <DormwayShowcaseSections
-            onOpenCanvas={() => setShowLmsModal(true)}
-            onOpenUpload={() => setShowDropzone(true)}
+            onOpenCanvas={() => requirePro(() => setShowLmsModal(true))}
+            onOpenUpload={() => requirePro(() => setShowDropzone(true))}
           />
         </section>
 
         {/* 5 FEATURE CARDS */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           <div
-            onClick={() => setShowDropzone(true)}
+            onClick={() => requirePro(() => setShowDropzone(true))}
             className="paper-card-interactive p-5 space-y-2 cursor-pointer"
           >
             <div className="text-2xl">📅</div>
@@ -789,7 +802,7 @@ export default function SyllabiQDashboard() {
           </div>
 
           <div
-            onClick={() => setShowHomeworkModal(true)}
+            onClick={() => requirePro(() => setShowHomeworkModal(true))}
             className="paper-card-interactive p-5 space-y-2 cursor-pointer border-indigo-200 bg-indigo-50/20"
           >
             <div className="text-2xl">📸</div>
@@ -800,7 +813,7 @@ export default function SyllabiQDashboard() {
           </div>
 
           <div
-            onClick={() => setShowPeerModal(true)}
+            onClick={() => requirePro(() => setShowPeerModal(true))}
             className="paper-card-interactive p-5 space-y-2 cursor-pointer border-emerald-200 bg-emerald-50/20"
           >
             <div className="text-2xl">👥</div>
@@ -811,7 +824,7 @@ export default function SyllabiQDashboard() {
           </div>
 
           <div
-            onClick={() => setShowAudioModal(true)}
+            onClick={() => requirePro(() => setShowAudioModal(true))}
             className="paper-card-interactive p-5 space-y-2 cursor-pointer"
           >
             <div className="text-2xl">🎙️</div>
@@ -822,7 +835,7 @@ export default function SyllabiQDashboard() {
           </div>
 
           <div
-            onClick={() => setShowGradeModal(true)}
+            onClick={() => requirePro(() => setShowGradeModal(true))}
             className="paper-card-interactive p-5 space-y-2 cursor-pointer"
           >
             <div className="text-2xl">✨</div>
@@ -833,7 +846,7 @@ export default function SyllabiQDashboard() {
           </div>
 
           <div
-            onClick={() => setShowCloudVaultModal(true)}
+            onClick={() => requirePro(() => setShowCloudVaultModal(true))}
             className="paper-card-interactive p-5 space-y-2 cursor-pointer border-blue-200 dark:border-blue-800 bg-blue-50/20 dark:bg-blue-950/20"
           >
             <div className="text-2xl">☁️</div>
@@ -844,7 +857,7 @@ export default function SyllabiQDashboard() {
           </div>
 
           <div
-            onClick={() => setShowBackgroundModal(true)}
+            onClick={() => requirePro(() => setShowBackgroundModal(true))}
             className="paper-card-interactive p-5 space-y-2 cursor-pointer border-purple-200 dark:border-purple-800 bg-purple-50/20 dark:bg-purple-950/20"
           >
             <div className="text-2xl">🖼️</div>
@@ -871,7 +884,11 @@ export default function SyllabiQDashboard() {
         {/* VIEW 4: FLASHCARDS & STUDY DECKS */}
         {activeMainTab === "FLASHCARDS" && (
           <section className="space-y-4 animate-fade-in">
-            <FlashcardsTab courses={courses} />
+            <FlashcardsTab
+              courses={courses}
+              isPro={user?.isPro}
+              onOpenPaywall={() => setShowPaywallModal(true)}
+            />
           </section>
         )}
 

@@ -40,6 +40,16 @@ export const TESTER_USER: UserProfile = {
   monthlyPrice: 5.0
 };
 
+export const FREE_VISITOR: UserProfile = {
+  id: "guest-visitor",
+  name: "Guest Student",
+  email: "student@syllabiq.app",
+  role: "STUDENT",
+  avatar: "🎓",
+  isPro: false,
+  provider: "email"
+};
+
 interface AuthContextType {
   user: UserProfile | null;
   loginWithCredentials: (email: string, pass: string) => boolean;
@@ -54,7 +64,7 @@ interface AuthContextType {
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [user, setUser] = useState<UserProfile | null>(TESTER_USER);
+  const [user, setUser] = useState<UserProfile | null>(FREE_VISITOR);
 
   useEffect(() => {
     try {
@@ -74,18 +84,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             trialEndsAt: new Date(Date.now() + 30 * 86400000).toISOString(),
             monthlyPrice: 5.0
           };
+          localStorage.setItem("syllabiq_explicit_session", "true");
           saveUser(googleUser);
           window.history.replaceState({}, document.title, window.location.pathname);
           return;
         }
       }
 
+      const hasExplicitSession = localStorage.getItem("syllabiq_explicit_session");
       const stored = localStorage.getItem("syllabiq_auth_user");
-      if (stored) {
+      if (hasExplicitSession && stored) {
         setUser(JSON.parse(stored));
       } else {
-        setUser(TESTER_USER);
-        localStorage.setItem("syllabiq_auth_user", JSON.stringify(TESTER_USER));
+        setUser(FREE_VISITOR);
+        localStorage.setItem("syllabiq_auth_user", JSON.stringify(FREE_VISITOR));
       }
     } catch (e) {
       console.error(e);
@@ -104,10 +116,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const loginWithCredentials = (email: string, pass: string): boolean => {
     const cleanEmail = email.trim().toLowerCase();
     if (cleanEmail === "admin@syllabiq.app" || cleanEmail === "josh.stebs@gmail.com") {
+      localStorage.setItem("syllabiq_explicit_session", "true");
       saveUser(ADMIN_USER);
       return true;
     }
     if (cleanEmail === "tester@syllabiq.app") {
+      localStorage.setItem("syllabiq_explicit_session", "true");
       saveUser(TESTER_USER);
       return true;
     }
@@ -121,6 +135,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       isPro: false,
       provider: "email"
     };
+    localStorage.setItem("syllabiq_explicit_session", "true");
     saveUser(newUser);
     return true;
   };
@@ -141,14 +156,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       trialEndsAt: new Date(Date.now() + 30 * 86400000).toISOString(),
       monthlyPrice: 5.0
     };
+    localStorage.setItem("syllabiq_explicit_session", "true");
     saveUser(googleUser);
   };
 
   const loginWithAdminPreset = () => {
+    localStorage.setItem("syllabiq_explicit_session", "true");
     saveUser(ADMIN_USER);
   };
 
   const loginWithTesterPreset = () => {
+    localStorage.setItem("syllabiq_explicit_session", "true");
     saveUser(TESTER_USER);
   };
 
@@ -164,21 +182,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       trialEndsAt: new Date(Date.now() + 30 * 86400000).toISOString(),
       monthlyPrice: 5.0
     };
+    localStorage.setItem("syllabiq_explicit_session", "true");
     saveUser(netUser);
   };
 
   const logout = () => {
-    saveUser(null);
+    localStorage.removeItem("syllabiq_explicit_session");
+    saveUser(FREE_VISITOR);
   };
 
   const updateUserProStatus = (isPro: boolean) => {
-    if (!user) return;
-    const updated = {
-      ...user,
+    const baseUser = user && user.id !== "guest-visitor" ? user : FREE_VISITOR;
+    const updated: UserProfile = {
+      ...baseUser,
+      id: isPro && baseUser.id === "guest-visitor" ? `user-pro-${Date.now()}` : baseUser.id,
+      name: isPro && baseUser.id === "guest-visitor" ? "Pro Student" : baseUser.name,
       isPro,
       trialEndsAt: isPro ? new Date(Date.now() + 30 * 86400000).toISOString() : undefined,
       monthlyPrice: isPro ? 5.0 : 0
     };
+    if (isPro) {
+      localStorage.setItem("syllabiq_explicit_session", "true");
+    }
     saveUser(updated);
   };
 

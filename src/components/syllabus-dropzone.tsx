@@ -10,9 +10,11 @@ import { ReviewDrawer } from "./review-drawer";
 
 interface Props {
   onCommitSuccess?: (courseCode: string) => void;
+  isPro?: boolean;
+  onOpenPaywall?: () => void;
 }
 
-export function SyllabusDropzone({ onCommitSuccess }: Props) {
+export function SyllabusDropzone({ onCommitSuccess, isPro = false, onOpenPaywall }: Props) {
   const [file, setFile] = useState<File | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [currentStage, setCurrentStage] = useState("");
@@ -20,6 +22,10 @@ export function SyllabusDropzone({ onCommitSuccess }: Props) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const processTextOrSample = async (sampleId?: string, uploadedFile?: File) => {
+    if (!isPro) {
+      onOpenPaywall?.();
+      return;
+    }
     setIsProcessing(true);
     try {
       setCurrentStage("1/4: Analyzing document layout & reading tables...");
@@ -64,11 +70,15 @@ export function SyllabusDropzone({ onCommitSuccess }: Props) {
   };
 
   const onDrop = useCallback(async (acceptedFiles: File[]) => {
+    if (!isPro) {
+      onOpenPaywall?.();
+      return;
+    }
     if (!acceptedFiles.length) return;
     const f = acceptedFiles[0];
     setFile(f);
     await processTextOrSample(undefined, f);
-  }, []);
+  }, [isPro, onOpenPaywall]);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,

@@ -20,10 +20,11 @@ import { TaskItem, NotificationSettings } from "@/lib/types";
 
 interface Props {
   tasks: TaskItem[];
+  isPro?: boolean;
   onOpenPaywall?: () => void;
 }
 
-export function NotificationBar({ tasks, onOpenPaywall }: Props) {
+export function NotificationBar({ tasks, isPro = false, onOpenPaywall }: Props) {
   const [isDismissed, setIsDismissed] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [settings, setSettings] = useState<NotificationSettings>({
@@ -161,13 +162,24 @@ export function NotificationBar({ tasks, onOpenPaywall }: Props) {
           {/* Quick Actions */}
           <div className="flex flex-wrap items-center gap-2 self-end sm:self-auto">
             <button
-              onClick={handleSendTestAlert}
+              onClick={() => {
+                if (!isPro) {
+                  onOpenPaywall?.();
+                  return;
+                }
+                handleSendTestAlert();
+              }}
               disabled={isSending}
               className="inline-flex items-center gap-1.5 rounded-xl bg-amber-500 hover:bg-amber-600 text-white text-xs font-black px-3.5 py-1.5 transition cursor-pointer shadow-2xs disabled:opacity-50"
               title="Test real SMS push alert to your phone"
             >
               <Smartphone className="h-3.5 w-3.5" />
               <span>{isSending ? "Sending..." : "Alert Phone"}</span>
+              {!isPro && (
+                <span className="text-[9px] bg-slate-900 text-amber-300 font-extrabold px-1.5 py-0.2 rounded-md ml-1">
+                  PRO
+                </span>
+              )}
             </button>
 
             <button

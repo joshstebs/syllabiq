@@ -268,15 +268,15 @@ const INITIAL_STORE: SyllabiQStore = {
   ],
   subscription: {
     tier: "FREE",
-    status: "ACTIVE_TRIAL",
-    trialDaysRemaining: 28,
-    trialEndsAt: new Date(Date.now() + 28 * 86400000).toISOString(),
-    currentPeriodEnd: new Date(Date.now() + 28 * 86400000).toISOString(),
+    status: "CANCELLED",
+    trialDaysRemaining: 0,
+    trialEndsAt: new Date().toISOString(),
+    currentPeriodEnd: new Date().toISOString(),
     monthlyPrice: 5.0,
     stripeCustomerId: null,
     stripeSubscriptionId: null,
-    homeworkUploadsCount: 1,
-    homeworkUploadsLimit: 3
+    homeworkUploadsCount: 0,
+    homeworkUploadsLimit: 0
   },
   notifications: {
     phone: "+1 (607) 555-0199",
