@@ -28,7 +28,7 @@ export function DormwayStartWidget({ onOpenUpload, onOpenCanvas }: Props) {
   const [copiedEmail, setCopiedEmail] = useState(false);
 
   const handleCopyEmail = () => {
-    navigator.clipboard.writeText("syllabus@syllabiq.app");
+    navigator.clipboard.writeText("support@syllabiq.ca");
     setCopiedEmail(true);
     setTimeout(() => setCopiedEmail(false), 2500);
   };
@@ -196,7 +196,7 @@ export function DormwayStartWidget({ onOpenUpload, onOpenCanvas }: Props) {
                       </span>
                     </div>
                     <p className="mt-0.5 text-xs text-slate-500 font-medium">
-                      Send to your unique address or syllabus@syllabiq.app
+                      Send to your unique address or support@syllabiq.ca
                     </p>
                   </div>
                 </div>
@@ -204,7 +204,7 @@ export function DormwayStartWidget({ onOpenUpload, onOpenCanvas }: Props) {
                 <div className="bg-amber-50/70 border border-amber-200 rounded-xl p-3 space-y-2">
                   <div className="flex items-center justify-between">
                     <code className="text-xs font-mono font-bold text-amber-950">
-                      syllabus@syllabiq.app
+                      support@syllabiq.ca
                     </code>
                     <button
                       onClick={handleCopyEmail}

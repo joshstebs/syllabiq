@@ -19,7 +19,7 @@ export interface UserProfile {
 export const ADMIN_USER: UserProfile = {
   id: "user-admin-01",
   name: "Josh Stebs",
-  email: "admin@syllabiq.app",
+  email: "support@syllabiq.ca",
   role: "ADMIN",
   avatar: "👨‍💼",
   isPro: true,
@@ -31,7 +31,7 @@ export const ADMIN_USER: UserProfile = {
 export const TESTER_USER: UserProfile = {
   id: "user-tester-02",
   name: "Alex Cornell",
-  email: "tester@syllabiq.app",
+  email: "tester@syllabiq.ca",
   role: "TESTER",
   avatar: "🧑‍🎓",
   isPro: true,
@@ -43,7 +43,7 @@ export const TESTER_USER: UserProfile = {
 export const FREE_VISITOR: UserProfile = {
   id: "guest-visitor",
   name: "Guest Student",
-  email: "student@syllabiq.app",
+  email: "student@syllabiq.ca",
   role: "STUDENT",
   avatar: "🎓",
   isPro: false,
@@ -115,12 +115,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const loginWithCredentials = (email: string, pass: string): boolean => {
     const cleanEmail = email.trim().toLowerCase();
-    if (cleanEmail === "admin@syllabiq.app" || cleanEmail === "josh.stebs@gmail.com") {
+    if (
+      cleanEmail === "support@syllabiq.ca" ||
+      cleanEmail === "admin@syllabiq.ca" ||
+      cleanEmail === "admin@syllabiq.app" ||
+      cleanEmail === "josh.stebs@gmail.com"
+    ) {
       localStorage.setItem("syllabiq_explicit_session", "true");
       saveUser(ADMIN_USER);
       return true;
     }
-    if (cleanEmail === "tester@syllabiq.app") {
+    if (cleanEmail === "tester@syllabiq.ca" || cleanEmail === "tester@syllabiq.app") {
       localStorage.setItem("syllabiq_explicit_session", "true");
       saveUser(TESTER_USER);
       return true;

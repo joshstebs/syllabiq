@@ -79,6 +79,23 @@ export function ContactModal({ onClose }: Props) {
           </button>
         </div>
 
+        {/* Direct Email Support Banner */}
+        <div className="flex items-center justify-between p-3 rounded-2xl bg-indigo-50/80 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-900/60 text-xs">
+          <div className="flex items-center space-x-2">
+            <Mail className="h-4 w-4 text-indigo-600 dark:text-indigo-400 shrink-0" />
+            <span className="text-slate-600 dark:text-slate-300 text-[11px]">Direct Support:</span>
+            <a
+              href="mailto:support@syllabiq.ca"
+              className="font-black text-indigo-600 dark:text-indigo-400 hover:underline text-[11px]"
+            >
+              support@syllabiq.ca
+            </a>
+          </div>
+          <span className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 bg-emerald-100 dark:bg-emerald-950 px-2 py-0.5 rounded-full">
+            Active 24/7
+          </span>
+        </div>
+
         {isSubmitted ? (
           <div className="text-center py-8 space-y-4">
             <div className="mx-auto h-16 w-16 rounded-full bg-emerald-100 dark:bg-emerald-950/80 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
@@ -87,7 +104,7 @@ export function ContactModal({ onClose }: Props) {
             <div className="space-y-1.5">
               <h4 className="text-lg font-black text-slate-900 dark:text-white">Message Dispatched!</h4>
               <p className="text-xs text-slate-600 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
-                Thank you for reaching out, <strong>{name}</strong>. The Harbour and Main engineering team will review your note and follow up at <strong>{email}</strong> shortly.
+                Thank you for reaching out, <strong>{name}</strong>. The Harbour and Main team will review your note and follow up from <strong>support@syllabiq.ca</strong> to <strong>{email}</strong> shortly.
               </p>
             </div>
             <button

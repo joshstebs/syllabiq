@@ -12,9 +12,9 @@ interface Props {
 export function ShareScheduleModal({ onClose }: Props) {
   const [copiedKey, setCopiedKey] = useState<string | null>(null);
 
-  const publicUrl = "https://syllabiq.app/p/alex-cornell-fall2026";
-  const gcalShareUrl = "https://calendar.google.com/calendar/r?cid=webcal_syllabiq_alex";
-  const icalSubscribeUrl = "webcal://syllabiq.app/api/ical/feed/alex-user-token.ics";
+  const publicUrl = "https://syllabiq.ca/p/alex-cornell-fall2026";
+  const gcalShareUrl = "https://calendar.google.com/calendar/r?cid=" + encodeURIComponent("https://syllabiq.ca/api/calendar/feed");
+  const icalSubscribeUrl = "webcal://syllabiq.ca/api/calendar/feed";
 
   const copyToClipboard = (text: string, key: string) => {
     navigator.clipboard.writeText(text);
@@ -85,28 +85,39 @@ export function ShareScheduleModal({ onClose }: Props) {
           <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-2">
             <div className="flex items-center justify-between text-xs font-bold text-slate-800">
               <span className="flex items-center gap-1.5">
-                <Calendar className="h-4 w-4 text-emerald-600" /> 1-Click Google Calendar Share
+                <Calendar className="h-4 w-4 text-emerald-600" /> 1-Click Google Calendar 2-Way Sync
               </span>
               <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">
                 Google Cal
               </span>
             </div>
             <p className="text-[11px] text-slate-500">
-              Overlay your color-coded semester deadlines directly onto a study partner's calendar.
+              Sync color-coded semester deadlines &amp; AI milestone prep buffers directly into Google Calendar.
             </p>
-            <div className="flex items-center space-x-2 pt-1">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 pt-1">
               <input
                 readOnly
                 value={gcalShareUrl}
                 className="w-full bg-white rounded-xl px-3 py-2 text-xs text-slate-700 border border-slate-300 font-mono select-all shadow-2xs"
               />
-              <button
-                onClick={() => copyToClipboard(gcalShareUrl, "gcal")}
-                className="flex items-center space-x-1.5 rounded-xl bg-emerald-600 px-4 py-2 text-xs font-bold text-white shadow hover:bg-emerald-700 transition shrink-0 cursor-pointer"
-              >
-                {copiedKey === "gcal" ? <CheckCircle2 className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
-                <span>{copiedKey === "gcal" ? "Copied!" : "Copy"}</span>
-              </button>
+              <div className="flex items-center gap-1.5 shrink-0">
+                <a
+                  href={gcalShareUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-1 rounded-xl bg-emerald-600 hover:bg-emerald-700 px-3 py-2 text-xs font-bold text-white shadow transition cursor-pointer"
+                  title="Open in Google Calendar"
+                >
+                  <span>Add to Google Cal ↗</span>
+                </a>
+                <button
+                  onClick={() => copyToClipboard(gcalShareUrl, "gcal")}
+                  className="flex items-center space-x-1 rounded-xl bg-slate-200 hover:bg-slate-300 text-slate-800 px-3 py-2 text-xs font-bold shadow-xs transition cursor-pointer"
+                >
+                  {copiedKey === "gcal" ? <CheckCircle2 className="h-3.5 w-3.5 text-emerald-600" /> : <Copy className="h-3.5 w-3.5" />}
+                  <span>{copiedKey === "gcal" ? "Copied!" : "Copy"}</span>
+                </button>
+              </div>
             </div>
           </div>
 

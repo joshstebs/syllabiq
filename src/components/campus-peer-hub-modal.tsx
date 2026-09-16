@@ -80,7 +80,7 @@ export function CampusPeerHubModal({ courses, onClose }: Props) {
   };
 
   const handleCopyLink = (noteId: string) => {
-    const link = `https://syllabiq.app/notes/${noteId}`;
+    const link = `https://syllabiq.ca/notes/${noteId}`;
     navigator.clipboard.writeText(link);
     setCopiedLink(noteId);
     setTimeout(() => setCopiedLink(null), 2500);

@@ -9,12 +9,18 @@ interface Props {
   onOpenContactModal: () => void;
   onOpenCloudVault?: () => void;
   onOpenWallpaper?: () => void;
+  onOpenCalendarSync?: () => void;
+  onOpenSheetsModal?: () => void;
+  onOpenHomeworkModal?: () => void;
 }
 
 export function Footer({
   onOpenContactModal,
   onOpenCloudVault,
-  onOpenWallpaper
+  onOpenWallpaper,
+  onOpenCalendarSync,
+  onOpenSheetsModal,
+  onOpenHomeworkModal
 }: Props) {
   return (
     <footer className="relative z-10 w-full border-t border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#0E1526]/90 backdrop-blur-md transition-colors duration-200 text-slate-600 dark:text-slate-400 mt-16">
@@ -88,14 +94,14 @@ export function Footer({
             <h4 className="font-extrabold text-slate-900 dark:text-slate-200 uppercase tracking-wider text-[11px]">
               Cloud &amp; Customization
             </h4>
-            <ul className="space-y-2">
+            <ul className="space-y-2.5">
               {onOpenCloudVault && (
                 <li>
                   <button
                     onClick={onOpenCloudVault}
-                    className="hover:text-blue-600 dark:hover:text-blue-400 font-medium transition text-left cursor-pointer"
+                    className="hover:text-blue-600 dark:hover:text-blue-400 font-medium transition text-left cursor-pointer flex items-center gap-1.5"
                   >
-                    Google Cloud Papers Vault
+                    <span>Google Cloud Papers Vault</span>
                   </button>
                 </li>
               )}
@@ -103,20 +109,80 @@ export function Footer({
                 <li>
                   <button
                     onClick={onOpenWallpaper}
-                    className="hover:text-blue-600 dark:hover:text-blue-400 font-medium transition text-left cursor-pointer"
+                    className="hover:text-blue-600 dark:hover:text-blue-400 font-medium transition text-left cursor-pointer flex items-center gap-1.5"
                   >
-                    Custom Background Wallpapers
+                    <span>Custom Background Wallpapers</span>
                   </button>
                 </li>
               )}
               <li>
-                <span className="text-slate-400">Google Calendar 2-Way Sync</span>
+                {onOpenCalendarSync ? (
+                  <button
+                    onClick={onOpenCalendarSync}
+                    className="hover:text-blue-600 dark:hover:text-blue-400 font-medium transition text-left cursor-pointer flex items-center gap-2 group"
+                  >
+                    <span>Google Calendar 2-Way Sync</span>
+                    <span className="text-[9px] bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-bold px-1.5 py-0.2 rounded group-hover:bg-blue-200 dark:group-hover:bg-blue-900 transition-colors">
+                      LIVE
+                    </span>
+                  </button>
+                ) : (
+                  <Link
+                    href="/#schedule"
+                    className="hover:text-blue-600 dark:hover:text-blue-400 font-medium transition text-left cursor-pointer flex items-center gap-2"
+                  >
+                    <span>Google Calendar 2-Way Sync</span>
+                    <span className="text-[9px] bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-bold px-1.5 py-0.2 rounded">
+                      LIVE
+                    </span>
+                  </Link>
+                )}
               </li>
               <li>
-                <span className="text-slate-400">Google Sheets Tracker</span>
+                {onOpenSheetsModal ? (
+                  <button
+                    onClick={onOpenSheetsModal}
+                    className="hover:text-emerald-600 dark:hover:text-emerald-400 font-medium transition text-left cursor-pointer flex items-center gap-2 group"
+                  >
+                    <span>Google Sheets Tracker</span>
+                    <span className="text-[9px] bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold px-1.5 py-0.2 rounded group-hover:bg-emerald-200 dark:group-hover:bg-emerald-900 transition-colors">
+                      NEW
+                    </span>
+                  </button>
+                ) : (
+                  <Link
+                    href="/#schedule"
+                    className="hover:text-emerald-600 dark:hover:text-emerald-400 font-medium transition text-left cursor-pointer flex items-center gap-2"
+                  >
+                    <span>Google Sheets Tracker</span>
+                    <span className="text-[9px] bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-bold px-1.5 py-0.2 rounded">
+                      NEW
+                    </span>
+                  </Link>
+                )}
               </li>
               <li>
-                <span className="text-slate-400">Vision OCR Homework Scanner</span>
+                {onOpenHomeworkModal ? (
+                  <button
+                    onClick={onOpenHomeworkModal}
+                    className="hover:text-purple-600 dark:hover:text-purple-400 font-medium transition text-left cursor-pointer flex items-center gap-2 group"
+                  >
+                    <span>Vision OCR Homework Scanner</span>
+                    <span className="text-[9px] bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 font-bold px-1.5 py-0.2 rounded group-hover:bg-purple-200 dark:group-hover:bg-purple-900 transition-colors">
+                      AI
+                    </span>
+                  </button>
+                ) : (
+                  <Link
+                    href="/#schedule"
+                    className="hover:text-purple-600 dark:hover:text-purple-400 font-medium transition text-left cursor-pointer flex items-center gap-2"
+                  >
+                    <span>Vision OCR Homework Scanner</span>
+                    <span className="text-[9px] bg-purple-100 dark:bg-purple-950 text-purple-700 dark:text-purple-300 font-bold px-1.5 py-0.2 rounded">
+                      AI
+                    </span>
+                  </Link>
+                )}
               </li>
             </ul>
           </div>
@@ -130,13 +196,25 @@ export function Footer({
               Have questions, feedback, or want to partner on your campus?
             </p>
 
-            <button
-              onClick={onOpenContactModal}
-              className="inline-flex items-center space-x-2 rounded-2xl bg-indigo-600 hover:bg-indigo-700 px-4 py-2.5 text-xs font-bold text-white shadow-sm shadow-indigo-500/25 transition cursor-pointer"
-            >
-              <Mail className="h-3.5 w-3.5" />
-              <span>Contact Us</span>
-            </button>
+            <div className="space-y-2">
+              <a
+                href="mailto:support@syllabiq.ca"
+                className="inline-flex items-center space-x-1.5 text-xs font-bold text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                <Mail className="h-3.5 w-3.5" />
+                <span>support@syllabiq.ca</span>
+              </a>
+
+              <div>
+                <button
+                  onClick={onOpenContactModal}
+                  className="inline-flex items-center space-x-2 rounded-2xl bg-indigo-600 hover:bg-indigo-700 px-4 py-2.5 text-xs font-bold text-white shadow-sm shadow-indigo-500/25 transition cursor-pointer"
+                >
+                  <Mail className="h-3.5 w-3.5" />
+                  <span>Contact Us</span>
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 

@@ -168,7 +168,7 @@ export function AuthModal({ isOpen, onClose, onOpenAdminPanel }: Props) {
                 <div className="bg-white/80 dark:bg-slate-900/80 rounded-xl p-2.5 border border-indigo-100 dark:border-indigo-900/40 text-xs space-y-1.5 font-mono">
                   <div className="flex items-center justify-between">
                     <span className="text-slate-500">Email:</span>
-                    <span className="font-bold text-slate-900 dark:text-slate-200">admin@syllabiq.app</span>
+                    <span className="font-bold text-slate-900 dark:text-slate-200">support@syllabiq.ca</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-slate-500">Password:</span>
@@ -193,7 +193,7 @@ export function AuthModal({ isOpen, onClose, onOpenAdminPanel }: Props) {
                   </button>
 
                   <button
-                    onClick={() => handleCopy("admin@syllabiq.app / AdminPassword2026!", "admin")}
+                    onClick={() => handleCopy("support@syllabiq.ca / AdminPassword2026!", "admin")}
                     className="px-3 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 text-xs font-bold transition cursor-pointer"
                     title="Copy Credentials"
                   >
@@ -228,7 +228,7 @@ export function AuthModal({ isOpen, onClose, onOpenAdminPanel }: Props) {
                 <div className="bg-white/80 dark:bg-slate-900/80 rounded-xl p-2.5 border border-emerald-100 dark:border-emerald-900/40 text-xs space-y-1.5 font-mono">
                   <div className="flex items-center justify-between">
                     <span className="text-slate-500">Email:</span>
-                    <span className="font-bold text-slate-900 dark:text-slate-200">tester@syllabiq.app</span>
+                    <span className="font-bold text-slate-900 dark:text-slate-200">tester@syllabiq.ca</span>
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-slate-500">Password:</span>
@@ -253,7 +253,7 @@ export function AuthModal({ isOpen, onClose, onOpenAdminPanel }: Props) {
                   </button>
 
                   <button
-                    onClick={() => handleCopy("tester@syllabiq.app / TesterPassword2026!", "tester")}
+                    onClick={() => handleCopy("tester@syllabiq.ca / TesterPassword2026!", "tester")}
                     className="px-3 py-2.5 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-300 hover:bg-slate-100 text-xs font-bold transition cursor-pointer"
                     title="Copy Credentials"
                   >

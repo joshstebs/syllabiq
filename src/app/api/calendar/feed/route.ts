@@ -26,11 +26,11 @@ export async function GET() {
       const now = new Date();
 
       const summary = `[${task.courseCode}] ${task.title}`;
-      const description = `${task.description || ""}\\n\\nType: ${task.type.toUpperCase()}\\nWeight: ${task.weightPercent}%\\nStatus: ${task.status}\\nManaged by SyllabiQ (syllabiq.app)`;
+      const description = `${task.description || ""}\\n\\nType: ${task.type.toUpperCase()}\\nWeight: ${task.weightPercent}%\\nStatus: ${task.status}\\nManaged by SyllabiQ (syllabiq.ca)`;
 
       icsContent.push(
         "BEGIN:VEVENT",
-        `UID:syllabiq-${task.id}@syllabiq.app`,
+        `UID:syllabiq-${task.id}@syllabiq.ca`,
         `DTSTAMP:${formatIcsDate(now)}`,
         `DTSTART:${formatIcsDate(startDate)}`,
         `DTEND:${formatIcsDate(dueDate)}`,

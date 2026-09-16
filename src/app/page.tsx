@@ -552,7 +552,7 @@ export default function SyllabiQDashboard() {
               </div>
 
               <div className="text-xs font-semibold text-slate-500 bg-white px-6 py-1 rounded-full border border-slate-200 shadow-2xs">
-                syllabiq.app/dashboard
+                syllabiq.ca/dashboard
               </div>
 
               <div className="text-xs text-slate-400 font-medium hidden sm:block">
@@ -1258,6 +1258,9 @@ export default function SyllabiQDashboard() {
         onOpenContactModal={() => setShowContactModal(true)}
         onOpenCloudVault={() => setShowCloudVaultModal(true)}
         onOpenWallpaper={() => setShowBackgroundModal(true)}
+        onOpenCalendarSync={() => setShowShareModal(true)}
+        onOpenSheetsModal={() => setShowSheetsModal(true)}
+        onOpenHomeworkModal={() => setShowHomeworkModal(true)}
       />
     </div>
   );

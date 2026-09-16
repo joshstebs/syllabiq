@@ -294,7 +294,7 @@ export default function FeaturesPage() {
                       <div className="h-3 w-3 rounded-full bg-rose-500" />
                       <div className="h-3 w-3 rounded-full bg-amber-500" />
                       <div className="h-3 w-3 rounded-full bg-emerald-500" />
-                      <span className="ml-4 font-mono text-slate-400 text-[11px]">https://syllabiq.app/dashboard</span>
+                      <span className="ml-4 font-mono text-slate-400 text-[11px]">https://syllabiq.ca/dashboard</span>
                     </div>
                     <div className="p-5 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900 space-y-3">
                       <div className="bg-indigo-600/20 border border-indigo-500/40 p-3 rounded-xl flex items-center justify-between text-xs">

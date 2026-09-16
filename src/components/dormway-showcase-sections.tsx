@@ -25,7 +25,7 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
   const [copiedEmail, setCopiedEmail] = useState(false);
 
   const handleCopyEmail = () => {
-    navigator.clipboard.writeText("syllabus@syllabiq.app");
+    navigator.clipboard.writeText("support@syllabiq.ca");
     setCopiedEmail(true);
     setTimeout(() => setCopiedEmail(false), 2500);
   };
@@ -264,7 +264,7 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
               </span>
               <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2 w-full min-w-0">
                 <code className="text-xs sm:text-sm font-mono font-bold text-slate-900 bg-white px-3 py-2 rounded-xl border border-slate-200 truncate select-all">
-                  syllabus@syllabiq.app
+                  support@syllabiq.ca
                 </code>
                 <button
                   type="button"

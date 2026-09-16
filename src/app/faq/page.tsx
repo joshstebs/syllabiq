@@ -132,7 +132,11 @@ export default function FAQPage() {
         <div className="p-6 bg-indigo-50 dark:bg-indigo-950/40 rounded-3xl border border-indigo-200 dark:border-indigo-800 text-center space-y-3">
           <h3 className="text-sm font-black text-slate-900 dark:text-white">Still have a question?</h3>
           <p className="text-xs text-slate-600 dark:text-slate-400">
-            Our student engineering team at Harbour and Main is always happy to help.
+            Our engineering team at Harbour and Main is always happy to help. Email us anytime at{" "}
+            <a href="mailto:support@syllabiq.ca" className="font-bold text-indigo-600 dark:text-indigo-400 hover:underline">
+              support@syllabiq.ca
+            </a>{" "}
+            or send a message below.
           </p>
           <button
             onClick={() => setShowContactModal(true)}

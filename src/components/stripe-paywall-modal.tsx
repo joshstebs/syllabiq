@@ -58,7 +58,7 @@ export function StripePaywallModal({ onClose, onSubscriptionUpdated }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           action: "subscribe",
-          email: user?.email || "student@syllabiq.app",
+          email: user?.email || "student@syllabiq.ca",
           name: user?.name || "SyllabiQ Student"
         })
       });
