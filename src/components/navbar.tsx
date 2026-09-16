@@ -71,15 +71,20 @@ export function Navbar({
   const { user, logout, loginWithAdminPreset, loginWithTesterPreset } = useAuth();
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showToolsMenu, setShowToolsMenu] = useState(false);
+  const [showMobileTools, setShowMobileTools] = useState(false);
 
-  const toolsRef = useRef<HTMLDivElement>(null);
+  const desktopToolsRef = useRef<HTMLDivElement>(null);
+  const mobileToolsRef = useRef<HTMLDivElement>(null);
   const userRef = useRef<HTMLDivElement>(null);
 
   // Close dropdowns on outside click
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (toolsRef.current && !toolsRef.current.contains(event.target as Node)) {
+      if (desktopToolsRef.current && !desktopToolsRef.current.contains(event.target as Node)) {
         setShowToolsMenu(false);
+      }
+      if (mobileToolsRef.current && !mobileToolsRef.current.contains(event.target as Node)) {
+        setShowMobileTools(false);
       }
       if (userRef.current && !userRef.current.contains(event.target as Node)) {
         setShowUserMenu(false);
@@ -92,39 +97,39 @@ export function Navbar({
   return (
     <header className="sticky top-0 z-40 w-full border-b border-slate-200 dark:border-slate-800 bg-white/95 dark:bg-[#131B2E]/95 backdrop-blur-md transition-colors duration-200">
       {/* Top Banner with Pro Promotion */}
-      <div className={`py-1 px-3 text-center text-[11px] sm:text-xs text-white flex flex-wrap items-center justify-center gap-1.5 shadow-2xs overflow-hidden ${
+      <div className={`py-1.5 px-3 sm:px-6 text-xs text-white flex items-center justify-between shadow-2xs overflow-hidden ${
         user?.isPro
           ? "bg-gradient-to-r from-emerald-600 via-teal-600 to-blue-600"
-          : "bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600"
+          : "bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500"
       }`}>
-        <span className="text-sm">{user?.isPro ? "🎉" : "✨"}</span>
-        <span className="font-extrabold">{user?.isPro ? "SyllabiQ Pro Active:" : "SyllabiQ Pro:"}</span>
-        <span className="opacity-95 hidden sm:inline">
-          {user?.isPro
-            ? "30-Day Free Trial ($0 today) · All features, OCR & sync unlocked"
-            : "1st Month 100% Free Trial ($5/mo after) · Homework Scanner, Cloud Papers Vault & Phone Alerts"}
-        </span>
+        <div className="flex items-center gap-1.5 truncate">
+          <span className="text-xs">{user?.isPro ? "🎉" : "✨"}</span>
+          <span className="font-bold truncate text-[11px] sm:text-xs">
+            {user?.isPro ? "SyllabiQ Pro Active" : "SyllabiQ Pro: 30-Day Free Trial"}
+          </span>
+        </div>
         <button
           onClick={onOpenPaywallModal}
-          className="ml-2 font-black bg-white text-indigo-700 px-2.5 py-0.5 rounded-full hover:bg-indigo-50 shadow-2xs cursor-pointer text-[11px]"
+          className="bg-white text-slate-900 font-bold px-2.5 py-0.5 rounded-full hover:bg-slate-100 shadow-2xs cursor-pointer text-[10px] sm:text-[11px] shrink-0 whitespace-nowrap ml-2"
         >
           {user?.isPro ? "Manage Plan" : "Try Free Trial →"}
         </button>
       </div>
 
-      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-3 sm:px-6 lg:px-8">
-        {/* Official SyllabiQ Logo */}
-        <div className="flex items-center space-x-3">
-          <Link href="/" className="flex items-center space-x-3 group cursor-pointer">
-            {/* Crisp Logo Container ensuring perfect contrast in light & dark modes */}
-            <div className="flex items-center bg-white px-2.5 py-1 sm:px-3 sm:py-1.5 rounded-xl shadow-xs border border-slate-200/80 hover:border-blue-400 transition-all">
+      <div className="mx-auto flex h-14 md:h-16 max-w-7xl items-center justify-between px-3 sm:px-6 lg:px-8 gap-2">
+        {/* 1. BRAND LOGO (Always visible on far left, never squished) */}
+        <div className="flex items-center gap-2 shrink-0 min-w-[125px] sm:min-w-[140px]">
+          <Link href="/" className="flex items-center gap-2 group cursor-pointer select-none">
+            <div className="flex items-center bg-white px-2 py-1 sm:px-2.5 sm:py-1.5 rounded-xl shadow-xs border border-slate-200/80 hover:border-blue-400 transition-all shrink-0">
               <img
                 src="/images/syllabiq-logo.png"
                 alt="SyllabiQ Logo"
-                className="h-6 sm:h-8 w-auto object-contain"
+                width={100}
+                height={26}
+                className="h-6 sm:h-7 w-auto object-contain shrink-0"
               />
             </div>
-            <div className="hidden sm:flex items-center space-x-2">
+            <div className="hidden lg:flex items-center space-x-2">
               <span className="rounded-full bg-blue-50 dark:bg-blue-950/80 px-2 py-0.5 text-[10px] font-bold text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
                 CAMPUS 2.0
               </span>
@@ -143,20 +148,265 @@ export function Navbar({
           </div>
         </div>
 
-        {/* Spacious, Decompressed Action Tools Navigation */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5 md:gap-3 shrink-0">
-          {/* Quick Action: Homework Photo Scanner */}
+        {/* 2. MOBILE ACTIONS (< md: PRO, Sync, Tools) */}
+        <div className="flex md:hidden items-center gap-1.5 shrink-0">
+          <button
+            onClick={onOpenPaywallModal}
+            className={`text-xs font-black px-2.5 py-1.5 rounded-xl flex items-center gap-1 shadow-xs transition cursor-pointer shrink-0 ${
+              user?.isPro
+                ? "bg-gradient-to-r from-amber-500 to-orange-500 text-white"
+                : "bg-gradient-to-r from-indigo-600 to-blue-600 text-white"
+            }`}
+            title="SyllabiQ Pro Subscription"
+          >
+            <Zap className="h-3.5 w-3.5 fill-white" />
+            <span>{user?.isPro ? "PRO" : "Upgrade"}</span>
+          </button>
+
+          <button
+            onClick={onSyncAll}
+            disabled={isSyncing}
+            className="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition cursor-pointer shrink-0"
+            title="Sync all deadlines"
+          >
+            <RefreshCw className={`h-4 w-4 ${isSyncing ? "animate-spin" : ""}`} />
+          </button>
+
+          <div className="relative" ref={mobileToolsRef}>
+            <button
+              onClick={() => setShowMobileTools(!showMobileTools)}
+              className={`p-2 rounded-xl border flex items-center gap-1 text-xs font-bold transition cursor-pointer shrink-0 ${
+                showMobileTools
+                  ? "bg-blue-50 dark:bg-blue-950/80 text-blue-700 dark:text-blue-300 border-blue-300 dark:border-blue-700 shadow-xs"
+                  : "bg-slate-100 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-slate-700 dark:text-slate-200"
+              }`}
+              title="Open Campus Tools"
+            >
+              <Layers className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+              <span>Tools</span>
+              <ChevronDown className={`h-3 w-3 transition-transform duration-200 ${showMobileTools ? "rotate-180" : ""}`} />
+            </button>
+
+            {/* Mobile Tools Dropdown Popover */}
+            {showMobileTools && (
+              <div className="absolute right-0 mt-2 w-72 sm:w-80 rounded-2xl bg-white dark:bg-[#0E1526] border border-slate-200 dark:border-slate-800 shadow-2xl p-2.5 space-y-2 z-50 animate-fade-in">
+                {/* Mobile Quick Setting Row: Theme & Profile */}
+                <div className="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+                  <button
+                    onClick={toggleTheme}
+                    className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 text-xs font-bold transition cursor-pointer hover:bg-slate-200 dark:hover:bg-slate-700"
+                  >
+                    {resolvedTheme === "dark" ? (
+                      <Sun className="h-3.5 w-3.5 fill-amber-400 text-amber-400" />
+                    ) : (
+                      <Moon className="h-3.5 w-3.5 fill-slate-700 text-slate-700" />
+                    )}
+                    <span>{resolvedTheme === "dark" ? "Light Mode" : "Dark Mode"}</span>
+                  </button>
+
+                  {user && user.id !== "guest-visitor" ? (
+                    <button
+                      onClick={() => {
+                        setShowMobileTools(false);
+                        setShowUserMenu(true);
+                      }}
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 text-xs font-bold transition cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900"
+                    >
+                      <span className="text-sm">{user.avatar}</span>
+                      <span className="truncate max-w-[80px]">{user.name.split(" ")[0]}</span>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => {
+                        setShowMobileTools(false);
+                        onOpenAuthModal?.();
+                      }}
+                      className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900 dark:bg-white text-white dark:text-slate-900 text-xs font-bold transition cursor-pointer"
+                    >
+                      <User className="h-3.5 w-3.5" />
+                      <span>Sign In</span>
+                    </button>
+                  )}
+                </div>
+
+                <div className="px-2 py-1 text-[11px] font-extrabold text-slate-400 uppercase tracking-wider flex items-center justify-between">
+                  <span>Campus Studio &amp; Tools</span>
+                  <Sparkles className="h-3 w-3 text-blue-500" />
+                </div>
+
+                <div className="space-y-0.5 max-h-[60vh] overflow-y-auto pr-1">
+                  {/* Snap HW */}
+                  <button
+                    onClick={() => {
+                      setShowMobileTools(false);
+                      onOpenHomeworkModal();
+                    }}
+                    className="w-full flex items-center space-x-3 px-2.5 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-950/50 transition text-left cursor-pointer group"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 group-hover:scale-105 transition-transform">
+                      <Camera className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-800 dark:text-white">Snap Homework (OCR)</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Scan syllabus &amp; assignment sheets</div>
+                    </div>
+                  </button>
+
+                  {/* Cloud Papers Vault */}
+                  <button
+                    onClick={() => {
+                      setShowMobileTools(false);
+                      onOpenCloudVaultModal();
+                    }}
+                    className="w-full flex items-center space-x-3 px-2.5 py-2 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-950/50 transition text-left cursor-pointer group"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 group-hover:scale-105 transition-transform">
+                      <Cloud className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-800 dark:text-white">Cloud Papers Vault</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Save syllabi &amp; work to Google Drive</div>
+                    </div>
+                  </button>
+
+                  {/* Wallpaper Studio */}
+                  <button
+                    onClick={() => {
+                      setShowMobileTools(false);
+                      onOpenBackgroundModal();
+                    }}
+                    className="w-full flex items-center space-x-3 px-2.5 py-2 rounded-xl hover:bg-emerald-50 dark:hover:bg-emerald-950/50 transition text-left cursor-pointer group"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-emerald-100 dark:bg-emerald-900/60 text-emerald-600 dark:text-emerald-400 group-hover:scale-105 transition-transform">
+                      <ImageIcon className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-800 dark:text-white">Wallpaper Studio</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Campus aesthetic presets &amp; photos</div>
+                    </div>
+                  </button>
+
+                  {/* Course Colors & Emojis */}
+                  <button
+                    onClick={() => {
+                      setShowMobileTools(false);
+                      onOpenColorModal();
+                    }}
+                    className="w-full flex items-center space-x-3 px-2.5 py-2 rounded-xl hover:bg-purple-50 dark:hover:bg-purple-950/50 transition text-left cursor-pointer group"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900/60 text-purple-600 dark:text-purple-400 group-hover:scale-105 transition-transform">
+                      <Palette className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-800 dark:text-white">Course Colors &amp; Emojis</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Color-code classes with custom tags</div>
+                    </div>
+                  </button>
+
+                  {/* Universal LMS Sync */}
+                  <button
+                    onClick={() => {
+                      setShowMobileTools(false);
+                      onOpenLmsModal();
+                    }}
+                    className="w-full flex items-center space-x-3 px-2.5 py-2 rounded-xl hover:bg-indigo-50 dark:hover:bg-indigo-950/50 transition text-left cursor-pointer group"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-100 dark:bg-indigo-900/60 text-indigo-600 dark:text-indigo-400 group-hover:scale-105 transition-transform">
+                      <GraduationCap className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-800 dark:text-white">Universal LMS Sync</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Canvas, Blackboard, Brightspace</div>
+                    </div>
+                  </button>
+
+                  {/* Campus Peer Hub */}
+                  <button
+                    onClick={() => {
+                      setShowMobileTools(false);
+                      onOpenPeerModal();
+                    }}
+                    className="w-full flex items-center space-x-3 px-2.5 py-2 rounded-xl hover:bg-amber-50 dark:hover:bg-amber-950/50 transition text-left cursor-pointer group"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/60 text-amber-600 dark:text-amber-400 group-hover:scale-105 transition-transform">
+                      <Users className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-800 dark:text-white">Campus Peer Study Hub</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Study circles &amp; shared notes</div>
+                    </div>
+                  </button>
+
+                  {/* Lecture Audio Transcriber */}
+                  <button
+                    onClick={() => {
+                      setShowMobileTools(false);
+                      onOpenAudioModal();
+                    }}
+                    className="w-full flex items-center space-x-3 px-2.5 py-2 rounded-xl hover:bg-rose-50 dark:hover:bg-rose-950/50 transition text-left cursor-pointer group"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-rose-100 dark:bg-rose-900/60 text-rose-600 dark:text-rose-400 group-hover:scale-105 transition-transform">
+                      <Mic className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-800 dark:text-white">Audio Transcriber</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Record &amp; transcribe class lectures</div>
+                    </div>
+                  </button>
+
+                  {/* Mobile App Simulator */}
+                  <button
+                    onClick={() => {
+                      setShowMobileTools(false);
+                      onOpenMobileModal();
+                    }}
+                    className="w-full flex items-center space-x-3 px-2.5 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 transition text-left cursor-pointer group"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 group-hover:scale-105 transition-transform">
+                      <Smartphone className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-800 dark:text-white">Mobile Simulator</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">iPhone &amp; iPad interactive view</div>
+                    </div>
+                  </button>
+
+                  {/* Student Locker */}
+                  <button
+                    onClick={() => {
+                      setShowMobileTools(false);
+                      onOpenLockerModal();
+                    }}
+                    className="w-full flex items-center space-x-3 px-2.5 py-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800/60 transition text-left cursor-pointer group"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-slate-200 dark:bg-slate-800 text-slate-600 dark:text-slate-300 group-hover:scale-105 transition-transform">
+                      <Archive className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-800 dark:text-white">Student Locker</div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Course document &amp; file archive</div>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* 3. DESKTOP ACTIONS (hidden md:flex: Snap HW, Tools ⌵, ☀️/🌙, PRO, Sync, User) */}
+        <div className="hidden md:flex items-center gap-2 sm:gap-2.5 md:gap-3 shrink-0">
+          {/* Snap Homework Scanner */}
           <button
             onClick={onOpenHomeworkModal}
-            className="hidden sm:flex items-center space-x-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 px-3 py-2 text-xs font-bold text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 transition cursor-pointer shadow-2xs"
+            className="flex items-center space-x-1.5 rounded-xl bg-indigo-50 dark:bg-indigo-950/60 px-3 py-2 text-xs font-bold text-indigo-700 dark:text-indigo-300 hover:bg-indigo-100 dark:hover:bg-indigo-900/60 border border-indigo-200 dark:border-indigo-800 transition cursor-pointer shadow-2xs"
             title="Snap Homework Photos (OCR Problem Extraction)"
           >
             <Camera className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
-            <span className="hidden md:inline">Snap HW</span>
+            <span>Snap HW</span>
           </button>
 
-          {/* Studio & Tools Dropdown Menu (Decompresses the navbar into an organized menu) */}
-          <div className="relative" ref={toolsRef}>
+          {/* Tools Menu Popover */}
+          <div className="relative" ref={desktopToolsRef}>
             <button
               onClick={() => setShowToolsMenu(!showToolsMenu)}
               className={`flex items-center space-x-1.5 rounded-xl px-3 py-2 text-xs font-bold border transition cursor-pointer ${
@@ -171,7 +421,6 @@ export function Navbar({
               <ChevronDown className={`h-3.5 w-3.5 transition-transform duration-200 ${showToolsMenu ? "rotate-180" : ""}`} />
             </button>
 
-            {/* Tools Dropdown Popover */}
             {showToolsMenu && (
               <div className="absolute right-0 mt-2 w-72 sm:w-80 rounded-2xl bg-white dark:bg-[#0E1526] border border-slate-200 dark:border-slate-800 shadow-2xl p-2.5 space-y-1.5 z-50 animate-fade-in">
                 <div className="px-2.5 py-1.5 text-[11px] font-extrabold text-slate-400 uppercase tracking-wider border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
@@ -197,7 +446,7 @@ export function Navbar({
                     </div>
                   </button>
 
-                  {/* Wallpaper / Background Customizer */}
+                  {/* Wallpaper Studio */}
                   <button
                     onClick={() => {
                       setShowToolsMenu(false);
@@ -322,7 +571,7 @@ export function Navbar({
 
           <div className="h-5 w-[1px] bg-slate-200 dark:bg-slate-800 mx-0.5" />
 
-          {/* LIGHT / DARK MODE TOGGLE */}
+          {/* Light / Dark Mode Toggle */}
           <button
             onClick={toggleTheme}
             className="flex items-center justify-center h-9 w-9 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-amber-400 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition cursor-pointer"
@@ -335,7 +584,7 @@ export function Navbar({
             )}
           </button>
 
-          {/* PRO BADGE / TRIAL */}
+          {/* Pro Badge / Free Trial Button */}
           <button
             onClick={onOpenPaywallModal}
             className={`flex items-center space-x-1 rounded-xl px-3 py-2 text-xs font-black transition cursor-pointer shadow-xs hover:opacity-90 ${
@@ -349,7 +598,7 @@ export function Navbar({
             <span>{user?.isPro ? "PRO" : "Upgrade"}</span>
           </button>
 
-          {/* SYNC ALL BUTTON */}
+          {/* Sync All Deadlines */}
           <button
             onClick={onSyncAll}
             disabled={isSyncing}
@@ -360,7 +609,7 @@ export function Navbar({
             <span className="hidden sm:inline">{isSyncing ? "Syncing..." : "Sync"}</span>
           </button>
 
-          {/* USER AUTH & PROFILE DROPDOWN */}
+          {/* User Auth & Profile Dropdown */}
           <div className="relative" ref={userRef}>
             {user && user.id !== "guest-visitor" ? (
               <button
@@ -371,7 +620,7 @@ export function Navbar({
                 <div className="h-6 w-6 rounded-lg bg-blue-100 dark:bg-blue-900 text-sm flex items-center justify-center">
                   {user.avatar}
                 </div>
-                <div className="text-left hidden md:block">
+                <div className="text-left hidden lg:block">
                   <div className="text-[11px] font-black text-slate-900 dark:text-white leading-tight">
                     {user.name.split(" ")[0]}
                   </div>

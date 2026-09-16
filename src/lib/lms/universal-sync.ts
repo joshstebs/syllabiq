@@ -116,7 +116,7 @@ export class UniversalLMSSyncService {
     // Sample payload representing real JSON items returned by Canvas / Blackboard LMS API
     const sampleLmsItems = [
       {
-        title: "Assignment 1: OCaml Warmup (Submission Portal)",
+        title: "Assignment 1: OCaml Warm-Up (Submission Portal)",
         courseCode: "CS 3110",
         dueDate: new Date(Date.now() + 24 * 3600 * 1000).toISOString(),
         points: 100,

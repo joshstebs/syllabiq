@@ -28,7 +28,7 @@ export async function POST(req: Request) {
 
     if (action === "test_dispatch") {
       const phone = patch.phone || "+1 (607) 555-0199";
-      const taskTitle = patch.taskTitle || "CS 3110: OCaml Warmup Assignment";
+      const taskTitle = patch.taskTitle || "CS 3110: OCaml Warm-Up Assignment";
       const dueString = patch.dueString || "Tonight at 11:59 PM";
 
       const twilioSid = process.env.TWILIO_ACCOUNT_SID;

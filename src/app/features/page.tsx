@@ -298,7 +298,7 @@ export default function FeaturesPage() {
                     </div>
                     <div className="p-5 bg-gradient-to-b from-slate-900 via-slate-950 to-slate-900 space-y-3">
                       <div className="bg-indigo-600/20 border border-indigo-500/40 p-3 rounded-xl flex items-center justify-between text-xs">
-                        <span className="font-black text-indigo-300">🚨 DUE TONIGHT: CS 3110 OCaml Warmup (40% weight)</span>
+                        <span className="font-black text-indigo-300">🚨 DUE TONIGHT: CS 3110 OCaml Warm-Up (40% weight)</span>
                         <span className="bg-indigo-600 text-white px-2.5 py-0.5 rounded-full font-bold text-[11px]">3h 24m left</span>
                       </div>
                       <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">

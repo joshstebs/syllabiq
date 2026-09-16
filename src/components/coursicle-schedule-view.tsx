@@ -423,7 +423,7 @@ export function CoursicleScheduleView() {
                   <span>11:59 PM All-Day Assignment Bars</span>
                 </div>
                 <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
-                  Problem sets, OCaml warmups, and term paper deadlines appear across the top of your Google Calendar week view with automatic 24-hour and 3-hour crunch reminder chimes.
+                  Problem sets, OCaml warm-ups, and term paper deadlines appear across the top of your Google Calendar week view with automatic 24-hour and 3-hour crunch reminder chimes.
                 </p>
               </div>
 

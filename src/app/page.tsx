@@ -270,7 +270,7 @@ export default function SyllabiQDashboard() {
           <div className="inline-flex items-center space-x-2 rounded-full bg-white px-4 py-1.5 border border-slate-200 shadow-xs">
             <GraduationCap className="h-4 w-4 text-blue-600" />
             <span className="text-xs font-bold text-slate-700">
-              Never Wonder What&apos;s Due · Free for Students
+              Never Wonder What&apos;s Due · Try It Free Today
             </span>
           </div>
 
@@ -752,7 +752,7 @@ export default function SyllabiQDashboard() {
                       <span className="text-slate-400 w-12 text-right text-[11px] pt-1">4PM</span>
                       <div className="flex-1 bg-amber-100 border border-amber-300 rounded-xl p-3 text-amber-900 font-sans shadow-2xs">
                         <div className="font-extrabold text-xs">⚡ AI Prep Buffer Block</div>
-                        <div className="text-[11px] text-amber-700">Start OCaml Warmup draft (5 days early)</div>
+                        <div className="text-[11px] text-amber-700">Start OCaml Warm-Up draft (5 days early)</div>
                       </div>
                     </div>
                   </div>

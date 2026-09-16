@@ -168,8 +168,8 @@ export function StripePaywallModal({ onClose, onSubscriptionUpdated }: Props) {
           {/* Features Comparison Matrix */}
           <div className="space-y-2.5 text-xs">
             <div className="grid grid-cols-12 font-bold text-slate-400 uppercase text-[10px] pb-1 border-b border-slate-100 px-2">
-              <div className="col-span-8">Feature</div>
-              <div className="col-span-2 text-center">Free</div>
+              <div className="col-span-8">Features</div>
+              <div className="col-span-2 text-center">Starter / Trial</div>
               <div className="col-span-2 text-center text-blue-600 font-black">Pro</div>
             </div>
 
@@ -300,7 +300,7 @@ export function StripePaywallModal({ onClose, onSubscriptionUpdated }: Props) {
                       You are on SyllabiQ Pro
                     </h4>
                     <p className="text-[11px] text-emerald-700 font-medium">
-                      {sub?.trialDaysRemaining || 30} days remaining in your free trial period.
+                      {sub?.trialDaysRemaining || 30} days remaining in your free trial.
                     </p>
                   </div>
                 </div>
@@ -323,9 +323,9 @@ export function StripePaywallModal({ onClose, onSubscriptionUpdated }: Props) {
               Stripe Verified
             </span>
             <span>•</span>
-            <span>Cancel in 1 Click</span>
+            <span>Cancel Anytime</span>
             <span>•</span>
-            <span>Free for Students</span>
+            <span>Try It Free Today</span>
           </div>
         </div>
       </div>

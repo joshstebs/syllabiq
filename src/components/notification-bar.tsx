@@ -174,7 +174,7 @@ export function NotificationBar({ tasks, isPro = false, onOpenPaywall }: Props) 
               title="Test real SMS push alert to your phone"
             >
               <Smartphone className="h-3.5 w-3.5" />
-              <span>{isSending ? "Sending..." : "Alert Phone"}</span>
+              <span>{isSending ? "Sending..." : "Send SMS Alert"}</span>
               {!isPro && (
                 <span className="text-[9px] bg-slate-900 text-amber-300 font-extrabold px-1.5 py-0.2 rounded-md ml-1">
                   PRO

@@ -22,7 +22,7 @@ const PHONES_DATA = [
       id: "n1",
       badgeEmoji: "📝",
       title: "2 Things DUE TODAY",
-      message: "• CS 3110: OCaml Warmup & Expressions\n• ECON 1010: Problem Set 2",
+      message: "• CS 3110: OCaml Warm-Up & Expressions\n• ECON 1010: Problem Set 2",
       minutesAgo: "now",
       accent: "blue" as const
     }

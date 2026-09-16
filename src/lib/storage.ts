@@ -132,7 +132,7 @@ const INITIAL_STORE: SyllabiQStore = {
       courseCode: "CS 3110",
       courseName: "Data Structures & Functional Programming",
       courseColor: "#6366F1",
-      title: "Assignment 1: OCaml Warmup & Expressions",
+      title: "Assignment 1: OCaml Warm-Up & Expressions",
       type: "assignment",
       dueDate: offsetDate(1, 23, 59), // Due tomorrow!
       estimatedHours: 4.5,
