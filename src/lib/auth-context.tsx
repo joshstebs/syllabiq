@@ -10,10 +10,19 @@ export interface UserProfile {
   email: string;
   role: UserRole;
   avatar: string;
+  photoUrl?: string;
+  school?: string;
+  major?: string;
+  graduationYear?: string;
   isPro: boolean;
   provider: "email" | "google" | "apple" | "cornell";
   trialEndsAt?: string;
   monthlyPrice?: number;
+  timeZone?: string;
+  timeZoneMode?: "auto" | "manual";
+  defaultDueTime?: string;
+  weekStartDay?: "sunday" | "monday";
+  prepBufferDays?: number;
 }
 
 export const ADMIN_USER: UserProfile = {
@@ -22,6 +31,14 @@ export const ADMIN_USER: UserProfile = {
   email: "support@syllabiq.ca",
   role: "ADMIN",
   avatar: "👨‍💼",
+  school: "Cornell University",
+  major: "Computer Science & Economics",
+  graduationYear: "2027",
+  timeZone: "America/New_York",
+  timeZoneMode: "auto",
+  defaultDueTime: "23:59",
+  weekStartDay: "sunday",
+  prepBufferDays: 5,
   isPro: true,
   provider: "email",
   trialEndsAt: new Date(Date.now() + 30 * 86400000).toISOString(),
@@ -34,6 +51,14 @@ export const TESTER_USER: UserProfile = {
   email: "tester@syllabiq.ca",
   role: "TESTER",
   avatar: "🧑‍🎓",
+  school: "Cornell University",
+  major: "Applied Economics & Management",
+  graduationYear: "2026",
+  timeZone: "America/New_York",
+  timeZoneMode: "auto",
+  defaultDueTime: "23:59",
+  weekStartDay: "sunday",
+  prepBufferDays: 5,
   isPro: true,
   provider: "email",
   trialEndsAt: new Date(Date.now() + 30 * 86400000).toISOString(),
@@ -46,6 +71,14 @@ export const FREE_VISITOR: UserProfile = {
   email: "student@syllabiq.ca",
   role: "STUDENT",
   avatar: "🎓",
+  school: "College Campus",
+  major: "Undeclared",
+  graduationYear: "2028",
+  timeZone: "America/New_York",
+  timeZoneMode: "auto",
+  defaultDueTime: "23:59",
+  weekStartDay: "sunday",
+  prepBufferDays: 5,
   isPro: false,
   provider: "email"
 };
@@ -59,6 +92,7 @@ interface AuthContextType {
   loginWithNetID: (netId: string) => void;
   logout: () => void;
   updateUserProStatus: (isPro: boolean) => void;
+  updateUserProfile: (patch: Partial<UserProfile>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -212,6 +246,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     saveUser(updated);
   };
 
+  const updateUserProfile = (patch: Partial<UserProfile>) => {
+    const baseUser = user && user.id !== "guest-visitor" ? user : FREE_VISITOR;
+    const updated: UserProfile = {
+      ...baseUser,
+      ...patch
+    };
+    localStorage.setItem("syllabiq_explicit_session", "true");
+    saveUser(updated);
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -222,7 +266,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         loginWithTesterPreset,
         loginWithNetID,
         logout,
-        updateUserProStatus
+        updateUserProStatus,
+        updateUserProfile
       }}
     >
       {children}

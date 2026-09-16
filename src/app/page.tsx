@@ -69,6 +69,7 @@ import { AuthModal } from "@/components/auth-modal";
 import { AdminPanelModal } from "@/components/admin-panel-modal";
 import { StoryCardModal } from "@/components/story-card-modal";
 import { ClassGroupsModal } from "@/components/class-groups-modal";
+import { SettingsModal } from "@/components/settings-modal";
 import { Footer } from "@/components/footer";
 import { useAuth } from "@/lib/auth-context";
 
@@ -150,6 +151,7 @@ export default function SyllabiQDashboard() {
   const [showStoryModal, setShowStoryModal] = useState(false);
   const [storyHighlightTask, setStoryHighlightTask] = useState<TaskItem | null>(null);
   const [showClassGroupsModal, setShowClassGroupsModal] = useState(false);
+  const [showSettingsModal, setShowSettingsModal] = useState(false);
 
   const fetchDashboardData = async () => {
     try {
@@ -262,6 +264,7 @@ export default function SyllabiQDashboard() {
         onOpenClassGroupsModal={() => setShowClassGroupsModal(true)}
         onOpenAuthModal={() => setShowAuthModal(true)}
         onOpenAdminPanel={() => setShowAdminModal(true)}
+        onOpenSettingsModal={() => setShowSettingsModal(true)}
         onSyncAll={() => requirePro(handleSyncAll)}
         isSyncing={isSyncing}
       />
@@ -1253,6 +1256,15 @@ export default function SyllabiQDashboard() {
         />
       )}
 
+      {showSettingsModal && (
+        <SettingsModal
+          isOpen={showSettingsModal}
+          onClose={() => setShowSettingsModal(false)}
+          courses={courses}
+          tasks={tasks}
+        />
+      )}
+
       {/* Global Footer with Harbour and Main Company Logo */}
       <Footer
         onOpenContactModal={() => setShowContactModal(true)}
@@ -1261,6 +1273,7 @@ export default function SyllabiQDashboard() {
         onOpenCalendarSync={() => setShowShareModal(true)}
         onOpenSheetsModal={() => setShowSheetsModal(true)}
         onOpenHomeworkModal={() => setShowHomeworkModal(true)}
+        onOpenSettings={() => setShowSettingsModal(true)}
       />
     </div>
   );

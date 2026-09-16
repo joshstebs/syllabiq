@@ -12,6 +12,7 @@ interface Props {
   onOpenCalendarSync?: () => void;
   onOpenSheetsModal?: () => void;
   onOpenHomeworkModal?: () => void;
+  onOpenSettings?: () => void;
 }
 
 export function Footer({
@@ -20,7 +21,8 @@ export function Footer({
   onOpenWallpaper,
   onOpenCalendarSync,
   onOpenSheetsModal,
-  onOpenHomeworkModal
+  onOpenHomeworkModal,
+  onOpenSettings
 }: Props) {
   return (
     <footer className="relative z-10 w-full border-t border-slate-200 dark:border-slate-800 bg-white/90 dark:bg-[#0E1526]/90 backdrop-blur-md transition-colors duration-200 text-slate-600 dark:text-slate-400 mt-16">
@@ -184,6 +186,16 @@ export function Footer({
                   </Link>
                 )}
               </li>
+              {onOpenSettings && (
+                <li>
+                  <button
+                    onClick={onOpenSettings}
+                    className="hover:text-blue-600 dark:hover:text-blue-400 font-medium transition text-left cursor-pointer flex items-center gap-1.5"
+                  >
+                    <span>App Settings (Profile &amp; Timezone)</span>
+                  </button>
+                </li>
+              )}
             </ul>
           </div>
 

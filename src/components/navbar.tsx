@@ -21,7 +21,8 @@ import {
   ChevronDown,
   Archive,
   GraduationCap,
-  Sparkles
+  Sparkles,
+  Settings
 } from "lucide-react";
 import { useTheme } from "./theme-provider";
 import { useAuth } from "@/lib/auth-context";
@@ -45,6 +46,7 @@ interface Props {
   onOpenClassGroupsModal?: () => void;
   onOpenAuthModal?: () => void;
   onOpenAdminPanel?: () => void;
+  onOpenSettingsModal?: () => void;
   onSyncAll: () => void;
   isSyncing: boolean;
 }
@@ -68,6 +70,7 @@ export function Navbar({
   onOpenClassGroupsModal,
   onOpenAuthModal,
   onOpenAdminPanel,
+  onOpenSettingsModal,
   onSyncAll,
   isSyncing
 }: Props) {
@@ -216,7 +219,11 @@ export function Navbar({
                       }}
                       className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 text-xs font-bold transition cursor-pointer hover:bg-blue-100 dark:hover:bg-blue-900"
                     >
-                      <span className="text-sm">{user.avatar}</span>
+                      {user.photoUrl ? (
+                        <img src={user.photoUrl} alt="Avatar" className="h-4 w-4 rounded-full object-cover shrink-0" />
+                      ) : (
+                        <span className="text-sm">{user.avatar}</span>
+                      )}
                       <span className="truncate max-w-[80px]">{user.name.split(" ")[0]}</span>
                     </button>
                   ) : (
@@ -239,6 +246,26 @@ export function Navbar({
                 </div>
 
                 <div className="space-y-0.5 max-h-[60vh] overflow-y-auto pr-1">
+                  {/* Account & App Settings */}
+                  <button
+                    onClick={() => {
+                      setShowMobileTools(false);
+                      onOpenSettingsModal?.();
+                    }}
+                    className="w-full flex items-center space-x-3 px-2.5 py-2 rounded-xl hover:bg-blue-50 dark:hover:bg-blue-950/50 transition text-left cursor-pointer group"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/60 text-blue-600 dark:text-blue-400 group-hover:scale-105 transition-transform">
+                      <Settings className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <div className="text-xs font-bold text-slate-800 dark:text-white flex items-center gap-1.5">
+                        <span>Settings</span>
+                        <span className="text-[9px] bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-extrabold px-1.5 py-0.2 rounded">PREFS</span>
+                      </div>
+                      <div className="text-[10px] text-slate-500 dark:text-slate-400">Profile, Theme, Timezone &amp; School</div>
+                    </div>
+                  </button>
+
                   {/* Story Cards Studio (IG & Snap) */}
                   <button
                     onClick={() => {
@@ -681,6 +708,15 @@ export function Navbar({
 
           <div className="h-5 w-[1px] bg-slate-200 dark:bg-slate-800 mx-0.5" />
 
+          {/* Settings Button */}
+          <button
+            onClick={onOpenSettingsModal}
+            className="flex items-center justify-center h-9 w-9 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition cursor-pointer"
+            title="App & Profile Settings (Profile, Theme, Timezone)"
+          >
+            <Settings className="h-4 w-4" />
+          </button>
+
           {/* Light / Dark Mode Toggle */}
           <button
             onClick={toggleTheme}
@@ -727,8 +763,12 @@ export function Navbar({
                 className="flex items-center space-x-2 pl-2 pr-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 border border-slate-200 dark:border-slate-700 transition cursor-pointer"
                 title="Account Menu"
               >
-                <div className="h-6 w-6 rounded-lg bg-blue-100 dark:bg-blue-900 text-sm flex items-center justify-center">
-                  {user.avatar}
+                <div className="h-6 w-6 rounded-lg bg-blue-100 dark:bg-blue-900 text-sm flex items-center justify-center overflow-hidden">
+                  {user.photoUrl ? (
+                    <img src={user.photoUrl} alt="Avatar" className="h-full w-full object-cover" />
+                  ) : (
+                    user.avatar
+                  )}
                 </div>
                 <div className="text-left hidden lg:block">
                   <div className="text-[11px] font-black text-slate-900 dark:text-white leading-tight">
@@ -754,8 +794,12 @@ export function Navbar({
             {showUserMenu && user && (
               <div className="absolute right-0 mt-2 w-64 rounded-2xl bg-white dark:bg-[#0E1526] border border-slate-200 dark:border-slate-800 shadow-2xl p-3 space-y-3 z-50 animate-fade-in">
                 <div className="flex items-center space-x-2.5 pb-2 border-b border-slate-100 dark:border-slate-800">
-                  <div className="h-9 w-9 rounded-xl bg-blue-50 dark:bg-blue-950 flex items-center justify-center text-lg">
-                    {user.avatar}
+                  <div className="h-9 w-9 rounded-xl bg-blue-50 dark:bg-blue-950 flex items-center justify-center text-lg overflow-hidden border border-blue-200 dark:border-blue-900">
+                    {user.photoUrl ? (
+                      <img src={user.photoUrl} alt="Avatar" className="h-full w-full object-cover" />
+                    ) : (
+                      user.avatar
+                    )}
                   </div>
                   <div className="min-w-0 flex-1">
                     <div className="text-xs font-black text-slate-900 dark:text-white truncate">
@@ -775,6 +819,18 @@ export function Navbar({
                 </div>
 
                 <div className="space-y-1 text-xs">
+                  {/* Settings Menu Item */}
+                  <button
+                    onClick={() => {
+                      setShowUserMenu(false);
+                      onOpenSettingsModal?.();
+                    }}
+                    className="w-full flex items-center space-x-2 px-2.5 py-2 rounded-xl text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-950/50 font-bold transition text-left cursor-pointer"
+                  >
+                    <Settings className="h-3.5 w-3.5" />
+                    <span>Settings (Profile, Theme, Timezone)</span>
+                  </button>
+
                   {user.role === "ADMIN" && (
                     <button
                       onClick={() => {
