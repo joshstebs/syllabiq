@@ -113,8 +113,8 @@ export function PhoneNotificationsStrip() {
       </div>
 
       {/* Row of 6 sleek iPhone Lockscreen Mockups matching Screenshot 1 */}
-      <div className="overflow-x-auto pb-4 pt-2">
-        <div className="flex items-center space-x-4 min-w-[1280px] justify-center px-4">
+      <div className="overflow-x-auto pb-4 pt-2 touch-pan-x scroll-smooth -webkit-overflow-scrolling-touch">
+        <div className="flex items-center space-x-4 min-w-[1280px] justify-start sm:justify-center px-4">
           {PHONES_DATA.map((phone, idx) => (
             <div
               key={idx}

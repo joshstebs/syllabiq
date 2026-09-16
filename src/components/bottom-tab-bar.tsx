@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { Calendar, CheckSquare, Bell, Share2, MessageCircle } from "lucide-react";
+import { Calendar, CheckSquare, Bell, Share2, MessageCircle, Brain } from "lucide-react";
 
-export type TabMode = "TIMELINE" | "SCHEDULE" | "TASKS" | "REMINDERS" | "SHARE" | "CHAT";
+export type TabMode = "TIMELINE" | "SCHEDULE" | "TASKS" | "FLASHCARDS" | "REMINDERS" | "SHARE" | "CHAT";
 
 interface Props {
   activeTab: TabMode;
@@ -15,13 +15,14 @@ export function BottomTabBar({ activeTab, onSelectTab }: Props) {
     { id: "TIMELINE" as const, label: "Timeline", icon: Calendar },
     { id: "SCHEDULE" as const, label: "Coursicle", icon: Calendar },
     { id: "TASKS" as const, label: "Tasks", icon: CheckSquare },
+    { id: "FLASHCARDS" as const, label: "Flashcards", icon: Brain },
     { id: "REMINDERS" as const, label: "Reminders", icon: Bell },
     { id: "CHAT" as const, label: "Syllabird", icon: MessageCircle }
   ];
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#0E1526]/95 border-t border-slate-200 dark:border-slate-800 py-2 px-3 backdrop-blur-md shadow-2xl transition-colors">
-      <div className="mx-auto max-w-lg flex items-center justify-around">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 dark:bg-[#0E1526]/95 border-t border-slate-200 dark:border-slate-800 py-1.5 sm:py-2 px-2 sm:px-3 pb-safe backdrop-blur-md shadow-2xl transition-colors">
+      <div className="mx-auto max-w-xl flex items-center justify-around">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;

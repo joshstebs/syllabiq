@@ -35,6 +35,7 @@ import { SyllabusDropzone } from "@/components/syllabus-dropzone";
 import { WorkloadHeatmap } from "@/components/workload-heatmap";
 import { ScheduleTimeline } from "@/components/schedule-timeline";
 import { CoursicleScheduleView } from "@/components/coursicle-schedule-view";
+import { FlashcardsTab } from "@/components/flashcards-tab";
 import { PhoneNotificationsStrip } from "@/components/phone-notifications-strip";
 import { BottomTabBar, TabMode } from "@/components/bottom-tab-bar";
 import { DormwayStartWidget } from "@/components/dormway-start-widget";
@@ -186,7 +187,7 @@ export default function SyllabiQDashboard() {
   const progressPercent = totalTasks > 0 ? Math.round((completedCount / totalTasks) * 100) : 0;
 
   return (
-    <div className="relative min-h-screen bg-[#F8FAFC] dark:bg-[#0B0F19] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col selection:bg-yellow-300 selection:text-slate-900 pb-12 transition-colors duration-200">
+    <div className="relative min-h-screen bg-[#F8FAFC] dark:bg-[#0B0F19] text-[#0F172A] dark:text-[#F8FAFC] flex flex-col selection:bg-yellow-300 selection:text-slate-900 pb-28 sm:pb-20 pb-safe transition-colors duration-200">
       {/* Background Wallpaper Layer */}
       <BackgroundLayer config={backgroundConfig} />
 
@@ -442,6 +443,18 @@ export default function SyllabiQDashboard() {
             >
               <CheckSquare className="h-4 w-4 text-emerald-600" />
               <span>Due Gooder Dashboard View</span>
+            </button>
+
+            <button
+              onClick={() => setActiveMainTab("FLASHCARDS")}
+              className={`flex items-center space-x-2 px-4 sm:px-5 py-2 rounded-xl text-xs font-black transition cursor-pointer ${
+                activeMainTab === "FLASHCARDS"
+                  ? "bg-white text-purple-700 shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              <Brain className="h-4 w-4 text-purple-600" />
+              <span>AI Flashcards &amp; Study Decks</span>
             </button>
           </div>
         </div>
@@ -854,6 +867,14 @@ export default function SyllabiQDashboard() {
         </section>
       </main>
 
+      
+        {/* VIEW 4: FLASHCARDS & STUDY DECKS */}
+        {activeMainTab === "FLASHCARDS" && (
+          <section className="space-y-4 animate-fade-in">
+            <FlashcardsTab courses={courses} />
+          </section>
+        )}
+
       {/* BOTTOM TAB BAR */}
       <BottomTabBar
         activeTab={activeMainTab}
@@ -868,6 +889,9 @@ export default function SyllabiQDashboard() {
             scrollToMainView();
           } else if (tab === "TASKS") {
             setActiveMainTab("TASKS");
+            scrollToMainView();
+          } else if (tab === "FLASHCARDS") {
+            setActiveMainTab("FLASHCARDS");
             scrollToMainView();
           } else if (tab === "REMINDERS") {
             setShowDispatchModal(true);
