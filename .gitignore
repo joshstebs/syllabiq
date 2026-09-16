@@ -43,3 +43,5 @@ next-env.d.ts
 
 # local persistent datastore
 .data/
+
+.vercel

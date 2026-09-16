@@ -60,6 +60,8 @@ import { GoogleCloudVaultModal } from "@/components/google-cloud-vault-modal";
 import { ContactModal } from "@/components/contact-modal";
 import { CoursicleModal } from "@/components/coursicle-modal";
 import { SemesterTimelineModal } from "@/components/semester-timeline-modal";
+import { AuthModal } from "@/components/auth-modal";
+import { AdminPanelModal } from "@/components/admin-panel-modal";
 import { Footer } from "@/components/footer";
 
 export default function SyllabiQDashboard() {
@@ -71,6 +73,8 @@ export default function SyllabiQDashboard() {
   const [showDropzone, setShowDropzone] = useState(false);
   const [showCoursicleModal, setShowCoursicleModal] = useState(false);
   const [showTimelineModal, setShowTimelineModal] = useState(false);
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showAdminModal, setShowAdminModal] = useState(false);
 
   // Background state
   const [backgroundConfig, setBackgroundConfig] = useState<BackgroundConfig>({
@@ -202,6 +206,8 @@ export default function SyllabiQDashboard() {
         onOpenPaywallModal={() => setShowPaywallModal(true)}
         onOpenBackgroundModal={() => setShowBackgroundModal(true)}
         onOpenCloudVaultModal={() => setShowCloudVaultModal(true)}
+        onOpenAuthModal={() => setShowAuthModal(true)}
+        onOpenAdminPanel={() => setShowAdminModal(true)}
         onSyncAll={handleSyncAll}
         isSyncing={isSyncing}
       />
@@ -1034,6 +1040,23 @@ export default function SyllabiQDashboard() {
             setActiveMainTab("TIMELINE");
             scrollToMainView();
           }}
+        />
+      )}
+
+      {showAuthModal && (
+        <AuthModal
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          onOpenAdminPanel={() => setShowAdminModal(true)}
+        />
+      )}
+
+      {showAdminModal && (
+        <AdminPanelModal
+          isOpen={showAdminModal}
+          onClose={() => setShowAdminModal(false)}
+          onOpenPaywall={() => setShowPaywallModal(true)}
+          onOpenDispatch={() => setShowDispatchModal(true)}
         />
       )}
 
