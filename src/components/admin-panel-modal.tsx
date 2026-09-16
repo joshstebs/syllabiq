@@ -153,6 +153,20 @@ export function AdminPanelModal({ isOpen, onClose, onOpenPaywall, onOpenDispatch
                 </span>
               </div>
 
+              {/* Google OAuth & Drive */}
+              <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
+                <div className="flex items-center space-x-3">
+                  <span className="text-lg">🌐</span>
+                  <div>
+                    <div className="font-bold text-slate-900 dark:text-white">Google OAuth2 Client &amp; Drive API</div>
+                    <div className="text-[11px] text-slate-500 font-mono">ID: 437142939106-...apps.googleusercontent.com</div>
+                  </div>
+                </div>
+                <span className="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-extrabold text-[10px] flex items-center gap-1">
+                  <CheckCircle2 className="h-3 w-3" /> CONFIGURED
+                </span>
+              </div>
+
               {/* Vercel */}
               <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800">
                 <div className="flex items-center space-x-3">

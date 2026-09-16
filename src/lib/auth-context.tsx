@@ -43,7 +43,7 @@ export const TESTER_USER: UserProfile = {
 interface AuthContextType {
   user: UserProfile | null;
   loginWithCredentials: (email: string, pass: string) => boolean;
-  loginWithGoogle: (email?: string, name?: string) => void;
+  loginWithGoogle: (email?: string, name?: string, useRealOAuth?: boolean) => void;
   loginWithAdminPreset: () => void;
   loginWithTesterPreset: () => void;
   loginWithNetID: (netId: string) => void;
@@ -58,6 +58,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     try {
+      if (typeof window !== "undefined") {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("google_auth") === "success") {
+          const gEmail = params.get("email") || "josh.stebs@gmail.com";
+          const gName = params.get("name") || "Josh Stebs (Google)";
+          const googleUser: UserProfile = {
+            id: `user-google-${Date.now()}`,
+            name: gName,
+            email: gEmail,
+            role: gEmail.toLowerCase().includes("stebs") || gEmail.includes("admin") ? "ADMIN" : "STUDENT",
+            avatar: "🌐",
+            isPro: true,
+            provider: "google",
+            trialEndsAt: new Date(Date.now() + 30 * 86400000).toISOString(),
+            monthlyPrice: 5.0
+          };
+          saveUser(googleUser);
+          window.history.replaceState({}, document.title, window.location.pathname);
+          return;
+        }
+      }
+
       const stored = localStorage.getItem("syllabiq_auth_user");
       if (stored) {
         setUser(JSON.parse(stored));
@@ -103,7 +125,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return true;
   };
 
-  const loginWithGoogle = (customEmail?: string, customName?: string) => {
+  const loginWithGoogle = (customEmail?: string, customName?: string, useRealOAuth = false) => {
+    if (useRealOAuth && typeof window !== "undefined") {
+      window.location.href = "/api/auth/google";
+      return;
+    }
     const googleUser: UserProfile = {
       id: "user-google-" + Date.now(),
       name: customName || "Josh Stebs (Google)",
