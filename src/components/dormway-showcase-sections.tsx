@@ -52,7 +52,7 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
             </h2>
 
             <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium break-words">
-              iCal snapshots work now. Canvas, Blackboard, Brightspace, and Moodle connections are being built with institution-approved OAuth/API access.
+              iCal snapshot import is ready once production persistence is configured. Canvas, Blackboard, Brightspace, and Moodle connections are being built with institution-approved OAuth/API access.
             </p>
 
             <ul className="space-y-3 pt-1 text-xs sm:text-sm font-semibold text-slate-700 w-full min-w-0">
@@ -60,7 +60,7 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
                 <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-rose-100 flex items-center justify-center shrink-0 mt-0.5">
                   <div className="h-2 w-2 rounded-full bg-rose-600" />
                 </div>
-                <span className="flex-1 min-w-0 break-words leading-snug">Import calendar deadlines as a one-time snapshot</span>
+                <span className="flex-1 min-w-0 break-words leading-snug">Import calendar deadlines as a one-time snapshot after setup</span>
               </li>
               <li className="flex items-start gap-2.5 sm:gap-3 w-full min-w-0">
                 <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-rose-100 flex items-center justify-center shrink-0 mt-0.5">
@@ -122,7 +122,7 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
                 <h3 className="text-xs sm:text-sm font-black text-slate-900 truncate">LMS Import Status</h3>
                 <div className="inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-2 py-0.5 text-[10px] sm:text-xs font-bold text-amber-700 shrink-0">
                   <CheckCircle2 className="h-3 w-3 text-amber-600" />
-                  <span>iCal snapshot available</span>
+                  <span>iCal snapshot pending setup</span>
                 </div>
               </div>
 

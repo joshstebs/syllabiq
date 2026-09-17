@@ -101,7 +101,7 @@ export function LMSSyncModal({ onClose, onSyncComplete }: Props) {
           <div className="flex items-center justify-between text-xs text-slate-600 font-semibold">
             <span>{provider === "ICAL_FEED" ? "Calendar Feed URL" : "Provider connection"}</span>
             <span className="text-[11px] text-slate-500 flex items-center gap-1 font-bold">
-              <ShieldCheck className="h-3.5 w-3.5 text-slate-400" /> {provider === "ICAL_FEED" ? "Fetched as a snapshot" : "OAuth/API setup pending"}
+              <ShieldCheck className="h-3.5 w-3.5 text-slate-400" /> {provider === "ICAL_FEED" ? "Persistence setup required" : "OAuth/API setup pending"}
             </span>
           </div>
 
