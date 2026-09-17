@@ -37,7 +37,7 @@ export async function POST(req: Request) {
     if (!calendarText.includes("BEGIN:VCALENDAR")) {
       return NextResponse.json({ error: "Provide an iCalendar feed or a valid feed URL." }, { status: 400 });
     }
-    if (isDatabaseConfigured()) {
+    if (process.env.NODE_ENV === "production" || isDatabaseConfigured()) {
       return NextResponse.json({ error: "The feed was fetched successfully, but durable per-account calendar import is not enabled in this deployment yet." }, { status: 503 });
     }
     const result = await UniversalLMSSyncService.syncICalContent(calendarText, provider);
