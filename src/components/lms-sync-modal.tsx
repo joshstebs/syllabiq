@@ -11,7 +11,7 @@ interface Props {
 }
 
 export function LMSSyncModal({ onClose, onSyncComplete }: Props) {
-  const [provider, setProvider] = useState<LMSProvider>("CANVAS");
+  const [provider, setProvider] = useState<LMSProvider>("ICAL_FEED");
   const [feedUrl, setFeedUrl] = useState("");
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncReport, setSyncReport] = useState<any | null>(null);
@@ -24,7 +24,7 @@ export function LMSSyncModal({ onClose, onSyncComplete }: Props) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           provider,
-          endpoint: provider === "CANVAS" ? "https://canvas.instructure.com" : undefined
+          feedUrl: provider === "ICAL_FEED" ? feedUrl : undefined
         })
       });
 
@@ -99,9 +99,9 @@ export function LMSSyncModal({ onClose, onSyncComplete }: Props) {
         {/* Credentials / Feed */}
         <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
           <div className="flex items-center justify-between text-xs text-slate-600 font-semibold">
-            <span>Authentication Token / Feed URL</span>
-            <span className="text-[11px] text-emerald-700 flex items-center gap-1 font-bold">
-              <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" /> End-to-End Encrypted
+            <span>{provider === "ICAL_FEED" ? "Calendar Feed URL" : "Provider connection"}</span>
+            <span className="text-[11px] text-slate-500 flex items-center gap-1 font-bold">
+              <ShieldCheck className="h-3.5 w-3.5 text-slate-400" /> {provider === "ICAL_FEED" ? "Fetched as a snapshot" : "OAuth/API setup pending"}
             </span>
           </div>
 
@@ -110,13 +110,14 @@ export function LMSSyncModal({ onClose, onSyncComplete }: Props) {
             <input
               value={feedUrl}
               onChange={(e) => setFeedUrl(e.target.value)}
-              placeholder={provider === "ICAL_FEED" ? "webcal://canvas.university.edu/feeds/calendar.ics" : "Personal Access Token"}
+              placeholder={provider === "ICAL_FEED" ? "webcal://university.edu/feeds/calendar.ics" : "Institution connection coming soon"}
+              disabled={provider !== "ICAL_FEED"}
               className="w-full bg-transparent text-xs text-slate-900 focus:outline-none placeholder-slate-400 font-medium"
             />
           </div>
 
           <p className="text-[11px] text-slate-500 leading-relaxed">
-            <strong>Deduplication Guarantee:</strong> SyllabiQ matches all incoming LMS assignments against your syllabus items using fuzzy Levenshtein distance (&gt;0.85) to avoid double-booking tasks.
+            <strong>Current status:</strong> Calendar feeds can be fetched as a one-time snapshot. Canvas, Blackboard, Brightspace, and Moodle require an institution-approved OAuth/API connection and are not enabled by this button yet.
           </p>
         </div>
 
@@ -156,7 +157,7 @@ export function LMSSyncModal({ onClose, onSyncComplete }: Props) {
             className="flex items-center space-x-2 rounded-full bg-blue-600 px-6 py-2.5 text-xs font-bold text-white shadow-md shadow-blue-500/25 hover:bg-blue-700 transition disabled:opacity-50 cursor-pointer"
           >
             <RefreshCw className={`h-3.5 w-3.5 ${isSyncing ? "animate-spin" : ""}`} />
-            <span>{isSyncing ? "Connecting..." : `Pull & Deduplicate ${provider}`}</span>
+            <span>{isSyncing ? "Fetching..." : provider === "ICAL_FEED" ? "Import Calendar Snapshot" : "Provider Setup Pending"}</span>
           </button>
         </div>
       </motion.div>

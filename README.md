@@ -1,4 +1,16 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+SyllabiQ is a [Next.js](https://nextjs.org) academic planning app with Prisma/Postgres-backed accounts, sessions, courses, and tasks.
+
+## Production setup
+
+Set `DATABASE_URL`, `SESSION_SECRET`, and the provider credentials in `.env.local` or the deployment environment. Apply the tracked schema before serving authenticated traffic:
+
+```bash
+npm ci
+npm run db:migrate
+npm run build
+```
+
+Without `DATABASE_URL`, a production deployment stays in read-only visitor mode and account/write endpoints return a clear `503` configuration response. Local development may use the existing demo store for UI work; it does not create client-side accounts.
 
 ## Getting Started
 

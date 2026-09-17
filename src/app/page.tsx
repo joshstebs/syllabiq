@@ -243,7 +243,7 @@ export default function SyllabiQDashboard() {
 
       {/* Top Navbar */}
       <Navbar
-        onOpenLmsModal={() => requirePro(() => setShowLmsModal(true))}
+        onOpenLmsModal={() => setShowLmsModal(true)}
         onOpenSheetsModal={() => requirePro(() => setShowSheetsModal(true))}
         onOpenGradeModal={() => requirePro(() => setShowGradeModal(true))}
         onOpenDispatchModal={() => requirePro(() => setShowDispatchModal(true))}
@@ -317,7 +317,7 @@ export default function SyllabiQDashboard() {
             </button>
 
             <button
-              onClick={() => requirePro(() => setShowLmsModal(true))}
+              onClick={() => setShowLmsModal(true)}
               className="rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-6 py-2.5 text-sm font-extrabold shadow-xs hover:bg-slate-800 dark:hover:bg-slate-200 transition cursor-pointer"
             >
               Connect Canvas
@@ -456,7 +456,7 @@ export default function SyllabiQDashboard() {
         <section className="space-y-3">
           <DormwayStartWidget
             onOpenUpload={() => requirePro(() => setShowDropzone(true))}
-            onOpenCanvas={() => requirePro(() => setShowLmsModal(true))}
+            onOpenCanvas={() => setShowLmsModal(true)}
           />
         </section>
 
@@ -856,7 +856,7 @@ export default function SyllabiQDashboard() {
         {/* DORMWAY HALLMARK SHOWCASE SECTIONS: Canvas Sync Without IT, Forward a Syllabus Breakdown, Founder Story */}
         <section className="space-y-12">
           <DormwayShowcaseSections
-            onOpenCanvas={() => requirePro(() => setShowLmsModal(true))}
+            onOpenCanvas={() => setShowLmsModal(true)}
             onOpenUpload={() => requirePro(() => setShowDropzone(true))}
           />
         </section>

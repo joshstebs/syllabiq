@@ -10,7 +10,7 @@ export async function GET() {
     const store = getStore();
     const tasks = store.tasks;
 
-    let icsContent = [
+    const icsContent = [
       "BEGIN:VCALENDAR",
       "VERSION:2.0",
       "PRODID:-//SyllabiQ//Academic Schedule Feed//EN",

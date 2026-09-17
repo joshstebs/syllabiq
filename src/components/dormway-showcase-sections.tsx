@@ -47,12 +47,12 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
             </div>
 
             <h2 className="font-display text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight break-words">
-              Sync Canvas <br />
-              <span className="text-rose-600">without campus IT</span>
+              Import LMS deadlines <br />
+              <span className="text-rose-600">when your school supports it</span>
             </h2>
 
             <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium break-words">
-              Read-only student token. No university administrator approvals required. Set it up once in 30 seconds.
+              iCal snapshots work now. Canvas, Blackboard, Brightspace, and Moodle connections are being built with institution-approved OAuth/API access.
             </p>
 
             <ul className="space-y-3 pt-1 text-xs sm:text-sm font-semibold text-slate-700 w-full min-w-0">
@@ -60,13 +60,13 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
                 <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-rose-100 flex items-center justify-center shrink-0 mt-0.5">
                   <div className="h-2 w-2 rounded-full bg-rose-600" />
                 </div>
-                <span className="flex-1 min-w-0 break-words leading-snug">Assignments and due dates auto-sync bidirectionally</span>
+                <span className="flex-1 min-w-0 break-words leading-snug">Import calendar deadlines as a one-time snapshot</span>
               </li>
               <li className="flex items-start gap-2.5 sm:gap-3 w-full min-w-0">
                 <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-rose-100 flex items-center justify-center shrink-0 mt-0.5">
                   <div className="h-2 w-2 rounded-full bg-rose-600" />
                 </div>
-                <span className="flex-1 min-w-0 break-words leading-snug">Running grades and course weights pull in automatically</span>
+                <span className="flex-1 min-w-0 break-words leading-snug">Provider OAuth/API imports are on the roadmap</span>
               </li>
               <li className="flex items-start gap-2.5 sm:gap-3 w-full min-w-0">
                 <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-rose-100 flex items-center justify-center shrink-0 mt-0.5">
@@ -88,7 +88,7 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
                 onClick={onOpenCanvas}
                 className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs sm:text-sm px-5 py-3.5 shadow-md transition cursor-pointer"
               >
-                <span>Connect Canvas in 30 Seconds</span>
+                <span>Open LMS Import</span>
                 <ArrowRight className="h-4 w-4 shrink-0" />
               </button>
             </div>
@@ -119,10 +119,10 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
             {/* Canvas Sync Card */}
             <div className="rounded-2xl border border-slate-200/90 bg-white p-3.5 sm:p-6 shadow-sm space-y-3 w-full min-w-0">
               <div className="flex items-center justify-between gap-2">
-                <h3 className="text-xs sm:text-sm font-black text-slate-900 truncate">Canvas Sync Live Feed</h3>
-                <div className="inline-flex items-center gap-1 rounded-full bg-emerald-50 border border-emerald-200 px-2 py-0.5 text-[10px] sm:text-xs font-bold text-emerald-700 shrink-0">
-                  <CheckCircle2 className="h-3 w-3 text-emerald-600" />
-                  <span>Active &amp; Synced</span>
+                <h3 className="text-xs sm:text-sm font-black text-slate-900 truncate">LMS Import Status</h3>
+                <div className="inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-2 py-0.5 text-[10px] sm:text-xs font-bold text-amber-700 shrink-0">
+                  <CheckCircle2 className="h-3 w-3 text-amber-600" />
+                  <span>iCal snapshot available</span>
                 </div>
               </div>
 

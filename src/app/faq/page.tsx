@@ -41,7 +41,7 @@ export default function FAQPage() {
     },
     {
       q: "Can I connect my Canvas or Blackboard account?",
-      a: "Yes! Click the 'LMS' button in the navigation bar to connect Canvas LMS, Blackboard Learn, Brightspace D2L, or Moodle via API token or calendar feed URL to automatically pull all upcoming assignment due dates."
+      a: "SyllabiQ currently supports one-time iCalendar/WebCal snapshots. Live Canvas, Blackboard Learn, Brightspace D2L, and Moodle imports are planned and will require institution-approved OAuth/API connections."
     },
     {
       q: "Who built SyllabiQ?",

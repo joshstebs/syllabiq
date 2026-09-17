@@ -135,7 +135,7 @@ export function GoogleSheetsModal({ onClose, onSyncUpdated }: Props) {
 
           {simulatedTaskTitle && (
             <div className="text-xs text-emerald-800 bg-emerald-100/70 px-3.5 py-2 rounded-xl border border-emerald-200 font-semibold animate-fade-in">
-              ⚡ Webhook Synchronized: Updated "{simulatedTaskTitle}" from Google Sheets.
+              ⚡ Webhook Synchronized: Updated &quot;{simulatedTaskTitle}&quot; from Google Sheets.
             </div>
           )}
 

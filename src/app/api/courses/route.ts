@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { getStore, saveStore, deleteCourse, updateCourseGroupChat } from "@/lib/storage";
+import { getCurrentUser, isDatabaseConfigured } from "@/lib/server/auth";
+import { getUserDashboard } from "@/lib/server/core-data";
+import { prisma } from "@/lib/server/prisma";
 
 export async function GET() {
+  const user = await getCurrentUser();
+  if (user) return NextResponse.json(await getUserDashboard(user.id));
+
   const store = getStore();
   return NextResponse.json({
     courses: store.courses,
@@ -15,6 +21,23 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
+    const user = await getCurrentUser();
+    if (user) {
+      const course = await prisma.course.create({
+        data: {
+          userId: user.id,
+          name: typeof body.name === "string" ? body.name : "New Course",
+          code: typeof body.code === "string" ? body.code : "COURSE 101",
+          colorHex: typeof body.colorHex === "string" ? body.colorHex : "#6366F1",
+          term: typeof body.term === "string" ? body.term : "Fall 2026",
+          instructor: { create: { name: body.instructor?.name || "TBD", email: body.instructor?.email || "", officeHours: body.instructor?.office_hours || "" } },
+          weightCategories: { create: Array.isArray(body.weightCategories) ? body.weightCategories.map((category: { category?: string; percentage?: number }) => ({ category: category.category || "General", percentage: Number(category.percentage) || 100 })) : [{ category: "General", percentage: 100 }] }
+        }
+      });
+      return NextResponse.json({ success: true, course });
+    }
+
+    if (isDatabaseConfigured() || process.env.NODE_ENV === "production") return NextResponse.json({ error: "Account services are not configured" }, { status: 503 });
     const store = getStore();
 
     const newCourse = {
@@ -68,6 +91,14 @@ export async function DELETE(req: Request) {
     if (!courseId) {
       return NextResponse.json({ error: "Missing course id parameter" }, { status: 400 });
     }
+
+    const user = await getCurrentUser();
+    if (user) {
+      const deleted = await prisma.course.deleteMany({ where: { id: courseId, userId: user.id } });
+      if (!deleted.count) return NextResponse.json({ error: "Course not found" }, { status: 404 });
+      return NextResponse.json({ success: true, message: "Course and associated tasks successfully deleted." });
+    }
+    if (isDatabaseConfigured() || process.env.NODE_ENV === "production") return NextResponse.json({ error: "Account services are not configured" }, { status: 503 });
 
     const deleted = deleteCourse(courseId);
     if (!deleted) {

@@ -138,7 +138,7 @@ export class UniversalLMSSyncService {
       }
     ];
 
-    let totalFound = sampleLmsItems.length;
+    const totalFound = sampleLmsItems.length;
     let syncedNew = 0;
     let deduplicated = 0;
     const details: string[] = [];

@@ -1,6 +1,6 @@
 "use client";
 
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 export type UserRole = "ADMIN" | "TESTER" | "STUDENT";
 
@@ -26,49 +26,29 @@ export interface UserProfile {
 }
 
 export const ADMIN_USER: UserProfile = {
-  id: "user-admin-01",
-  name: "Josh Stebs",
-  email: "support@syllabiq.ca",
+  id: "demo-admin",
+  name: "Demo Admin",
+  email: "admin@example.test",
   role: "ADMIN",
   avatar: "👨‍💼",
-  school: "Cornell University",
-  major: "Computer Science & Economics",
-  graduationYear: "2027",
-  timeZone: "America/New_York",
-  timeZoneMode: "auto",
-  defaultDueTime: "23:59",
-  weekStartDay: "sunday",
-  prepBufferDays: 5,
   isPro: true,
-  provider: "email",
-  trialEndsAt: new Date(Date.now() + 30 * 86400000).toISOString(),
-  monthlyPrice: 5.0
+  provider: "email"
 };
 
 export const TESTER_USER: UserProfile = {
-  id: "user-tester-02",
-  name: "Alex Cornell",
-  email: "tester@syllabiq.ca",
+  id: "demo-tester",
+  name: "Demo Tester",
+  email: "tester@example.test",
   role: "TESTER",
   avatar: "🧑‍🎓",
-  school: "Cornell University",
-  major: "Applied Economics & Management",
-  graduationYear: "2026",
-  timeZone: "America/New_York",
-  timeZoneMode: "auto",
-  defaultDueTime: "23:59",
-  weekStartDay: "sunday",
-  prepBufferDays: 5,
   isPro: true,
-  provider: "email",
-  trialEndsAt: new Date(Date.now() + 30 * 86400000).toISOString(),
-  monthlyPrice: 5.0
+  provider: "email"
 };
 
 export const FREE_VISITOR: UserProfile = {
   id: "guest-visitor",
   name: "Guest Student",
-  email: "student@syllabiq.ca",
+  email: "student@example.test",
   role: "STUDENT",
   avatar: "🎓",
   school: "College Campus",
@@ -85,192 +65,103 @@ export const FREE_VISITOR: UserProfile = {
 
 interface AuthContextType {
   user: UserProfile | null;
-  loginWithCredentials: (email: string, pass: string) => boolean;
-  loginWithGoogle: (email?: string, name?: string, useRealOAuth?: boolean) => void;
+  loginWithCredentials: (email: string, pass: string) => Promise<boolean>;
+  registerWithCredentials: (name: string, email: string, pass: string) => Promise<boolean>;
+  loginWithGoogle: (useRealOAuth?: boolean) => void;
   loginWithAdminPreset: () => void;
   loginWithTesterPreset: () => void;
-  loginWithNetID: (netId: string) => void;
-  logout: () => void;
+  logout: () => Promise<void>;
   updateUserProStatus: (isPro: boolean) => void;
-  updateUserProfile: (patch: Partial<UserProfile>) => void;
+  updateUserProfile: (patch: Partial<UserProfile>) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const demoAccountsEnabled = process.env.NEXT_PUBLIC_ENABLE_DEMO_ACCOUNTS === "true";
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(FREE_VISITOR);
 
-  function saveUser(u: UserProfile | null) {
-    setUser(u);
-    if (u) {
-      localStorage.setItem("syllabiq_auth_user", JSON.stringify(u));
-    } else {
-      localStorage.removeItem("syllabiq_auth_user");
-    }
-  }
-
   useEffect(() => {
-    try {
-      if (typeof window !== "undefined") {
-        const params = new URLSearchParams(window.location.search);
-        if (params.get("google_auth") === "success") {
-          const gEmail = params.get("email") || "josh.stebs@gmail.com";
-          const gName = params.get("name") || "Josh Stebs (Google)";
-          const googleUser: UserProfile = {
-            id: `user-google-${Date.now()}`,
-            name: gName,
-            email: gEmail,
-            role: gEmail.toLowerCase().includes("stebs") || gEmail.includes("admin") ? "ADMIN" : "STUDENT",
-            avatar: "🌐",
-            isPro: true,
-            provider: "google",
-            trialEndsAt: new Date(Date.now() + 30 * 86400000).toISOString(),
-            monthlyPrice: 5.0
-          };
-          localStorage.setItem("syllabiq_explicit_session", "true");
-          saveUser(googleUser);
-          window.history.replaceState({}, document.title, window.location.pathname);
-          return;
-        }
-      }
+    let cancelled = false;
+    fetch("/api/auth/session", { credentials: "same-origin" })
+      .then(async (response) => {
+        if (!response.ok) return null;
+        const data = (await response.json()) as { user?: UserProfile | null };
+        return data.user ?? null;
+      })
+      .then((sessionUser) => {
+        if (!cancelled && sessionUser) setUser(sessionUser);
+      })
+      .catch(() => undefined);
 
-      const hasExplicitSession = localStorage.getItem("syllabiq_explicit_session");
-      const stored = localStorage.getItem("syllabiq_auth_user");
-      if (hasExplicitSession && stored) {
-        setUser(JSON.parse(stored));
-      } else {
-        setUser(FREE_VISITOR);
-        localStorage.setItem("syllabiq_auth_user", JSON.stringify(FREE_VISITOR));
-      }
-    } catch (e) {
-      console.error(e);
-    }
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const loginWithCredentials = (email: string, pass: string): boolean => {
-    const cleanEmail = email.trim().toLowerCase();
-    if (!cleanEmail || !pass.trim()) return false;
-    if (
-      cleanEmail === "support@syllabiq.ca" ||
-      cleanEmail === "admin@syllabiq.ca" ||
-      cleanEmail === "admin@syllabiq.app" ||
-      cleanEmail === "josh.stebs@gmail.com"
-    ) {
-      localStorage.setItem("syllabiq_explicit_session", "true");
-      saveUser(ADMIN_USER);
-      return true;
-    }
-    if (cleanEmail === "tester@syllabiq.ca" || cleanEmail === "tester@syllabiq.app") {
-      localStorage.setItem("syllabiq_explicit_session", "true");
-      saveUser(TESTER_USER);
-      return true;
-    }
-    // Generic email user
-    const newUser: UserProfile = {
-      id: `user-${Date.now()}`,
-      name: email.split("@")[0].replace(/[._]/g, " "),
-      email: cleanEmail,
-      role: "STUDENT",
-      avatar: "🧑‍🎓",
-      isPro: false,
-      provider: "email"
-    };
-    localStorage.setItem("syllabiq_explicit_session", "true");
-    saveUser(newUser);
+  const loginWithCredentials = async (email: string, password: string): Promise<boolean> => {
+    const response = await fetch("/api/auth/login", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify({ email, password })
+    });
+    if (!response.ok) return false;
+    const data = (await response.json()) as { user?: UserProfile };
+    if (!data.user) return false;
+    setUser(data.user);
     return true;
   };
 
-  const loginWithGoogle = (customEmail?: string, customName?: string, useRealOAuth = false) => {
-    if (useRealOAuth && typeof window !== "undefined") {
-      window.location.href = "/api/auth/google";
-      return;
-    }
-    const googleUser: UserProfile = {
-      id: "user-google-" + Date.now(),
-      name: customName || "Josh Stebs (Google)",
-      email: customEmail || "josh.stebs@gmail.com",
-      role: "ADMIN",
-      avatar: "🌐",
-      isPro: true,
-      provider: "google",
-      trialEndsAt: new Date(Date.now() + 30 * 86400000).toISOString(),
-      monthlyPrice: 5.0
-    };
-    localStorage.setItem("syllabiq_explicit_session", "true");
-    saveUser(googleUser);
+  const registerWithCredentials = async (name: string, email: string, password: string): Promise<boolean> => {
+    const response = await fetch("/api/auth/register", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify({ name, email, password })
+    });
+    if (!response.ok) return false;
+    const data = (await response.json()) as { user?: UserProfile };
+    if (!data.user) return false;
+    setUser(data.user);
+    return true;
+  };
+
+  const loginWithGoogle = (useRealOAuth = true) => {
+    if (useRealOAuth && typeof window !== "undefined") window.location.assign("/api/auth/google");
   };
 
   const loginWithAdminPreset = () => {
-    localStorage.setItem("syllabiq_explicit_session", "true");
-    saveUser(ADMIN_USER);
+    if (demoAccountsEnabled) setUser(ADMIN_USER);
   };
 
   const loginWithTesterPreset = () => {
-    localStorage.setItem("syllabiq_explicit_session", "true");
-    saveUser(TESTER_USER);
+    if (demoAccountsEnabled) setUser(TESTER_USER);
   };
 
-  const loginWithNetID = (netId: string) => {
-    const netUser: UserProfile = {
-      id: `user-${netId}`,
-      name: `${netId.toUpperCase()} (Cornell NetID)`,
-      email: `${netId}@cornell.edu`,
-      role: "STUDENT",
-      avatar: "🏛️",
-      isPro: true,
-      provider: "cornell",
-      trialEndsAt: new Date(Date.now() + 30 * 86400000).toISOString(),
-      monthlyPrice: 5.0
-    };
-    localStorage.setItem("syllabiq_explicit_session", "true");
-    saveUser(netUser);
-  };
-
-  const logout = () => {
-    localStorage.removeItem("syllabiq_explicit_session");
-    saveUser(FREE_VISITOR);
+  const logout = async () => {
+    await fetch("/api/auth/logout", { method: "POST", credentials: "same-origin" });
+    setUser(FREE_VISITOR);
   };
 
   const updateUserProStatus = (isPro: boolean) => {
-    const baseUser = user && user.id !== "guest-visitor" ? user : FREE_VISITOR;
-    const updated: UserProfile = {
-      ...baseUser,
-      id: isPro && baseUser.id === "guest-visitor" ? `user-pro-${Date.now()}` : baseUser.id,
-      name: isPro && baseUser.id === "guest-visitor" ? "Pro Student" : baseUser.name,
-      isPro,
-      trialEndsAt: isPro ? new Date(Date.now() + 30 * 86400000).toISOString() : undefined,
-      monthlyPrice: isPro ? 5.0 : 0
-    };
-    if (isPro) {
-      localStorage.setItem("syllabiq_explicit_session", "true");
-    }
-    saveUser(updated);
+    setUser((current) => (current ? { ...current, isPro } : current));
   };
 
-  const updateUserProfile = (patch: Partial<UserProfile>) => {
-    const baseUser = user && user.id !== "guest-visitor" ? user : FREE_VISITOR;
-    const updated: UserProfile = {
-      ...baseUser,
-      ...patch
-    };
-    localStorage.setItem("syllabiq_explicit_session", "true");
-    saveUser(updated);
+  const updateUserProfile = async (patch: Partial<UserProfile>) => {
+    const response = await fetch("/api/auth/profile", {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
+      body: JSON.stringify(patch)
+    });
+    if (!response.ok) return;
+    const data = (await response.json()) as { user?: UserProfile };
+    if (data.user) setUser(data.user);
   };
 
   return (
-    <AuthContext.Provider
-      value={{
-        user,
-        loginWithCredentials,
-        loginWithGoogle,
-        loginWithAdminPreset,
-        loginWithTesterPreset,
-        loginWithNetID,
-        logout,
-        updateUserProStatus,
-        updateUserProfile
-      }}
-    >
+    <AuthContext.Provider value={{ user, loginWithCredentials, registerWithCredentials, loginWithGoogle, loginWithAdminPreset, loginWithTesterPreset, logout, updateUserProStatus, updateUserProfile }}>
       {children}
     </AuthContext.Provider>
   );
@@ -278,6 +169,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
 export function useAuth() {
   const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error("useAuth must be used within an AuthProvider");
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
   return ctx;
 }

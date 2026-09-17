@@ -40,7 +40,7 @@ export function HarbourMainLogo({
   };
 
   // The Monogram Icon SVG
-  const MonogramSvg = ({ svgClass = iconSizes[size] }: { svgClass?: string }) => (
+  const renderMonogram = (svgClass = iconSizes[size]) => (
     <svg
       viewBox="0 0 160 130"
       fill="none"
@@ -80,13 +80,13 @@ export function HarbourMainLogo({
   );
 
   if (variant === "icon") {
-    return <MonogramSvg />;
+    return renderMonogram();
   }
 
   if (variant === "stacked") {
     return (
       <div className={`flex flex-col items-center text-center ${className}`}>
-        <MonogramSvg svgClass={iconSizes[size]} />
+        {renderMonogram(iconSizes[size])}
         <div className="mt-2 space-y-0.5">
           <div className={`${textSizes[size]} font-black tracking-tight flex items-center justify-center space-x-1.5`}>
             <span className={`text-[#0E2F49] ${lightModeOnly ? "" : "dark:text-white"}`}>Harbour</span>
@@ -106,7 +106,7 @@ export function HarbourMainLogo({
   // Horizontal variant (default)
   return (
     <div className={`flex items-center space-x-3.5 ${className}`}>
-      <MonogramSvg svgClass={iconSizes[size]} />
+      {renderMonogram(iconSizes[size])}
       <div>
         <div className={`${textSizes[size]} font-black tracking-tight leading-none flex items-center space-x-1.5`}>
           <span className={`text-[#0E2F49] ${lightModeOnly ? "" : "dark:text-white"}`}>Harbour</span>

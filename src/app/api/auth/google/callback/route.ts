@@ -1,12 +1,20 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
+import { createSession, isDatabaseConfigured } from "@/lib/server/auth";
+import { prisma } from "@/lib/server/prisma";
 
 export async function GET(req: Request) {
   const { searchParams, origin } = new URL(req.url);
   const code = searchParams.get("code");
   const error = searchParams.get("error");
+  const returnedState = searchParams.get("state");
+  const expectedState = (await cookies()).get("syllabiq_oauth_state")?.value;
 
   if (error || !code) {
     return NextResponse.redirect(`${origin}/?auth_error=${encodeURIComponent(error || "No authorization code provided")}`);
+  }
+  if (!returnedState || !expectedState || returnedState !== expectedState) {
+    return NextResponse.redirect(`${origin}/?auth_error=${encodeURIComponent("Invalid OAuth state")}`);
   }
 
   const clientId = process.env.GOOGLE_CLIENT_ID || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
@@ -17,6 +25,9 @@ export async function GET(req: Request) {
     return NextResponse.redirect(
       `${origin}/?auth_error=${encodeURIComponent("Google sign-in is not configured for this deployment")}`
     );
+  }
+  if (!isDatabaseConfigured()) {
+    return NextResponse.redirect(`${origin}/?auth_error=${encodeURIComponent("Account persistence is not configured")}`);
   }
 
   try {
@@ -61,22 +72,15 @@ export async function GET(req: Request) {
       console.warn("Failed to fetch Google userinfo:", uErr);
     }
 
-    const redirectTarget = new URL(`${origin}/`);
-    redirectTarget.searchParams.set("google_auth", "success");
-    redirectTarget.searchParams.set("email", userEmail);
-    redirectTarget.searchParams.set("name", userName);
-    if (userPicture) redirectTarget.searchParams.set("picture", userPicture);
-
-    const res = NextResponse.redirect(redirectTarget.toString());
-    // Store access token in cookie for Google Calendar and Drive API requests
-    res.cookies.set("google_access_token", accessToken, {
-      httpOnly: false,
-      secure: process.env.NODE_ENV === "production",
-      maxAge: 3600,
-      path: "/"
+    const user = await prisma.user.upsert({
+      where: { email: userEmail.toLowerCase() },
+      update: { name: userName, avatarUrl: userPicture || undefined },
+      create: { email: userEmail.toLowerCase(), name: userName, avatarUrl: userPicture || undefined }
     });
-
-    return res;
+    await createSession(user.id);
+    const response = NextResponse.redirect(`${origin}/`);
+    response.cookies.delete("syllabiq_oauth_state");
+    return response;
   } catch (err: unknown) {
     console.error("Google OAuth callback exception:", err);
     const message = err instanceof Error ? err.message : "Internal auth error";

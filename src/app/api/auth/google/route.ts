@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { randomBytes } from "node:crypto";
 
 export async function GET(req: Request) {
   const clientId = process.env.GOOGLE_CLIENT_ID || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
@@ -27,11 +28,20 @@ export async function GET(req: Request) {
   authUrl.searchParams.set("scope", scope);
   authUrl.searchParams.set("access_type", "offline");
   authUrl.searchParams.set("prompt", "consent");
-  authUrl.searchParams.set("state", "syllabiq_oauth_state");
+  const state = randomBytes(24).toString("base64url");
+  authUrl.searchParams.set("state", state);
 
   if (searchParams.get("format") === "json") {
     return NextResponse.json({ url: authUrl.toString(), configured: true });
   }
 
-  return NextResponse.redirect(authUrl.toString());
+  const response = NextResponse.redirect(authUrl.toString());
+  response.cookies.set("syllabiq_oauth_state", state, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 600,
+    path: "/"
+  });
+  return response;
 }

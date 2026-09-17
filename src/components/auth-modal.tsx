@@ -20,6 +20,7 @@ interface Props {
 export function AuthModal({ isOpen, onClose, onOpenAdminPanel }: Props) {
   const {
     loginWithCredentials,
+    registerWithCredentials,
     loginWithGoogle,
     loginWithAdminPreset,
     loginWithTesterPreset
@@ -28,21 +29,32 @@ export function AuthModal({ isOpen, onClose, onOpenAdminPanel }: Props) {
   const demoAccountsEnabled = process.env.NEXT_PUBLIC_ENABLE_DEMO_ACCOUNTS === "true";
   const [activeTab, setActiveTab] = useState<"PRESETS" | "EMAIL" | "SSO">("EMAIL");
   const [email, setEmail] = useState("");
+  const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const [isRegistering, setIsRegistering] = useState(false);
   const [successNotice, setSuccessNotice] = useState("");
+  const [errorNotice, setErrorNotice] = useState("");
 
   if (!isOpen) return null;
 
-  const handleEmailSubmit = (e: React.FormEvent) => {
+  const handleEmailSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
-    const success = loginWithCredentials(email, password);
+    setErrorNotice("");
+    if (!email || !password) {
+      setErrorNotice("Enter your email and password to continue.");
+      return;
+    }
+    const success = isRegistering
+      ? await registerWithCredentials(name, email, password)
+      : await loginWithCredentials(email, password);
     if (success) {
-      setSuccessNotice(`Signed in successfully as ${email}!`);
+      setSuccessNotice(isRegistering ? "Your account is ready." : `Signed in successfully as ${email}!`);
       setTimeout(() => {
         onClose();
         setSuccessNotice("");
       }, 800);
+    } else {
+      setErrorNotice("We could not sign you in. Check your details or create an account first.");
     }
   };
 
@@ -119,6 +131,11 @@ export function AuthModal({ isOpen, onClose, onOpenAdminPanel }: Props) {
           <div className="mx-6 mt-4 p-3 rounded-xl bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-300 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 text-xs font-bold flex items-center space-x-2">
             <CheckCircle2 className="h-4 w-4 shrink-0 text-emerald-600" />
             <span>{successNotice}</span>
+          </div>
+        )}
+        {errorNotice && (
+          <div className="mx-6 mt-4 rounded-xl border border-rose-300 bg-rose-50 p-3 text-xs font-bold text-rose-800 dark:border-rose-800 dark:bg-rose-950/50 dark:text-rose-300">
+            {errorNotice}
           </div>
         )}
 
@@ -220,7 +237,20 @@ export function AuthModal({ isOpen, onClose, onOpenAdminPanel }: Props) {
           {activeTab === "EMAIL" && (
             <form onSubmit={handleEmailSubmit} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                  {isRegistering && (
+                    <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
+                      Name
+                      <input
+                        type="text"
+                        required
+                        value={name}
+                        onChange={(e) => setName(e.target.value)}
+                        placeholder="Your name"
+                        className="mt-1 w-full px-4 py-2.5 text-xs rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-900 dark:text-white focus:outline-none focus:border-blue-500"
+                      />
+                    </label>
+                  )}
+                  <label className="block text-xs font-bold text-slate-700 dark:text-slate-300 mb-1">
                   Email Address
                 </label>
                 <div className="relative">
@@ -266,13 +296,23 @@ export function AuthModal({ isOpen, onClose, onOpenAdminPanel }: Props) {
                 type="submit"
                 className="w-full py-3 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-black shadow-xs transition flex items-center justify-center space-x-2 cursor-pointer"
               >
-                <span>Sign In or Create Account</span>
+                <span>{isRegistering ? "Create Account" : "Sign In"}</span>
                 <ArrowRight className="h-4 w-4" />
               </button>
 
               <p className="text-[10px] text-center text-slate-400">
-                New accounts automatically receive a 30-day Free Trial of SyllabiQ Pro ($5/month after).
+                {isRegistering ? "Your account and data are stored securely on the server." : ""}
               </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsRegistering((current) => !current);
+                  setErrorNotice("");
+                }}
+                className="w-full text-center text-[11px] font-bold text-blue-600 dark:text-blue-400 hover:underline"
+              >
+                {isRegistering ? "Already have an account? Sign in" : "Need an account? Create one"}
+              </button>
             </form>
           )}
 
@@ -286,7 +326,7 @@ export function AuthModal({ isOpen, onClose, onOpenAdminPanel }: Props) {
               {/* Live Google OAuth Consent Flow */}
               <button
                 onClick={() => {
-                  loginWithGoogle(undefined, undefined, true);
+                  loginWithGoogle(true);
                 }}
                 className="w-full py-3 px-4 rounded-2xl border-2 border-blue-500/30 bg-blue-50/40 dark:bg-blue-950/40 hover:bg-blue-50 dark:hover:bg-blue-950/70 text-xs font-black text-blue-900 dark:text-blue-200 shadow-xs transition flex items-center justify-center space-x-3 cursor-pointer"
               >
