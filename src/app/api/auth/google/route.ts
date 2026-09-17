@@ -3,7 +3,10 @@ import { NextResponse } from "next/server";
 export async function GET(req: Request) {
   const clientId = process.env.GOOGLE_CLIENT_ID || process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
   if (!clientId) {
-    return NextResponse.json({ error: "Google Client ID is not configured" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Google sign-in is not configured for this deployment", configured: false },
+      { status: 503 }
+    );
   }
 
   const { searchParams, origin } = new URL(req.url);

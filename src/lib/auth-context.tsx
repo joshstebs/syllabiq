@@ -100,6 +100,15 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<UserProfile | null>(FREE_VISITOR);
 
+  function saveUser(u: UserProfile | null) {
+    setUser(u);
+    if (u) {
+      localStorage.setItem("syllabiq_auth_user", JSON.stringify(u));
+    } else {
+      localStorage.removeItem("syllabiq_auth_user");
+    }
+  }
+
   useEffect(() => {
     try {
       if (typeof window !== "undefined") {
@@ -138,17 +147,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }, []);
 
-  const saveUser = (u: UserProfile | null) => {
-    setUser(u);
-    if (u) {
-      localStorage.setItem("syllabiq_auth_user", JSON.stringify(u));
-    } else {
-      localStorage.removeItem("syllabiq_auth_user");
-    }
-  };
-
   const loginWithCredentials = (email: string, pass: string): boolean => {
     const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail || !pass.trim()) return false;
     if (
       cleanEmail === "support@syllabiq.ca" ||
       cleanEmail === "admin@syllabiq.ca" ||

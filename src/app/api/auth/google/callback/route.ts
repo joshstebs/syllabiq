@@ -13,6 +13,12 @@ export async function GET(req: Request) {
   const clientSecret = process.env.GOOGLE_CLIENT_SECRET;
   const redirectUri = `${origin}/api/auth/google/callback`;
 
+  if (!clientId || !clientSecret) {
+    return NextResponse.redirect(
+      `${origin}/?auth_error=${encodeURIComponent("Google sign-in is not configured for this deployment")}`
+    );
+  }
+
   try {
     // Exchange authorization code for tokens
     const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
@@ -71,8 +77,9 @@ export async function GET(req: Request) {
     });
 
     return res;
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Google OAuth callback exception:", err);
-    return NextResponse.redirect(`${origin}/?auth_error=${encodeURIComponent(err.message || "Internal auth error")}`);
+    const message = err instanceof Error ? err.message : "Internal auth error";
+    return NextResponse.redirect(`${origin}/?auth_error=${encodeURIComponent(message)}`);
   }
 }

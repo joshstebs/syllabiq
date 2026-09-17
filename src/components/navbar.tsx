@@ -76,6 +76,7 @@ export function Navbar({
 }: Props) {
   const { theme, resolvedTheme, toggleTheme } = useTheme();
   const { user, logout, loginWithAdminPreset, loginWithTesterPreset } = useAuth();
+  const demoAccountsEnabled = process.env.NEXT_PUBLIC_ENABLE_DEMO_ACCOUNTS === "true";
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showToolsMenu, setShowToolsMenu] = useState(false);
   const [showMobileTools, setShowMobileTools] = useState(false);
@@ -159,22 +160,24 @@ export function Navbar({
             </button>
           )}
 
-          <button
-            onClick={() => {
-              if (user.role === "ADMIN") {
-                loginWithTesterPreset();
-              } else {
-                loginWithAdminPreset();
-              }
-              setShowUserMenu(false);
-            }}
-            className="w-full flex items-center space-x-2 px-2.5 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold transition text-left cursor-pointer"
-          >
-            <RefreshCw className="h-3.5 w-3.5" />
-            <span>
-              Switch to {user.role === "ADMIN" ? "Tester (Alex)" : "Admin (Josh)"}
-            </span>
-          </button>
+          {demoAccountsEnabled && (
+            <button
+              onClick={() => {
+                if (user.role === "ADMIN") {
+                  loginWithTesterPreset();
+                } else {
+                  loginWithAdminPreset();
+                }
+                setShowUserMenu(false);
+              }}
+              className="w-full flex items-center space-x-2 px-2.5 py-2 rounded-xl text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 font-semibold transition text-left cursor-pointer"
+            >
+              <RefreshCw className="h-3.5 w-3.5" />
+              <span>
+                Switch demo account
+              </span>
+            </button>
+          )}
 
           <button
             onClick={() => {
