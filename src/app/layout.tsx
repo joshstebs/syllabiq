@@ -15,8 +15,34 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://syllabiq.ca'),
   title: "SyllabiQ - Your Whole Semester Organized In Seconds",
-  description: "Automate your study schedule. Upload your syllabi or connect your LMS to pull every due date and keep you on track."
+  description: "Automate your study schedule. Upload your syllabi or connect your LMS to pull every due date and keep you on track.",
+  alternates: {
+    canonical: '/'
+  },
+  openGraph: {
+    title: "SyllabiQ - Your Whole Semester Organized In Seconds",
+    description: "Automate your study schedule. Upload your syllabi or connect your LMS to pull every due date and keep you on track.",
+    url: 'https://syllabiq.ca',
+    siteName: 'SyllabiQ',
+    images: [
+      {
+        url: '/file.svg',
+        width: 16,
+        height: 16,
+        alt: 'SyllabiQ'
+      }
+    ],
+    locale: 'en_US',
+    type: 'website'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: "SyllabiQ - Your Whole Semester Organized In Seconds",
+    description: "Automate your study schedule. Upload your syllabi or connect your LMS to pull every due date and keep you on track.",
+    images: ['/file.svg']
+  }
 };
 
 export default function RootLayout({
