@@ -14,9 +14,46 @@ export const viewport: Viewport = {
   ]
 };
 
+const canonicalUrl = process.env.NEXT_PUBLIC_CANONICAL_URL || "https://syllabiq.ca";
+const isNonCanonical = process.env.VERCEL_URL && !process.env.VERCEL_URL.includes("syllabiq.ca");
+
 export const metadata: Metadata = {
-  title: "SyllabiQ - Your Whole Semester Organized In Seconds",
-  description: "Automate your study schedule. Upload your syllabi or connect your LMS to pull every due date and keep you on track."
+  metadataBase: new URL(canonicalUrl),
+  title: {
+    default: "SyllabiQ - Your Whole Semester Organized In Seconds",
+    template: "%s | SyllabiQ"
+  },
+  description: "Upload your syllabus or import calendar feeds. SyllabiQ builds your semester timeline, syncs to Google Calendar, and keeps you organized. First month free, then $5/month.",
+  keywords: ["syllabus planner", "academic calendar", "college organization", "student planner", "deadline tracker", "canvas calendar", "google calendar sync"],
+  authors: [{ name: "Harbour & Main" }],
+  creator: "Harbour & Main",
+  publisher: "Harbour & Main",
+  robots: isNonCanonical ? "noindex, nofollow" : "index, follow",
+  alternates: {
+    canonical: canonicalUrl
+  },
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: canonicalUrl,
+    title: "SyllabiQ - Your Whole Semester Organized In Seconds",
+    description: "Upload your syllabus or import calendar feeds. SyllabiQ builds your semester timeline automatically. First month free, then $5/month.",
+    siteName: "SyllabiQ",
+    images: [
+      {
+        url: "/og-image.svg",
+        width: 1200,
+        height: 630,
+        alt: "SyllabiQ - Academic Planning Made Simple"
+      }
+    ]
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "SyllabiQ - Your Whole Semester Organized In Seconds",
+    description: "Upload your syllabus or import calendar feeds. SyllabiQ builds your semester timeline automatically.",
+    images: ["/og-image.svg"]
+  }
 };
 
 export default function RootLayout({

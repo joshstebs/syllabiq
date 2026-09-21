@@ -338,14 +338,16 @@ export default function FeaturesPage() {
                   </div>
                   <div className="rounded-2xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800/60 p-4 space-y-3">
                     <div className="flex items-center gap-3">
-                      <img src="/images/avatar-maya.jpg" alt="Maya L." className="h-9 w-9 rounded-full object-cover ring-2 ring-emerald-500/30" />
+                      <div className="h-9 w-9 rounded-full bg-emerald-100 dark:bg-emerald-900/30 border-2 border-emerald-300 dark:border-emerald-700 flex items-center justify-center text-base shrink-0">
+                        👩‍💻
+                      </div>
                       <div className="text-xs">
-                        <span className="font-extrabold text-slate-900 dark:text-white">Maya L. (Cornell &apos;27)</span>
-                        <p className="text-[10px] text-slate-500 dark:text-slate-400">Posted CS 3110 OCaml Recursion Cheat Sheet · 18 upvotes</p>
+                        <span className="font-extrabold text-slate-900 dark:text-white">Example Student (Demo)</span>
+                        <p className="text-[10px] text-slate-500 dark:text-slate-400">Posted CS Course Study Guide · Example data</p>
                       </div>
                     </div>
                     <div className="p-3 bg-white dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 text-xs text-slate-600 dark:text-slate-300">
-                      &ldquo;Tip for Problem 3: Remember tail recursion accumulator trick from Lecture 4! Saved me 2 hours of debugging.&rdquo;
+                      &ldquo;Helpful tips shared for problem sets. Collaborative study notes across courses.&rdquo;
                     </div>
                   </div>
                 </div>
