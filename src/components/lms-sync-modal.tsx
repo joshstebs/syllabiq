@@ -60,8 +60,8 @@ export function LMSSyncModal({ onClose, onSyncComplete }: Props) {
               🎓
             </div>
             <div>
-              <h3 className="text-lg font-black text-slate-900">Universal LMS Sync & Deduplication</h3>
-              <p className="text-xs text-slate-500 font-medium">Canvas, Blackboard, D2L Brightspace, Moodle, and iCal</p>
+              <h3 className="text-lg font-black text-slate-900">LMS Calendar Import (iCal Preview)</h3>
+              <p className="text-xs text-slate-500 font-medium">Canvas, Blackboard, Brightspace, Moodle iCal feeds supported</p>
             </div>
           </div>
           <button onClick={onClose} className="text-slate-400 hover:text-slate-700 p-2 rounded-full cursor-pointer">✕</button>
@@ -94,6 +94,14 @@ export function LMSSyncModal({ onClose, onSyncComplete }: Props) {
               </button>
             ))}
           </div>
+        </div>
+
+        {/* Info Box */}
+        <div className="bg-blue-50 p-4 rounded-2xl border border-blue-200 space-y-2">
+          <p className="text-xs font-bold text-blue-900">📅 iCal Snapshot Import Ready</p>
+          <p className="text-xs text-blue-800 leading-relaxed">
+            Paste your LMS private calendar feed URL below to import deadlines as a one-time snapshot. Direct Canvas/Blackboard OAuth integrations are on the roadmap once production persistence is configured.
+          </p>
         </div>
 
         {/* Credentials / Feed */}
