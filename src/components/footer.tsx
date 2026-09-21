@@ -265,6 +265,20 @@ export function Footer({
               Harbour &amp; Main
             </Link>
             <span className="text-slate-300 dark:text-slate-700">•</span>
+            <Link
+              href="/privacy"
+              className="hover:text-slate-900 dark:hover:text-white py-2 px-1 transition"
+            >
+              Privacy
+            </Link>
+            <span className="text-slate-300 dark:text-slate-700">•</span>
+            <Link
+              href="/terms"
+              className="hover:text-slate-900 dark:hover:text-white py-2 px-1 transition"
+            >
+              Terms
+            </Link>
+            <span className="text-slate-300 dark:text-slate-700">•</span>
             <button
               onClick={onOpenContactModal}
               className="hover:text-indigo-600 dark:hover:text-indigo-400 py-2 px-1 cursor-pointer transition underline font-bold"
@@ -280,17 +294,10 @@ export function Footer({
             </Link>
             <span className="text-slate-300 dark:text-slate-700">•</span>
             <Link
-              href="/who-its-for"
-              className="hover:text-slate-900 dark:hover:text-white py-2 px-1 transition"
-            >
-              Who It&apos;s For
-            </Link>
-            <span className="text-slate-300 dark:text-slate-700">•</span>
-            <Link
               href="/faq"
               className="hover:text-blue-600 dark:hover:text-blue-400 font-black py-2 px-1 transition text-blue-700 dark:text-blue-400"
             >
-              Q&amp;A (FAQs)
+              Q&amp;A
             </Link>
           </div>
         </div>

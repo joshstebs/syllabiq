@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>OG Image Generator</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      width: 1200px;
+      height: 630px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .container {
+      text-align: center;
+      color: white;
+      padding: 60px;
+    }
+    .logo {
+      font-size: 96px;
+      font-weight: 900;
+      margin-bottom: 20px;
+      letter-spacing: -2px;
+    }
+    .logo .q {
+      color: #fbbf24;
+    }
+    .tagline {
+      font-size: 36px;
+      font-weight: 600;
+      margin-bottom: 30px;
+      opacity: 0.95;
+    }
+    .features {
+      font-size: 24px;
+      font-weight: 500;
+      opacity: 0.85;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="logo">Syllabi<span class="q">Q</span></div>
+    <div class="tagline">Your Whole Semester Organized In Seconds</div>
+    <div class="features">
+      Upload Syllabus · Import Calendar · Google Sync<br>
+      First Month Free · $5/Month
+    </div>
+  </div>
+</body>
+</html>
+<!-- 
+To generate: Open in browser, take screenshot at 1200x630, or use headless chrome:
+npx playwright screenshot og-image-generation.html og-image.png --viewport-size=1200,630
+-->

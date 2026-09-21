@@ -303,13 +303,6 @@ export default function SyllabiQDashboard() {
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <button
-              onClick={() => setShowDropzone(!showDropzone)}
-              className="rounded-full bg-white px-6 py-2.5 text-sm font-bold text-slate-800 border border-slate-300 shadow-xs hover:bg-slate-50 transition cursor-pointer"
-            >
-              {showDropzone ? "Hide Upload Area" : "How It Works"}
-            </button>
-
-            <button
               onClick={() => requirePro(() => setShowDropzone(true))}
               className="rounded-full bg-blue-600 px-7 py-2.5 text-sm font-extrabold text-white shadow-md shadow-blue-500/30 hover:bg-blue-700 transition cursor-pointer"
             >
@@ -320,34 +313,26 @@ export default function SyllabiQDashboard() {
               onClick={() => setShowLmsModal(true)}
               className="rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-950 px-6 py-2.5 text-sm font-extrabold shadow-xs hover:bg-slate-800 dark:hover:bg-slate-200 transition cursor-pointer"
             >
-              Connect Canvas
+              Import Calendar (Preview)
+            </button>
+
+            <button
+              onClick={() => setShowDropzone(!showDropzone)}
+              className="rounded-full bg-white px-6 py-2.5 text-sm font-bold text-slate-800 border border-slate-300 shadow-xs hover:bg-slate-50 transition cursor-pointer"
+            >
+              {showDropzone ? "Hide Upload Area" : "How It Works"}
             </button>
           </div>
 
-          {/* Real Student Community Strip with Attached User Photos */}
+          {/* Pricing Callout */}
           <div className="pt-3 flex flex-col sm:flex-row items-center justify-center gap-4 max-w-xl mx-auto">
-            <div className="inline-flex items-center space-x-3 bg-white/95 dark:bg-[#131B2E]/95 border border-slate-200 dark:border-slate-800 rounded-full py-1.5 px-4 shadow-sm backdrop-blur-xs">
-              <div className="flex -space-x-2 overflow-hidden">
-                <img
-                  src="/images/student-studying.jpg"
-                  alt="Student studying with laptop"
-                  className="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-slate-900 object-cover"
-                />
-                <img
-                  src="/images/student-group.jpg"
-                  alt="College students smiling together on campus"
-                  className="inline-block h-8 w-8 rounded-full ring-2 ring-white dark:ring-slate-900 object-cover"
-                />
-                <div className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue-600 text-[10px] font-black text-white ring-2 ring-white dark:ring-slate-900">
-                  +48k
-                </div>
-              </div>
-              <div className="text-left text-[11px] leading-tight">
+            <div className="inline-flex items-center space-x-3 bg-white/95 dark:bg-[#131B2E]/95 border border-slate-200 dark:border-slate-800 rounded-full py-2 px-5 shadow-sm backdrop-blur-xs">
+              <div className="text-left text-xs leading-tight">
                 <span className="font-extrabold text-slate-900 dark:text-white block">
-                  Built for Real College Students
+                  First Month Free · Then $5/Month
                 </span>
                 <span className="text-slate-500 dark:text-slate-400 font-medium">
-                  Cornell · NYU · UCLA · Harvard · 120+ campuses
+                  Cancel anytime with 1 click. No commitments.
                 </span>
               </div>
             </div>

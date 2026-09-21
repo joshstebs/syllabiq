@@ -47,12 +47,12 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
             </div>
 
             <h2 className="font-display text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight break-words">
-              Import LMS deadlines <br />
-              <span className="text-rose-600">when your school supports it</span>
+              Import Calendar Feeds <br />
+              <span className="text-rose-600">as iCal snapshots</span>
             </h2>
 
             <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium break-words">
-              iCal snapshot import is ready once production persistence is configured. Canvas, Blackboard, Brightspace, and Moodle connections are being built with institution-approved OAuth/API access.
+              Paste your private calendar feed URL (Canvas, Blackboard, Brightspace, Moodle) to import deadlines as a one-time snapshot. Direct OAuth integrations are on the roadmap.
             </p>
 
             <ul className="space-y-3 pt-1 text-xs sm:text-sm font-semibold text-slate-700 w-full min-w-0">
@@ -308,56 +308,50 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
           </blockquote>
         </div>
 
-        {/* Testimonials Grid with Real Student Headshots */}
+        {/* Example Student Testimonials (Demo Data) */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 w-full min-w-0">
           <div className="bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-700 p-4 sm:p-5 shadow-2xs space-y-3 min-w-0">
             <div className="flex items-center gap-3 min-w-0">
-              <img
-                src="/images/avatar-marcus.jpg"
-                alt="Vance B."
-                className="h-10 w-10 rounded-full object-cover ring-2 ring-blue-500/20 shrink-0"
-              />
+              <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/30 border-2 border-blue-300 dark:border-blue-700 flex items-center justify-center text-lg shrink-0">
+                🎓
+              </div>
               <div className="min-w-0 flex-1">
-                <h4 className="text-xs font-black text-slate-900 dark:text-white truncate">Vance B.</h4>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">UMass · Sport Management &amp; Finance</p>
+                <h4 className="text-xs font-black text-slate-900 dark:text-white truncate">Example Student (Demo)</h4>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">Business Major</p>
               </div>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed break-words">
-              &ldquo;Turned my 8-page syllabus into an actual schedule in seconds. The Google Sheets master tracker syncs live every time a deadline changes.&rdquo;
+              &ldquo;Turned my syllabus into a schedule in seconds. The Sheets tracker updates whenever a deadline changes.&rdquo;
             </p>
           </div>
 
           <div className="bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-700 p-4 sm:p-5 shadow-2xs space-y-3 min-w-0">
             <div className="flex items-center gap-3 min-w-0">
-              <img
-                src="/images/avatar-maya.jpg"
-                alt="Maya L."
-                className="h-10 w-10 rounded-full object-cover ring-2 ring-rose-500/20 shrink-0"
-              />
+              <div className="h-10 w-10 rounded-full bg-rose-100 dark:bg-rose-900/30 border-2 border-rose-300 dark:border-rose-700 flex items-center justify-center text-lg shrink-0">
+                👩‍💻
+              </div>
               <div className="min-w-0 flex-1">
-                <h4 className="text-xs font-black text-slate-900 dark:text-white truncate">Maya L.</h4>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">Cornell · Computer Science</p>
+                <h4 className="text-xs font-black text-slate-900 dark:text-white truncate">Example Student (Demo)</h4>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">Computer Science Major</p>
               </div>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed break-words">
-              &ldquo;The AI prep buffers saved me from missing a 30% project deadline. It flagged the crunch week where 3 exams landed on the same 48 hours.&rdquo;
+              &ldquo;The prep buffers flagged crunch week where 3 exams landed in 48 hours.&rdquo;
             </p>
           </div>
 
           <div className="bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-700 p-4 sm:p-5 shadow-2xs space-y-3 min-w-0">
             <div className="flex items-center gap-3 min-w-0">
-              <img
-                src="/images/avatar-david.jpg"
-                alt="Devon K."
-                className="h-10 w-10 rounded-full object-cover ring-2 ring-emerald-500/20 shrink-0"
-              />
+              <div className="h-10 w-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 border-2 border-emerald-300 dark:border-emerald-700 flex items-center justify-center text-lg shrink-0">
+                🧑‍💼
+              </div>
               <div className="min-w-0 flex-1">
-                <h4 className="text-xs font-black text-slate-900 dark:text-white truncate">Devon K.</h4>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">NYU Stern · Finance</p>
+                <h4 className="text-xs font-black text-slate-900 dark:text-white truncate">Example Student (Demo)</h4>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">Finance Major</p>
               </div>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed break-words">
-              &ldquo;Never having to manually type dates from Canvas into Google Calendar is life-changing. 100% academic integrity safe and completely seamless.&rdquo;
+              &ldquo;Calendar import is convenient. 100% academic integrity safe.&rdquo;
             </p>
           </div>
         </div>
