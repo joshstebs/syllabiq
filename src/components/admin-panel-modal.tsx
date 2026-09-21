@@ -173,11 +173,11 @@ export function AdminPanelModal({ isOpen, onClose, onOpenPaywall, onOpenDispatch
                   <span className="text-lg">▲</span>
                   <div>
                     <div className="font-bold text-slate-900 dark:text-white">Vercel Production Deployment</div>
-                    <div className="text-[11px] text-slate-500 font-mono">syllabiq-seven.vercel.app</div>
+                    <div className="text-[11px] text-slate-500 font-mono">syllabiq.ca</div>
                   </div>
                 </div>
                 <a
-                  href="https://syllabiq-seven.vercel.app"
+                  href="https://syllabiq.ca"
                   target="_blank"
                   rel="noreferrer"
                   className="px-2.5 py-1 rounded-full bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-extrabold text-[10px] flex items-center gap-1 hover:underline"
