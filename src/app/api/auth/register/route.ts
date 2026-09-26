@@ -3,8 +3,12 @@ import bcrypt from "bcryptjs";
 import { z } from "zod";
 import { configuredAdminEmails, createSession, isDatabaseConfigured, publicUser } from "@/lib/server/auth";
 import { prisma } from "@/lib/server/prisma";
+import { checkRateLimit, getClientIp, rateLimitedResponse } from "@/lib/server/rate-limit";
 
 export async function POST(req: Request) {
+  const rl = checkRateLimit(`auth:register:${getClientIp(req)}`, 10, 60_000);
+  if (!rl.allowed) return rateLimitedResponse(rl.retryAfterSec);
+
   if (!isDatabaseConfigured()) {
     return NextResponse.json({ error: "Account services are not configured" }, { status: 503 });
   }

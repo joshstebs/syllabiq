@@ -101,7 +101,7 @@ const LANDING_FAQS = [
 ];
 
 export default function SyllabiQDashboard() {
-  const { user } = useAuth();
+  const { user, refreshUser } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
   const [tasks, setTasks] = useState<TaskItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -145,6 +145,7 @@ export default function SyllabiQDashboard() {
   const [showColorModal, setShowColorModal] = useState(false);
   const [showPeerModal, setShowPeerModal] = useState(false);
   const [showPaywallModal, setShowPaywallModal] = useState(false);
+  const [paywallNotice, setPaywallNotice] = useState("");
   const [showBackgroundModal, setShowBackgroundModal] = useState(false);
   const [showCloudVaultModal, setShowCloudVaultModal] = useState(false);
   const [showContactModal, setShowContactModal] = useState(false);
@@ -175,6 +176,46 @@ export default function SyllabiQDashboard() {
 
   useEffect(() => {
     fetchDashboardData();
+
+    // Handle return from Stripe Checkout (success_url includes ?checkout=success&session_id=...).
+    // The return-verify endpoint only CONFIRMS the session (read-only, no
+    // billing mutation). Pro status is driven by the verified
+    // checkout.session.completed webhook, so poll /api/subscription until
+    // the webhook lands, then refresh the session and celebrate.
+    const params = new URLSearchParams(window.location.search);
+    const checkoutState = params.get("checkout");
+    const sessionId = params.get("session_id");
+    if (checkoutState === "success" && sessionId) {
+      window.history.replaceState(null, "", window.location.pathname);
+      (async () => {
+        try {
+          const verify = await fetch(`/api/stripe/checkout?session_id=${encodeURIComponent(sessionId)}`);
+          if (!verify.ok) return;
+          for (let i = 0; i < 20; i++) {
+            await new Promise((r) => setTimeout(r, 2000));
+            const subRes = await fetch("/api/subscription");
+            if (subRes.ok) {
+              const sub = await subRes.json();
+              if (sub.isPro || sub.tier === "PRO") {
+                await refreshUser();
+                await fetchDashboardData();
+                confetti({ particleCount: 90, spread: 70, origin: { y: 0.5 } });
+                setShowPaywallModal(true);
+                return;
+              }
+            }
+          }
+          // Webhook hasn't landed yet — open the modal with an activating note.
+          setPaywallNotice("Payment confirmed — your Pro trial is activating. This usually takes a few seconds; refresh if it doesn't appear.");
+          setShowPaywallModal(true);
+        } catch (err) {
+          console.error("Checkout verification failed", err);
+        }
+      })();
+    } else if (checkoutState === "cancelled") {
+      window.history.replaceState(null, "", window.location.pathname);
+      setShowPaywallModal(true);
+    }
   }, []);
 
   const scrollToMainView = () => {
@@ -1137,7 +1178,15 @@ export default function SyllabiQDashboard() {
 
       {showPaywallModal && (
         <StripePaywallModal
-          onClose={() => setShowPaywallModal(false)}
+          notice={paywallNotice}
+          onClose={() => {
+            setShowPaywallModal(false);
+            setPaywallNotice("");
+          }}
+          onOpenAuthModal={() => {
+            setShowPaywallModal(false);
+            setShowAuthModal(true);
+          }}
           onSubscriptionUpdated={async () => {
             await fetchDashboardData();
           }}

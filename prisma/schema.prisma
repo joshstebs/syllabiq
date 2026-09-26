@@ -49,6 +49,14 @@ model User {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
+  // Per-user Stripe billing (driven by verified webhook events only)
+  stripeCustomerId     String?   @unique
+  stripeSubscriptionId String?
+  subscriptionTier     String    @default("FREE") // FREE | PRO
+  subscriptionStatus   String? // TRIALING | ACTIVE | PAST_DUE | CANCELLED
+  trialEndsAt          DateTime?
+  currentPeriodEnd     DateTime?
+
   courses         Course[]
   lmsConnections  LMSConnection[]
   googleSyncState GoogleSyncState?
@@ -173,7 +181,7 @@ model SyllabusDocument {
   fileName   String
   fileSize   Int
   mimeType   String
-  storageUrl String
+  storageUrl String? // null when committed from an ingest flow without a stored file URL
   parsedJson Json?
   rawText    String?
   embedding  Unsupported("vector(1536)")? // pgvector embedding for policy & Q&A

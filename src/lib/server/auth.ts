@@ -22,6 +22,10 @@ function hashToken(token: string): string {
 }
 
 export function publicUser(user: User) {
+  // Real Pro status comes from the user's own billing record, which is
+  // written only from verified Stripe webhook events. Never assume Pro.
+  const proStatuses = new Set(["TRIALING", "ACTIVE", "PAST_DUE"]);
+  const isPro = user.subscriptionTier === "PRO" && proStatuses.has(user.subscriptionStatus ?? "");
   return {
     id: user.id,
     name: user.name ?? user.email.split("@")[0],
@@ -32,7 +36,8 @@ export function publicUser(user: User) {
     school: undefined,
     major: undefined,
     graduationYear: undefined,
-    isPro: true,
+    isPro,
+    trialEndsAt: user.trialEndsAt ? user.trialEndsAt.toISOString() : undefined,
     provider: "email" as const,
     timeZone: user.timezone,
     timeZoneMode: "auto" as const,

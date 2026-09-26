@@ -1,7 +1,17 @@
 import { NextResponse } from "next/server";
 import { getStore } from "@/lib/storage";
+import { getCurrentUser } from "@/lib/server/auth";
+import { checkRateLimit, getClientIp, rateLimitedResponse } from "@/lib/server/rate-limit";
 
 export async function POST(req: Request) {
+  // Burn protection for the AI provider quota: signed-in users get a normal
+  // budget, anonymous visitors a tight one. Anonymous chat keeps working
+  // (demo), just not abusable at scale.
+  const user = await getCurrentUser().catch(() => null);
+  const rlKey = user ? `chat:user:${user.id}` : `chat:ip:${getClientIp(req)}`;
+  const rl = checkRateLimit(rlKey, user ? 30 : 10, 60_000);
+  if (!rl.allowed) return rateLimitedResponse(rl.retryAfterSec);
+
   try {
     const { message, history } = await req.json();
     const store = getStore();

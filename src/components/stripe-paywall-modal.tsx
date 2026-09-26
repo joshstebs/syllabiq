@@ -13,26 +13,42 @@ import {
   Smartphone,
   Palette,
   Users,
-  CheckCircle2,
-  Calendar
+  CheckCircle2
 } from "lucide-react";
 import confetti from "canvas-confetti";
-import { SubscriptionState } from "@/lib/types";
 import { useAuth } from "@/lib/auth-context";
+
+interface BillingState {
+  tier: string;
+  status: string;
+  isPro?: boolean;
+  trialEndsAt?: string | null;
+  currentPeriodEnd?: string | null;
+  monthlyPrice?: number;
+}
 
 interface Props {
   onClose: () => void;
-  onSubscriptionUpdated?: (sub: SubscriptionState) => void;
+  onOpenAuthModal?: () => void;
+  onSubscriptionUpdated?: (sub: BillingState) => void;
+  notice?: string;
 }
 
-export function StripePaywallModal({ onClose, onSubscriptionUpdated }: Props) {
+function trialDaysLeft(trialEndsAt?: string | null): number | null {
+  if (!trialEndsAt) return null;
+  const ms = new Date(trialEndsAt).getTime() - Date.now();
+  if (Number.isNaN(ms)) return null;
+  return Math.max(0, Math.ceil(ms / 86400000));
+}
+
+export function StripePaywallModal({ onClose, onOpenAuthModal, onSubscriptionUpdated, notice }: Props) {
   const { user, updateUserProStatus } = useAuth();
-  const [sub, setSub] = useState<SubscriptionState | null>(null);
-  const [cardNumber, setCardNumber] = useState("4242 •••• •••• 4242");
-  const [cardExpiry, setCardExpiry] = useState("12/28");
-  const [cardCvc, setCardCvc] = useState("888");
+  const [sub, setSub] = useState<BillingState | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+
+  const isGuest = !user || user.id === "guest-visitor";
 
   const fetchSub = async () => {
     try {
@@ -51,55 +67,84 @@ export function StripePaywallModal({ onClose, onSubscriptionUpdated }: Props) {
   }, []);
 
   const handleSubscribe = async () => {
+    // Checkout is per-user: guests sign in first.
+    if (isGuest) {
+      onOpenAuthModal?.();
+      return;
+    }
     setIsProcessing(true);
+    setErrorMessage("");
     try {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          action: "subscribe",
-          email: user?.email || "student@syllabiq.ca",
-          name: user?.name || "SyllabiQ Student"
-        })
+        body: JSON.stringify({ action: "subscribe" })
       });
-      const data = await res.json();
-      if (res.ok && data.subscription) {
-        setSub(data.subscription);
-        updateUserProStatus(true);
-        onSubscriptionUpdated?.(data.subscription);
-        confetti({ particleCount: 80, spread: 70, origin: { y: 0.5 } });
-        setSuccessMessage("🎉 Welcome to SyllabiQ Pro! Your first month is 100% free. All features unlocked.");
-        setTimeout(() => {
-          onClose();
-        }, 1200);
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.url) {
+        // Hand off to Stripe-hosted secure checkout. Stripe redirects back
+        // to /?checkout=success&session_id=... when done.
+        window.location.assign(data.url);
+        return;
       }
+      setErrorMessage(data.error || "Couldn't start checkout. Please try again.");
+    } catch (err) {
+      console.error(err);
+      setErrorMessage("Couldn't start checkout. Please try again.");
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
+  const handleManageBilling = async () => {
+    setIsProcessing(true);
+    setErrorMessage("");
+    try {
+      const res = await fetch("/api/stripe/portal", { method: "POST" });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.url) {
+        window.location.assign(data.url);
+        return;
+      }
+      setErrorMessage(data.error || "Couldn't open the billing portal.");
+    } catch (err) {
+      console.error(err);
+      setErrorMessage("Couldn't open the billing portal.");
     } finally {
       setIsProcessing(false);
     }
   };
 
   const handleCancel = async () => {
-    if (!confirm("Are you sure you want to cancel your Pro trial?")) return;
+    if (!confirm("Cancel your Pro subscription? You'll keep Pro until the end of your billing period, then it won't renew.")) return;
     setIsProcessing(true);
+    setErrorMessage("");
     try {
       const res = await fetch("/api/stripe/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "cancel" })
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
       if (res.ok && data.subscription) {
         setSub(data.subscription);
-        updateUserProStatus(false);
+        updateUserProStatus(data.subscription.isPro ?? data.subscription.tier === "PRO");
         onSubscriptionUpdated?.(data.subscription);
-        setSuccessMessage("Subscription cancelled. You remain on the Free plan.");
+        confetti({ particleCount: 40, spread: 60, origin: { y: 0.5 } });
+        setSuccessMessage("Cancelled. You keep Pro until the end of your billing period.");
+      } else {
+        setErrorMessage(data.error || "Couldn't cancel. Try the billing portal instead.");
       }
+    } catch (err) {
+      console.error(err);
+      setErrorMessage("Couldn't cancel. Try the billing portal instead.");
     } finally {
       setIsProcessing(false);
     }
   };
 
-  const isPro = sub?.tier === "PRO";
+  const isPro = sub?.isPro ?? sub?.tier === "PRO";
+  const daysLeft = trialDaysLeft(sub?.trialEndsAt);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs animate-fade-in">
@@ -157,11 +202,23 @@ export function StripePaywallModal({ onClose, onSubscriptionUpdated }: Props) {
             </div>
           </div>
 
-          {/* Success Banner */}
+          {/* Success / Error / Notice Banners */}
+          {notice && (
+            <div className="rounded-xl border border-blue-300 bg-blue-50 p-3.5 flex items-center gap-2.5 text-xs font-bold text-blue-800">
+              <Sparkles className="h-4 w-4 text-blue-600 shrink-0" />
+              <span>{notice}</span>
+            </div>
+          )}
           {successMessage && (
             <div className="rounded-xl border border-emerald-300 bg-emerald-50 p-3.5 flex items-center gap-2.5 text-xs font-bold text-emerald-800">
               <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" />
               <span>{successMessage}</span>
+            </div>
+          )}
+          {errorMessage && (
+            <div className="rounded-xl border border-rose-300 bg-rose-50 p-3.5 flex items-center gap-2.5 text-xs font-bold text-rose-800">
+              <X className="h-4 w-4 text-rose-600 shrink-0" />
+              <span>{errorMessage}</span>
             </div>
           )}
 
@@ -210,13 +267,13 @@ export function StripePaywallModal({ onClose, onSubscriptionUpdated }: Props) {
             </div>
           </div>
 
-          {/* Stripe Card Checkout Section */}
+          {/* Checkout Section */}
           {!isPro ? (
             <div className="rounded-2xl border border-slate-200 bg-white p-4 sm:p-5 space-y-4 shadow-xs">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2 text-xs font-bold text-slate-800">
                   <CreditCard className="h-4 w-4 text-slate-600" />
-                  <span>Stripe Secure 256-Bit Checkout</span>
+                  <span>Secure checkout via Stripe</span>
                 </div>
                 <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-400">
                   <Lock className="h-3 w-3 text-emerald-600" />
@@ -224,54 +281,11 @@ export function StripePaywallModal({ onClose, onSubscriptionUpdated }: Props) {
                 </div>
               </div>
 
-              {/* Card Form */}
-              <div className="space-y-3">
-                <div>
-                  <label className="text-[11px] font-bold text-slate-500 block mb-1">
-                    Card Number
-                  </label>
-                  <div className="relative">
-                    <input
-                      type="text"
-                      value={cardNumber}
-                      onChange={(e) => setCardNumber(e.target.value)}
-                      className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50/50"
-                      placeholder="4242 •••• •••• 4242"
-                    />
-                    <span className="absolute right-3 top-2 text-[11px] font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded">
-                      Test Card
-                    </span>
-                  </div>
-                </div>
-
-                <div className="grid grid-cols-2 gap-3">
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-500 block mb-1">
-                      Expiration (MM/YY)
-                    </label>
-                    <input
-                      type="text"
-                      value={cardExpiry}
-                      onChange={(e) => setCardExpiry(e.target.value)}
-                      className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50/50"
-                      placeholder="MM/YY"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="text-[11px] font-bold text-slate-500 block mb-1">
-                      CVC / CVV
-                    </label>
-                    <input
-                      type="text"
-                      value={cardCvc}
-                      onChange={(e) => setCardCvc(e.target.value)}
-                      className="w-full rounded-xl border border-slate-200 px-3.5 py-2 text-xs font-mono font-bold text-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-slate-50/50"
-                      placeholder="CVC"
-                    />
-                  </div>
-                </div>
-              </div>
+              <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                Your first month is free, then $5/month. Your card is collected securely by
+                Stripe and <span className="font-bold text-slate-800">won&apos;t be charged until your 30-day trial ends</span>.
+                Cancel anytime in 1 click.
+              </p>
 
               <button
                 onClick={handleSubscribe}
@@ -280,12 +294,16 @@ export function StripePaywallModal({ onClose, onSubscriptionUpdated }: Props) {
               >
                 <Zap className="h-4 w-4 fill-white" />
                 <span>
-                  {isProcessing ? "Processing via Stripe..." : "Start First Free Month ($0.00 Today)"}
+                  {isProcessing
+                    ? "Redirecting to Stripe…"
+                    : isGuest
+                      ? "Sign In to Start Your Free Month"
+                      : "Start First Free Month ($0.00 Today)"}
                 </span>
               </button>
 
               <p className="text-[10px] text-center text-slate-400 font-medium">
-                By starting, you agree to $5/month after your first free month unless cancelled. Cancel anytime in 1 click from your settings.
+                By starting, you agree to $5/month after your first free month unless cancelled. Cancel anytime in 1 click from your settings or the billing portal.
               </p>
             </div>
           ) : (
@@ -300,15 +318,26 @@ export function StripePaywallModal({ onClose, onSubscriptionUpdated }: Props) {
                       You are on SyllabiQ Pro
                     </h4>
                     <p className="text-[11px] text-emerald-700 font-medium">
-                      {sub?.trialDaysRemaining || 30} days remaining in your free trial.
+                      {daysLeft !== null
+                        ? `${daysLeft} day${daysLeft === 1 ? "" : "s"} remaining in your free trial.`
+                        : "Your Pro subscription is active."}
                     </p>
                   </div>
                 </div>
+              </div>
 
+              <div className="flex flex-wrap gap-2">
+                <button
+                  onClick={handleManageBilling}
+                  disabled={isProcessing}
+                  className="rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2 transition cursor-pointer disabled:opacity-50"
+                >
+                  {isProcessing ? "Opening…" : "Manage Billing"}
+                </button>
                 <button
                   onClick={handleCancel}
                   disabled={isProcessing}
-                  className="rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold px-3 py-1.5 transition cursor-pointer"
+                  className="rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold px-4 py-2 transition cursor-pointer disabled:opacity-50"
                 >
                   Cancel Subscription
                 </button>

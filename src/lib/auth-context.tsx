@@ -73,6 +73,7 @@ interface AuthContextType {
   logout: () => Promise<void>;
   updateUserProStatus: (isPro: boolean) => void;
   updateUserProfile: (patch: Partial<UserProfile>) => Promise<void>;
+  refreshUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -148,6 +149,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setUser((current) => (current ? { ...current, isPro } : current));
   };
 
+  const refreshUser = async () => {
+    try {
+      const response = await fetch("/api/auth/session", { credentials: "same-origin" });
+      if (!response.ok) return;
+      const data = (await response.json()) as { user?: UserProfile | null };
+      if (data.user) setUser(data.user);
+    } catch {
+      // keep current user on failure
+    }
+  };
+
   const updateUserProfile = async (patch: Partial<UserProfile>) => {
     const response = await fetch("/api/auth/profile", {
       method: "PATCH",
@@ -161,7 +173,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loginWithCredentials, registerWithCredentials, loginWithGoogle, loginWithAdminPreset, loginWithTesterPreset, logout, updateUserProStatus, updateUserProfile }}>
+    <AuthContext.Provider value={{ user, loginWithCredentials, registerWithCredentials, loginWithGoogle, loginWithAdminPreset, loginWithTesterPreset, logout, updateUserProStatus, updateUserProfile, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

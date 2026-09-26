@@ -1,22 +1,28 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/server/auth";
-import { getSubscription, updateSubscription } from "@/lib/storage";
+import { effectiveSubscription } from "@/lib/server/billing";
+import { getSubscription } from "@/lib/storage";
 
+/**
+ * Current subscription state.
+ * Logged in  -> the user's own record (driven by verified Stripe events).
+ * Logged out -> the shared demo-store subscription (always FREE).
+ */
 export async function GET() {
   const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: "Sign in to view your subscription" }, { status: 401 });
+  if (user) {
+    return NextResponse.json(effectiveSubscription(user));
   }
-  const sub = getSubscription();
-  return NextResponse.json(sub);
+  return NextResponse.json(getSubscription());
 }
 
-export async function POST(req: Request) {
-  const user = await getCurrentUser();
-  if (!user) {
-    return NextResponse.json({ error: "Sign in to manage your subscription" }, { status: 401 });
-  }
-  const body = await req.json().catch(() => ({}));
-  const updated = updateSubscription(body);
-  return NextResponse.json(updated);
+/**
+ * Direct subscription edits are disabled — billing is managed through
+ * Stripe Checkout / the customer portal, with status driven by webhooks.
+ */
+export async function POST() {
+  return NextResponse.json(
+    { error: "Subscriptions are managed through Stripe billing, not direct edits." },
+    { status: 405 }
+  );
 }
