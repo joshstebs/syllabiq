@@ -1,18 +1,5 @@
 import { NextResponse } from "next/server";
-import { getContactInquiries, addContactInquiry } from "@/lib/storage";
-
-export async function GET() {
-  try {
-    const inquiries = getContactInquiries();
-    return NextResponse.json({
-      success: true,
-      inquiries,
-      total: inquiries.length
-    });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
-  }
-}
+import { addContactInquiry } from "@/lib/storage";
 
 export async function POST(req: Request) {
   try {

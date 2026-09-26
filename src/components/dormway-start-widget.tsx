@@ -335,7 +335,7 @@ export function DormwayStartWidget({ onOpenUpload, onOpenCanvas }: Props) {
         <div className="mt-5 flex flex-col gap-3 border-t border-slate-100 pt-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 min-w-0">
             <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
-            <span className="break-words">Try it free today · 100% academic integrity safe · 30-day free trial</span>
+            <span className="break-words">Try it free today · 100% academic integrity safe · First month free, then $5/month</span>
           </div>
 
           <div className="flex items-center gap-2">

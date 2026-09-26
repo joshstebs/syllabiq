@@ -84,8 +84,8 @@ export default function TermsPage() {
           <section className="space-y-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#131B2E] p-6 sm:p-8">
             <h2 className="text-2xl font-black text-slate-900 dark:text-white">4. Subscription and Payments</h2>
             <div className="text-sm text-slate-700 dark:text-slate-300 space-y-3">
-              <p><strong>Free Trial:</strong> New users receive a 30-day free trial with full access to SyllabiQ Pro features. No payment is required to start the trial.</p>
-              <p><strong>Paid Subscription:</strong> After the trial period, SyllabiQ Pro costs $5.00 USD per month, billed via Stripe. Subscriptions automatically renew monthly unless cancelled.</p>
+              <p><strong>Free Trial:</strong> New users receive their first month free with full access to SyllabiQ Pro features. No payment is required to start the trial.</p>
+              <p><strong>Paid Subscription:</strong> After the first free month, SyllabiQ Pro costs $5.00 USD per month, billed via Stripe. Subscriptions automatically renew monthly unless cancelled.</p>
               <p><strong>Cancellation:</strong> You may cancel your subscription at any time from your account settings. Cancellations take effect at the end of the current billing period. No refunds are provided for partial months.</p>
               <p><strong>Payment Disputes:</strong> For billing questions, contact us at <a href="mailto:support@syllabiq.ca" className="text-blue-600 dark:text-blue-400 hover:underline font-bold">support@syllabiq.ca</a>.</p>
             </div>

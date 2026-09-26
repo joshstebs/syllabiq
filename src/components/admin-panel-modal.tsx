@@ -131,7 +131,7 @@ export function AdminPanelModal({ isOpen, onClose, onOpenPaywall, onOpenDispatch
                   <span className="text-lg">💳</span>
                   <div>
                     <div className="font-bold text-slate-900 dark:text-white">Stripe Live Canadian Balance API</div>
-                    <div className="text-[11px] text-slate-500 font-mono">Key: rk_live_51U3rk... · 30-Day Trial, $5/mo</div>
+                    <div className="text-[11px] text-slate-500 font-mono">Key: rk_live_51U3rk... · First month free, then $5/mo</div>
                   </div>
                 </div>
                 <span className="px-2.5 py-1 rounded-full bg-emerald-100 dark:bg-emerald-950 text-emerald-700 dark:text-emerald-300 font-extrabold text-[10px] flex items-center gap-1">
@@ -199,7 +199,7 @@ export function AdminPanelModal({ isOpen, onClose, onOpenPaywall, onOpenDispatch
               </span>
             </div>
             <p className="text-xs text-slate-600 dark:text-slate-300 leading-relaxed font-medium">
-              Every student account receives a <strong>30-day Free Trial</strong> ($0.00 charged today). Subscriptions automatically renew at <strong>$5.00/month</strong> thereafter. Students can cancel in 1 click at any time.
+              Every student account gets its <strong>first month free</strong> ($0.00 charged today). Subscriptions automatically renew at <strong>$5.00/month</strong> thereafter. Students can cancel in 1 click at any time.
             </p>
           </div>
 

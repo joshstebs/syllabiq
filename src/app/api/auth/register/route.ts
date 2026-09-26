@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import { z } from "zod";
 import { configuredAdminEmails, createSession, isDatabaseConfigured, publicUser } from "@/lib/server/auth";
 import { prisma } from "@/lib/server/prisma";
 
@@ -12,7 +13,7 @@ export async function POST(req: Request) {
   const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
   const password = typeof body.password === "string" ? body.password : "";
   const name = typeof body.name === "string" ? body.name.trim() : email.split("@")[0];
-  if (!email || !password || password.length < 8) {
+  if (!z.string().email().safeParse(email).success || !password || password.length < 8) {
     return NextResponse.json({ error: "Use a valid email and a password of at least 8 characters" }, { status: 400 });
   }
 

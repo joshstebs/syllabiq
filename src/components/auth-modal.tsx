@@ -206,7 +206,7 @@ export function AuthModal({ isOpen, onClose, onOpenAdminPanel }: Props) {
                         </span>
                       </div>
                       <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium">
-                        Alex Cornell · Preloaded with 4 Ivy League Syllabi &amp; 30-day Free Trial
+                        Alex Cornell · Preloaded with 4 Ivy League Syllabi &amp; First Month Free
                       </p>
                     </div>
                   </div>

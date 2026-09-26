@@ -129,7 +129,7 @@ export function Navbar({
                 ? "bg-amber-100 dark:bg-amber-900/60 text-amber-800 dark:text-amber-200"
                 : "bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300"
             }`}>
-              {user.role} · {user.isPro ? "30-Day Pro Trial" : "Free Plan"}
+              {user.role} · {user.isPro ? "1st Month Free" : "Free Plan"}
             </span>
           </div>
         </div>
@@ -227,7 +227,7 @@ export function Navbar({
         <div className="flex items-center gap-1.5 truncate">
           <span className="text-xs">{user?.isPro ? "🎉" : "✨"}</span>
           <span className="font-bold truncate text-[11px] sm:text-xs">
-            {user?.isPro ? "SyllabiQ Pro Active" : "SyllabiQ Pro: 30-Day Free Trial"}
+            {user?.isPro ? "SyllabiQ Pro Active" : "SyllabiQ Pro: First Month Free"}
           </span>
         </div>
         <button
@@ -890,7 +890,7 @@ export function Navbar({
                 ? "bg-gradient-to-r from-amber-500 via-orange-500 to-rose-500 text-white"
                 : "bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 hover:border-amber-400"
             }`}
-            title="SyllabiQ Pro Subscription ($0 1st Month Free Trial)"
+            title="SyllabiQ Pro Subscription (First month free, then $5/month)"
           >
             <Zap className={`h-3.5 w-3.5 ${user?.isPro ? "fill-white text-white" : "text-amber-500 fill-amber-500"}`} />
             <span>{user?.isPro ? "PRO" : "Upgrade"}</span>

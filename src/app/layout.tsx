@@ -39,7 +39,7 @@ export const metadata: Metadata = {
     siteName: "SyllabiQ",
     images: [
       {
-        url: "/og-image.svg",
+        url: "https://syllabiq.ca/og-image.png",
         width: 1200,
         height: 630,
         alt: "SyllabiQ - Academic Planning Made Simple"
@@ -50,7 +50,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "SyllabiQ - Your Whole Semester Organized In Seconds",
     description: "Upload your syllabus or import calendar feeds. SyllabiQ builds your semester timeline automatically.",
-    images: ["/og-image.svg"]
+    images: ["https://syllabiq.ca/og-image.png"]
   }
 };
 

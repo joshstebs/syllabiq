@@ -68,7 +68,7 @@ export function StripePaywallModal({ onClose, onSubscriptionUpdated }: Props) {
         updateUserProStatus(true);
         onSubscriptionUpdated?.(data.subscription);
         confetti({ particleCount: 80, spread: 70, origin: { y: 0.5 } });
-        setSuccessMessage("🎉 Welcome to SyllabiQ Pro! Your first 30 days are 100% free. All features unlocked.");
+        setSuccessMessage("🎉 Welcome to SyllabiQ Pro! Your first month is 100% free. All features unlocked.");
         setTimeout(() => {
           onClose();
         }, 1200);
@@ -140,7 +140,7 @@ export function StripePaywallModal({ onClose, onSubscriptionUpdated }: Props) {
                 Current Promotion
               </div>
               <div className="text-base sm:text-lg font-black text-slate-900">
-                30-Day Free Trial, then $5/mo
+                First month free, then $5/mo
               </div>
               <div className="text-[11px] text-slate-500 font-medium">
                 No commitment. Cancel anytime in 1 click.
@@ -280,12 +280,12 @@ export function StripePaywallModal({ onClose, onSubscriptionUpdated }: Props) {
               >
                 <Zap className="h-4 w-4 fill-white" />
                 <span>
-                  {isProcessing ? "Processing via Stripe..." : "Start 30-Day Free Trial ($0.00 Today)"}
+                  {isProcessing ? "Processing via Stripe..." : "Start First Free Month ($0.00 Today)"}
                 </span>
               </button>
 
               <p className="text-[10px] text-center text-slate-400 font-medium">
-                By starting your trial, you agree to $5/month after 30 days unless cancelled. Cancel anytime in 1 click from your settings.
+                By starting, you agree to $5/month after your first free month unless cancelled. Cancel anytime in 1 click from your settings.
               </p>
             </div>
           ) : (

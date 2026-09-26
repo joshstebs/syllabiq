@@ -21,7 +21,7 @@ export async function POST(req: Request) {
       .map((t) => `${t.courseCode}: "${t.title}" due ${new Date(t.dueDate).toLocaleDateString()} (Weight: ${t.weightPercent}%, Status: ${t.status})`)
       .join("\n");
 
-    const systemPrompt = `You are SyllabiQ AI, an ultra-smart, empathetic, dummy-proof academic tutor and campus copilot for students.
+    const systemPrompt = `You are SyllabiQ AI, an ultra-smart, empathetic, easy-to-follow academic tutor and campus copilot for students.
 You have complete real-time knowledge of the student's enrolled courses, syllabus policies, weights, and deadlines:
 ${coursesContext}
 

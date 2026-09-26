@@ -53,24 +53,29 @@ export async function GET(req: Request) {
     const tokens = await tokenRes.json();
     const accessToken = tokens.access_token;
 
-    // Fetch user profile info
-    let userEmail = "josh.stebs@gmail.com";
-    let userName = "Josh Stebs (Google)";
-    let userPicture = "";
-
+    // Fetch user profile info. Fail closed: if the userinfo fetch fails,
+    // nobody gets a session — never fall back to a default identity.
+    let userinfoRes: Response;
     try {
-      const userinfoRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
+      userinfoRes = await fetch("https://www.googleapis.com/oauth2/v2/userinfo", {
         headers: { Authorization: `Bearer ${accessToken}` }
       });
-      if (userinfoRes.ok) {
-        const info = await userinfoRes.json();
-        userEmail = info.email || userEmail;
-        userName = info.name || userName;
-        userPicture = info.picture || "";
-      }
     } catch (uErr) {
-      console.warn("Failed to fetch Google userinfo:", uErr);
+      console.error("Failed to fetch Google userinfo:", uErr);
+      return NextResponse.redirect(`${origin}/?auth_error=${encodeURIComponent("Could not retrieve your Google profile")}`);
     }
+    if (!userinfoRes.ok) {
+      console.error("Google userinfo request failed with status:", userinfoRes.status);
+      return NextResponse.redirect(`${origin}/?auth_error=${encodeURIComponent("Could not retrieve your Google profile")}`);
+    }
+
+    const info = (await userinfoRes.json()) as { email?: unknown; name?: unknown; picture?: unknown };
+    const userEmail = typeof info.email === "string" ? info.email : "";
+    if (!userEmail) {
+      return NextResponse.redirect(`${origin}/?auth_error=${encodeURIComponent("Your Google profile did not include an email address")}`);
+    }
+    const userName = typeof info.name === "string" && info.name ? info.name : userEmail.split("@")[0];
+    const userPicture = typeof info.picture === "string" ? info.picture : "";
 
     const user = await prisma.user.upsert({
       where: { email: userEmail.toLowerCase() },

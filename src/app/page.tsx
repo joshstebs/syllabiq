@@ -79,8 +79,8 @@ const LANDING_FAQS = [
     a: "SyllabiQ accepts PDF files (.pdf), Word documents (.docx), plain text (.txt), Markdown (.md), and photo scans / phone camera screenshots (JPEG, PNG, HEIC). Our multimodal AI accurately extracts grade breakdowns, assignments, exam dates, and policies in under 60 seconds."
   },
   {
-    q: "How does the $0 First Month Free Trial and $5/month subscription work?",
-    a: "You get full SyllabiQ Pro access 100% free for your first 30 days ($0 billed today via Stripe). After 30 days, Pro is just $5.00/month. You can cancel at any time with a single click in your account settings with zero commitments or hidden fees."
+    q: "How does the first month free, then $5/month subscription work?",
+    a: "You get full SyllabiQ Pro access 100% free for your first month ($0 billed today via Stripe). Then Pro is just $5.00/month. You can cancel at any time with a single click in your account settings with zero commitments or hidden fees."
   },
   {
     q: "Can I sync Canvas without campus IT approval?",

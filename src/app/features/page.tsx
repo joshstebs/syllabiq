@@ -611,8 +611,8 @@ export default function FeaturesPage() {
                   a: "Yes, 100%. SyllabiQ does NOT write papers, solve exam problems, or provide ghostwriting services. In the Campus Peer Hub, shared hints are strictly conceptual and moderated. Our tool is purely an academic organization and scheduling assistant."
                 },
                 {
-                  q: "How does the $5/month subscription and 1st Month Free Trial work?",
-                  a: "You get full SyllabiQ Pro access 100% free for your first 30 days! After 30 days, Pro is just $5.00/month (billed securely through Stripe). You can cancel at any time with a single click in your settings with no hidden fees or commitments."
+                  q: "How does the first month free, then $5/month subscription work?",
+                  a: "You get full SyllabiQ Pro access 100% free for your first month! Then Pro is just $5.00/month (billed securely through Stripe). You can cancel at any time with a single click in your settings with no hidden fees or commitments."
                 },
                 {
                   q: "How does Google Calendar and Google Sheets sync work?",

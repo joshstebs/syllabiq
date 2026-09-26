@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import { z } from "zod";
 import { createSession, isDatabaseConfigured, publicUser } from "@/lib/server/auth";
 import { prisma } from "@/lib/server/prisma";
 
@@ -11,7 +12,7 @@ export async function POST(req: Request) {
   const body = (await req.json().catch(() => ({}))) as { email?: unknown; password?: unknown };
   const email = typeof body.email === "string" ? body.email.trim().toLowerCase() : "";
   const password = typeof body.password === "string" ? body.password : "";
-  if (!email || !password) {
+  if (!z.string().email().safeParse(email).success || !password) {
     return NextResponse.json({ error: "Email and password are required" }, { status: 400 });
   }
 
