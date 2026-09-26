@@ -60,8 +60,11 @@ async function commitForUser(userId: string, syllabus: ParsedSyllabus, fileName:
       }
     });
   } else {
+    // Capture the id once: `course` is a `let` narrowed by the branch, but
+    // narrowing does not survive inside the arrow-function closures below.
+    const courseId = course.id;
     await prisma.instructor.upsert({
-      where: { courseId: course.id },
+      where: { courseId },
       update: {
         name: instructorName,
         email: syllabus.instructor?.email || "",
@@ -69,18 +72,18 @@ async function commitForUser(userId: string, syllabus: ParsedSyllabus, fileName:
         officeLocation: (syllabus.instructor as any)?.office_location || ""
       },
       create: {
-        courseId: course.id,
+        courseId,
         name: instructorName,
         email: syllabus.instructor?.email || "",
         officeHours: syllabus.instructor?.office_hours || "",
         officeLocation: (syllabus.instructor as any)?.office_location || ""
       }
     });
-    await prisma.weightCategory.deleteMany({ where: { courseId: course.id } });
+    await prisma.weightCategory.deleteMany({ where: { courseId } });
     if (weights.length > 0) {
       await prisma.weightCategory.createMany({
         data: weights.map((w) => ({
-          courseId: course.id,
+          courseId,
           category: w.category || "General",
           percentage: Number(w.percentage) || 0
         }))
