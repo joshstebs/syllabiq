@@ -293,65 +293,50 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
         </div>
       </section>
 
-      {/* SECTION 3: FOUNDER STORY & STUDENT VOICES */}
+      {/* SECTION 3: WHY SYLLABIQ */}
       <section className="rounded-3xl border border-slate-200/90 bg-gradient-to-br from-slate-50 via-white to-indigo-50/30 p-4 sm:p-8 lg:p-10 shadow-sm space-y-6 sm:space-y-8 w-full max-w-full min-w-0 overflow-hidden">
         <div className="max-w-3xl mx-auto text-center space-y-3 w-full min-w-0">
           <div className="inline-flex items-center gap-2 rounded-full bg-white border border-slate-200 px-3 py-1 text-xs font-bold text-slate-700 shadow-2xs max-w-full">
             <GraduationCap className="h-4 w-4 text-blue-600 shrink-0" />
-            <span className="truncate">Built by Students, for Students</span>
+            <span className="truncate">Why SyllabiQ exists</span>
           </div>
           <h2 className="font-display text-2xl sm:text-4xl font-black text-slate-900 tracking-tight break-words">
             Why we built SyllabiQ
           </h2>
-          <blockquote className="border-l-4 border-blue-600 pl-3 sm:pl-4 py-1 text-left sm:text-center italic text-sm sm:text-lg text-slate-700 font-medium max-w-2xl mx-auto break-words">
-            &ldquo;I built SyllabiQ because I was drowning in my own syllabi — that 3 AM &lsquo;wait, did I forget something due at 11:59 PM?&rsquo; feeling. Students shouldn&apos;t have to hunt through messy Canvas modules and 12-page PDFs just to know what&apos;s due.&rdquo;
-          </blockquote>
+          <p className="text-sm sm:text-lg text-slate-700 font-medium max-w-2xl mx-auto break-words">
+            Keeping track of what&apos;s due shouldn&apos;t be a second job. Upload a syllabus and get a semester plan — deadlines, readings, and study tasks, organized automatically. No more hunting through messy Canvas modules and 12-page PDFs just to know what&apos;s due.
+          </p>
         </div>
 
-        {/* Example Student Testimonials (Demo Data) */}
+        {/* What SyllabiQ does for you */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 pt-2 w-full min-w-0">
           <div className="bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-700 p-4 sm:p-5 shadow-2xs space-y-3 min-w-0">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/30 border-2 border-blue-300 dark:border-blue-700 flex items-center justify-center text-lg shrink-0">
-                🎓
-              </div>
-              <div className="min-w-0 flex-1">
-                <h4 className="text-xs font-black text-slate-900 dark:text-white truncate">Example Student (Demo)</h4>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">Business Major</p>
-              </div>
+            <div className="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900/30 border-2 border-blue-300 dark:border-blue-700 flex items-center justify-center shrink-0">
+              <FileText className="h-5 w-5 text-blue-600 dark:text-blue-400" />
             </div>
+            <h4 className="text-sm font-black text-slate-900 dark:text-white">Syllabus to schedule in seconds</h4>
             <p className="text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed break-words">
-              &ldquo;Turned my syllabus into a schedule in seconds. The Sheets tracker updates whenever a deadline changes.&rdquo;
+              Drop in a course syllabus and SyllabiQ pulls every due date, reading, and exam into one organized semester plan.
             </p>
           </div>
 
           <div className="bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-700 p-4 sm:p-5 shadow-2xs space-y-3 min-w-0">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="h-10 w-10 rounded-full bg-rose-100 dark:bg-rose-900/30 border-2 border-rose-300 dark:border-rose-700 flex items-center justify-center text-lg shrink-0">
-                👩‍💻
-              </div>
-              <div className="min-w-0 flex-1">
-                <h4 className="text-xs font-black text-slate-900 dark:text-white truncate">Example Student (Demo)</h4>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">Computer Science Major</p>
-              </div>
+            <div className="h-10 w-10 rounded-full bg-rose-100 dark:bg-rose-900/30 border-2 border-rose-300 dark:border-rose-700 flex items-center justify-center shrink-0">
+              <Clock3 className="h-5 w-5 text-rose-600 dark:text-rose-400" />
             </div>
+            <h4 className="text-sm font-black text-slate-900 dark:text-white">Crunch weeks flagged early</h4>
             <p className="text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed break-words">
-              &ldquo;The prep buffers flagged crunch week where 3 exams landed in 48 hours.&rdquo;
+              Prep buffers spot the weeks where exams and deadlines pile up, so nothing blindsides you.
             </p>
           </div>
 
           <div className="bg-white dark:bg-slate-800/80 rounded-2xl border border-slate-200/80 dark:border-slate-700 p-4 sm:p-5 shadow-2xs space-y-3 min-w-0">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="h-10 w-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 border-2 border-emerald-300 dark:border-emerald-700 flex items-center justify-center text-lg shrink-0">
-                🧑‍💼
-              </div>
-              <div className="min-w-0 flex-1">
-                <h4 className="text-xs font-black text-slate-900 dark:text-white truncate">Example Student (Demo)</h4>
-                <p className="text-[11px] text-slate-500 dark:text-slate-400 font-medium truncate">Finance Major</p>
-              </div>
+            <div className="h-10 w-10 rounded-full bg-emerald-100 dark:bg-emerald-900/30 border-2 border-emerald-300 dark:border-emerald-700 flex items-center justify-center shrink-0">
+              <Calendar className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
             </div>
+            <h4 className="text-sm font-black text-slate-900 dark:text-white">Deadlines in your calendar</h4>
             <p className="text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed break-words">
-              &ldquo;Calendar import is convenient. 100% academic integrity safe.&rdquo;
+              Import deadlines straight into the calendar you already use. Organization only — SyllabiQ never does your coursework for you.
             </p>
           </div>
         </div>
