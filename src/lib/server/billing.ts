@@ -62,9 +62,27 @@ export function stripeClient(): Stripe | null {
   return new Stripe(key, { apiVersion: "2026-08-26.dahlia" });
 }
 
-/** Pro price ID. Josh must create the $5/mo price in the Stripe dashboard. */
+/** Optional reusable Stripe Price ID. Checkout falls back to inline recurring price data. */
 export function billingPriceId(): string | null {
   return process.env.STRIPE_PRICE_ID || process.env.STRIPE_PRO_PRICE_ID || null;
+}
+
+export function billingLineItem(): Stripe.Checkout.SessionCreateParams.LineItem {
+  const priceId = billingPriceId();
+  if (priceId) return { price: priceId, quantity: 1 };
+
+  return {
+    price_data: {
+      currency: (process.env.STRIPE_CURRENCY || "usd").toLowerCase(),
+      unit_amount: 500,
+      recurring: { interval: "month" },
+      product_data: {
+        name: "SyllabiQ Pro",
+        description: "SyllabiQ Pro monthly subscription after a 30-day free trial"
+      }
+    },
+    quantity: 1
+  };
 }
 
 export function siteUrl(req?: Request): string {
@@ -74,7 +92,7 @@ export function siteUrl(req?: Request): string {
 }
 
 export function isBillingConfigured(): boolean {
-  return Boolean(process.env.STRIPE_SECRET_KEY) && Boolean(billingPriceId());
+  return Boolean(process.env.STRIPE_SECRET_KEY);
 }
 
 /** Reuse the user's Stripe customer, creating (and persisting) one if needed. */
@@ -128,6 +146,42 @@ export async function applyVerifiedSubscription(sub: Stripe.Subscription) {
     where: { id: user.id },
     data: subscriptionPatch(sub)
   });
+}
+
+/**
+ * Refresh subscription state directly from Stripe.
+ * This is a secure fallback for delayed/misconfigured webhooks and also keeps
+ * portal-originated changes synchronized on the next signed-in status check.
+ */
+export async function refreshVerifiedSubscription(
+  user: BillingUser
+): Promise<EffectiveSubscription> {
+  const stripe = stripeClient();
+  if (!stripe || (!user.stripeSubscriptionId && !user.stripeCustomerId)) {
+    return effectiveSubscription(user);
+  }
+
+  let sub: Stripe.Subscription | null = null;
+  if (user.stripeSubscriptionId) {
+    try {
+      sub = await stripe.subscriptions.retrieve(user.stripeSubscriptionId);
+    } catch {
+      // Fall through to a customer lookup. This covers stale subscription IDs.
+    }
+  }
+
+  if (!sub && user.stripeCustomerId) {
+    const list = await stripe.subscriptions.list({
+      customer: user.stripeCustomerId,
+      status: "all",
+      limit: 1
+    });
+    sub = list.data[0] ?? null;
+  }
+
+  if (!sub) return effectiveSubscription(user);
+  const updated = await applyVerifiedSubscription(sub);
+  return updated ? effectiveSubscription(updated) : effectiveSubscription(user);
 }
 
 async function subscriptionFromSession(

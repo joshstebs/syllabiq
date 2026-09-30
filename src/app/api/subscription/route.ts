@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/server/auth";
-import { effectiveSubscription } from "@/lib/server/billing";
+import { effectiveSubscription, refreshVerifiedSubscription } from "@/lib/server/billing";
 import { getSubscription } from "@/lib/storage";
 
 /**
@@ -11,7 +11,12 @@ import { getSubscription } from "@/lib/storage";
 export async function GET() {
   const user = await getCurrentUser();
   if (user) {
-    return NextResponse.json(effectiveSubscription(user));
+    try {
+      return NextResponse.json(await refreshVerifiedSubscription(user));
+    } catch (err) {
+      console.warn("Stripe subscription refresh failed; using stored billing state", err);
+      return NextResponse.json(effectiveSubscription(user));
+    }
   }
   return NextResponse.json(getSubscription());
 }

@@ -1,4 +1,5 @@
 import fs from "fs";
+import os from "os";
 import path from "path";
 import {
   Course,
@@ -34,7 +35,12 @@ export interface SyllabiQStore {
   contactInquiries: ContactInquiry[];
 }
 
-const DATA_DIR = path.join(process.cwd(), ".data");
+// The legacy/demo store is intentionally non-authoritative. Authenticated user data lives
+// in Postgres through Prisma. Vercel's deployment bundle (/var/task) is read-only, so use
+// its writable ephemeral /tmp area for logged-out demo state and local .data in development.
+const DATA_DIR = process.env.VERCEL
+  ? path.join(os.tmpdir(), "syllabiq-demo")
+  : path.join(process.cwd(), ".data");
 const DATA_FILE = path.join(DATA_DIR, "syllabiq-store.json");
 
 // Helper to construct dynamic dates relative to today

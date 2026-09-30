@@ -22,7 +22,7 @@ const stripe = new Stripe(
 export async function POST(req: Request) {
   const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
   if (!webhookSecret) {
-    console.error("Stripe webhook rejected: STRIPE_WEBHOOK_SECRET is not configured");
+    console.warn("Stripe webhook inactive: STRIPE_WEBHOOK_SECRET is not configured");
     return NextResponse.json({ error: "Webhook is not configured" }, { status: 500 });
   }
 

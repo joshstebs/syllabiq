@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import {
-  billingPriceId,
+  activateFromCheckoutSession,
+  billingLineItem,
   getOrCreateStripeCustomer,
   cancelStripeSubscription,
   isBillingConfigured,
@@ -20,9 +21,8 @@ import { checkRateLimit, getClientIp, rateLimitedResponse } from "@/lib/server/r
  *   { action: "cancel" } -> cancels the Stripe subscription at period end.
  * GET ?session_id=... (authed):
  *   verifies a just-completed Checkout Session server-side (ownership +
- *   completion, read from Stripe's API). It does NOT mutate billing state —
- *   Pro status is driven by verified webhook events only. The client polls
- *   /api/subscription until the checkout.session.completed webhook lands.
+ *   completion, read directly from Stripe's API) and applies the verified
+ *   subscription state. Webhooks remain the preferred ongoing sync path.
  */
 export async function POST(req: Request) {
   const user = await getCurrentUser();
@@ -65,8 +65,7 @@ export async function POST(req: Request) {
 
   try {
     const stripe = stripeClient();
-    const priceId = billingPriceId();
-    if (!stripe || !priceId) {
+    if (!stripe) {
       return NextResponse.json({ error: "Billing is not configured yet." }, { status: 503 });
     }
 
@@ -77,7 +76,7 @@ export async function POST(req: Request) {
       mode: "subscription",
       customer: customerId,
       client_reference_id: user.id,
-      line_items: [{ price: priceId, quantity: 1 }],
+      line_items: [billingLineItem()],
       subscription_data: {
         trial_period_days: 30,
         metadata: { userId: user.id }
@@ -133,10 +132,15 @@ export async function GET(req: Request) {
       return NextResponse.json({ error: "Checkout isn't complete yet" }, { status: 400 });
     }
 
-    // Verified: this checkout is complete and belongs to the caller.
-    // Billing state itself is applied by the verified
-    // checkout.session.completed webhook — this endpoint never mutates it.
-    return NextResponse.json({ success: true, checkoutComplete: true });
+    // Verified directly with Stripe: this completed Checkout Session belongs
+    // to the caller, so it is safe to apply the subscription even if a webhook
+    // is delayed or temporarily unavailable.
+    const subscription = await activateFromCheckoutSession(session);
+    return NextResponse.json({
+      success: true,
+      checkoutComplete: true,
+      subscription
+    });
   } catch (err: any) {
     console.error("Stripe session verify error", err);
     return NextResponse.json({ error: "Couldn't verify checkout" }, { status: 502 });
