@@ -22,8 +22,8 @@ export const metadata: Metadata = {
     default: "SyllabiQ - Your Whole Semester Organized In Seconds",
     template: "%s | SyllabiQ"
   },
-  description: "Upload your syllabus or import calendar feeds. SyllabiQ builds your semester timeline, syncs to Google Calendar, and keeps you organized. First month free, then $5/month.",
-  keywords: ["syllabus planner", "academic calendar", "college organization", "student planner", "deadline tracker", "canvas calendar", "google calendar sync"],
+  description: "Upload your syllabus or import calendar feeds. SyllabiQ builds your semester timeline, syncs to Google Calendar, and keeps you organized. First month free, then $5 CAD/month.",
+  keywords: ["syllabus planner", "academic calendar", "college organization", "student planner", "deadline tracker", "syllabus organizer", "Google Calendar student planner"],
   authors: [{ name: "Harbour & Main" }],
   creator: "Harbour & Main",
   publisher: "Harbour & Main",
@@ -32,14 +32,14 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    locale: "en_US",
+    locale: "en_CA",
     url: canonicalUrl,
     title: "SyllabiQ - Your Whole Semester Organized In Seconds",
-    description: "Upload your syllabus or import calendar feeds. SyllabiQ builds your semester timeline automatically. First month free, then $5/month.",
+    description: "Upload your syllabus or import calendar feeds. SyllabiQ builds your semester timeline automatically. First month free, then $5 CAD/month.",
     siteName: "SyllabiQ",
     images: [
       {
-        url: "https://syllabiq.ca/og-image.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
         alt: "SyllabiQ - Academic Planning Made Simple"
@@ -50,7 +50,32 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "SyllabiQ - Your Whole Semester Organized In Seconds",
     description: "Upload your syllabus or import calendar feeds. SyllabiQ builds your semester timeline automatically.",
-    images: ["https://syllabiq.ca/og-image.png"]
+    images: ["/og-image.png"]
+  },
+  robots: {
+    index: true,
+    follow: true
+  }
+};
+
+const softwareJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "SyllabiQ",
+  url: canonicalUrl,
+  applicationCategory: "EducationalApplication",
+  operatingSystem: "Web",
+  description: "A student planning app that turns syllabi and calendar feeds into an organized semester timeline with deadline tracking and calendar sync.",
+  offers: {
+    "@type": "Offer",
+    price: "5.00",
+    priceCurrency: "CAD",
+    description: "SyllabiQ Pro monthly subscription after the introductory free month."
+  },
+  creator: {
+    "@type": "Organization",
+    name: "Harbour & Main",
+    url: "https://harbourandmain.com"
   }
 };
 
@@ -60,8 +85,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en-CA" suppressHydrationWarning>
       <body className="min-h-screen antialiased bg-[#F8FAFC] text-[#0F172A] dark:bg-[#0B0F19] dark:text-[#F8FAFC] transition-colors duration-200">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareJsonLd) }}
+        />
         <ThemeProvider>
           <AuthProvider>
             {children}
