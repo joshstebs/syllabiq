@@ -9,6 +9,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1.0
     },
     {
+      url: 'https://syllabiq.ca/guides/student-organization-apps',
+      lastModified: new Date('2026-10-08'),
+      changeFrequency: 'monthly',
+      priority: 0.8
+    },
+    {
       url: 'https://syllabiq.ca/features',
       lastModified: new Date(),
       changeFrequency: 'monthly',

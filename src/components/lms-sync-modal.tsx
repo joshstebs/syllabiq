@@ -98,9 +98,9 @@ export function LMSSyncModal({ onClose, onSyncComplete }: Props) {
 
         {/* Info Box */}
         <div className="bg-blue-50 p-4 rounded-2xl border border-blue-200 space-y-2">
-          <p className="text-xs font-bold text-blue-900">📅 iCal Snapshot Import Ready</p>
+          <p className="text-xs font-bold text-blue-900">📅 iCal Import Preview Only</p>
           <p className="text-xs text-blue-800 leading-relaxed">
-            Paste your LMS private calendar feed URL below to import deadlines as a one-time snapshot. Direct Canvas/Blackboard OAuth integrations are on the roadmap once production persistence is configured.
+            Production imports are not enabled. Do not enter a private LMS calendar-feed URL until account-level persistence and security have been independently tested. Direct Canvas/Blackboard OAuth integrations remain planned.
           </p>
         </div>
 
@@ -125,7 +125,7 @@ export function LMSSyncModal({ onClose, onSyncComplete }: Props) {
           </div>
 
           <p className="text-[11px] text-slate-500 leading-relaxed">
-            <strong>Current status:</strong> Calendar feeds can be fetched as a one-time snapshot. Canvas, Blackboard, Brightspace, and Moodle require an institution-approved OAuth/API connection and are not enabled by this button yet.
+            <strong>Current status:</strong> The current production endpoint does not persist imported calendar events. Canvas, Blackboard, Brightspace, and Moodle account connections are not available.
           </p>
         </div>
 

@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     default: "SyllabiQ - Your Whole Semester Organized In Seconds",
     template: "%s | SyllabiQ"
   },
-  description: "Upload your syllabus or import calendar feeds. SyllabiQ builds your semester timeline, syncs to Google Calendar, and keeps you organized. First month free, then $5 CAD/month.",
+  description: "Explore SyllabiQ, a syllabus-focused student planning workspace. Review course deadlines against source documents. Live LMS and Google Calendar sync are not currently enabled.",
   keywords: ["syllabus planner", "academic calendar", "college organization", "student planner", "deadline tracker", "syllabus organizer", "Google Calendar student planner"],
   authors: [{ name: "Harbour & Main" }],
   creator: "Harbour & Main",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     locale: "en_CA",
     url: canonicalUrl,
     title: "SyllabiQ - Your Whole Semester Organized In Seconds",
-    description: "Upload your syllabus or import calendar feeds. SyllabiQ builds your semester timeline automatically. First month free, then $5 CAD/month.",
+    description: "Explore syllabus-first planning and keep a reviewable course deadline checklist. Live LMS and Google sync are not yet enabled.",
     siteName: "SyllabiQ",
     images: [
       {
@@ -49,7 +49,7 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "SyllabiQ - Your Whole Semester Organized In Seconds",
-    description: "Upload your syllabus or import calendar feeds. SyllabiQ builds your semester timeline automatically.",
+    description: "Explore SyllabiQ's syllabus-first planning workspace. Verify all imported deadlines.",
     images: ["/og-image.png"]
   },
   robots: {
@@ -65,7 +65,7 @@ const softwareJsonLd = {
   url: canonicalUrl,
   applicationCategory: "EducationalApplication",
   operatingSystem: "Web",
-  description: "A student planning app that turns syllabi and calendar feeds into an organized semester timeline with deadline tracking and calendar sync.",
+  description: "A student planning workspace for organizing course tasks and reviewing syllabus deadlines. Live external calendar sync is not enabled.",
   offers: {
     "@type": "Offer",
     price: "5.00",
