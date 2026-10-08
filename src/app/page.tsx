@@ -341,6 +341,7 @@ export default function SyllabiQDashboard() {
             Bring your course deadlines into focus with SyllabiQ. Review imported information against your syllabus and course announcements. LMS and Google synchronization are not yet available.
           </p>
 
+          <div className="text-center mt-3"><Link className="text-blue-300 underline underline-offset-4" href="/guides/student-organization-apps">Compare student organization apps and check integration status</Link></div>
           {/* CTA Buttons */}
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <button
