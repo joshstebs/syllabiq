@@ -76,23 +76,23 @@ import { useAuth } from "@/lib/auth-context";
 const LANDING_FAQS = [
   {
     q: "What syllabus file formats does SyllabiQ support?",
-    a: "SyllabiQ accepts PDF files (.pdf), Word documents (.docx), plain text (.txt), Markdown (.md), and photo scans / phone camera screenshots (JPEG, PNG, HEIC). Our multimodal AI accurately extracts grade breakdowns, assignments, exam dates, and policies in under 60 seconds."
+    a: "SyllabiQ accepts PDF files (.pdf), Word documents (.docx), plain text (.txt), Markdown (.md), and photo scans / phone camera screenshots (JPEG, PNG, HEIC). Review extracted dates and grading details against your original syllabus before relying on them; results may require correction."
   },
   {
     q: "How does the first month free, then $5/month subscription work?",
     a: "You get full SyllabiQ Pro access 100% free for your first month ($0 billed today via Stripe). Then Pro is just $5.00/month. You can cancel at any time with a single click in your account settings with zero commitments or hidden fees."
   },
   {
-    q: "Can I sync Canvas without campus IT approval?",
-    a: "Yes! SyllabiQ connects using a read-only student access token generated directly from your Canvas profile. It takes 30 seconds to set up, requires zero administrator approvals, and auto-syncs your assignments, running grades, and deadlines bidirectionally."
+    q: "Can I connect Canvas or another learning platform?",
+    a: "Direct Canvas, Blackboard, Brightspace and Moodle synchronization is not available in the current production release. The calendar-feed import screen is a preview, not a working account sync."
   },
   {
-    q: "Is SyllabiQ 100% compliant with my university's Academic Integrity Code?",
-    a: "Yes, 100%. SyllabiQ is strictly an academic organization, scheduling, and study system. It never writes essays, never solves exam questions, and never submits assignments or messages professors on your behalf."
+    q: "Can I use SyllabiQ under my school's academic integrity policy?",
+    a: "Academic integrity rules vary by course and institution. Review your school's policy and ask your instructor before using any AI tool with assessed materials."
   },
   {
-    q: "How do Google Calendar and Google Sheets sync work?",
-    a: "SyllabiQ creates dedicated sub-calendars for each of your enrolled courses with custom color coding and emojis. Any deadline added or edited in SyllabiQ immediately syncs to your Google Calendar on your phone. You can also export a live master tracker to Google Sheets."
+    q: "Can I sync Google Calendar or Sheets?",
+    a: "Live Google Calendar and Google Sheets synchronization is not available in the reviewed release. Some screens demonstrate a planned workflow but do not connect to an actual Google account."
   },
   {
     q: "Can I use SyllabiQ on my phone as a mobile app?",
@@ -338,7 +338,7 @@ export default function SyllabiQDashboard() {
           </h1>
 
           <p className="text-base sm:text-lg text-slate-600 font-medium max-w-xl mx-auto">
-            Drop a syllabus or connect Canvas. SyllabiQ builds your semester timeline automatically, syncs with Google Calendar, and keeps you organized.
+            Bring your course deadlines into focus with SyllabiQ. Review imported information against your syllabus and course announcements. LMS and Google synchronization are not yet available.
           </p>
 
           {/* CTA Buttons */}
@@ -469,7 +469,7 @@ export default function SyllabiQDashboard() {
                 <span className="text-[10px] font-extrabold bg-purple-600 px-2 py-0.5 rounded-md w-fit">
                   AUTOMATED SYNC
                 </span>
-                <h4 className="text-sm font-black">Syncs to Google Calendar &amp; Cloud</h4>
+                <h4 className="text-sm font-black">Organize and review your deadlines</h4>
                 <p className="text-[11px] text-slate-200 line-clamp-2">
                   Your whole semester color-coded and organized across iPhone, iPad, and laptop.
                 </p>
@@ -989,7 +989,7 @@ export default function SyllabiQDashboard() {
               Got questions? We&apos;ve got answers.
             </h2>
             <p className="text-xs sm:text-sm text-slate-600 dark:text-slate-400 max-w-xl mx-auto leading-relaxed font-medium">
-              Everything you need to know about syllabi parsing, Canvas integration, Google sync, academic safety, and subscriptions.
+              Learn about syllabus planning, integration status, academic rules, and subscriptions.
             </p>
           </div>
 
