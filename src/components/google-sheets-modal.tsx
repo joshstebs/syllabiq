@@ -96,18 +96,18 @@ export function GoogleSheetsModal({ onClose, onSyncUpdated }: Props) {
               </div>
               <div>
                 <h3 className="text-lg font-black text-slate-900">Google Sheets Master Tracker</h3>
-                <p className="text-xs text-slate-500 font-medium">Two-way bidirectional synchronization with Apps Script triggers</p>
+                <p className="text-xs text-slate-500 font-medium">Local preview data. Not connected to Google Sheets</p>
               </div>
             </div>
 
             <div className="flex items-center space-x-2">
               <a
-                href="https://docs.google.com/spreadsheets/d/1SyLLabiQ_MasterTracker_AutoProv/edit"
+                href="/guides/student-organization-apps"
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center space-x-1.5 rounded-full bg-slate-100 px-3.5 py-1.5 text-xs font-bold text-slate-700 hover:bg-slate-200 border border-slate-200 transition"
               >
-                <span>Open in Google Sheets</span>
+                <span>Read integration status</span>
                 <ExternalLink className="h-3 w-3" />
               </a>
               <button onClick={onClose} className="text-slate-400 hover:text-slate-700 p-2 rounded-full cursor-pointer">✕</button>
@@ -119,7 +119,7 @@ export function GoogleSheetsModal({ onClose, onSyncUpdated }: Props) {
             <div className="flex items-center space-x-2 text-emerald-900">
               <ArrowRightLeft className="h-4 w-4 shrink-0 text-emerald-600" />
               <span>
-                <strong>Live Two-Way Bridge:</strong> Changing any status to DONE or logging test scores in Google Sheets immediately syncs back into SyllabiQ and your calendar.
+                <strong>Preview only:</strong> This table is generated inside SyllabiQ. It does not read from or write to Google Sheets or Google Calendar.
               </span>
             </div>
 
@@ -129,13 +129,13 @@ export function GoogleSheetsModal({ onClose, onSyncUpdated }: Props) {
               className="flex items-center space-x-1.5 rounded-full bg-emerald-600 px-4 py-2 text-xs font-extrabold text-white shadow-xs hover:bg-emerald-700 transition disabled:opacity-50 shrink-0 cursor-pointer"
             >
               <Sparkles className="h-3.5 w-3.5" />
-              <span>{isSimulating ? "Syncing Webhook..." : "Test 2-Way Sheet Edit"}</span>
+              <span>{isSimulating ? "Syncing Webhook..." : "Try Local Demo Edit"}</span>
             </button>
           </div>
 
           {simulatedTaskTitle && (
             <div className="text-xs text-emerald-800 bg-emerald-100/70 px-3.5 py-2 rounded-xl border border-emerald-200 font-semibold animate-fade-in">
-              ⚡ Webhook Synchronized: Updated &quot;{simulatedTaskTitle}&quot; from Google Sheets.
+              ⚡ Local Demo Updated &quot;{simulatedTaskTitle}&quot; from Google Sheets.
             </div>
           )}
 
