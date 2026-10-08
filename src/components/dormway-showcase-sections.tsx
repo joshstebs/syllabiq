@@ -43,7 +43,7 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
           <div className="space-y-4 sm:space-y-6 w-full min-w-0">
             <div className="inline-flex items-center gap-2 rounded-full bg-rose-50 border border-rose-200 px-3 py-1 text-xs font-bold text-rose-700">
               <Calendar className="h-3.5 w-3.5 text-rose-600" />
-              <span>Canvas & LMS Integration</span>
+              <span>LMS calendar import roadmap</span>
             </div>
 
             <h2 className="font-display text-2xl sm:text-4xl lg:text-5xl font-black text-slate-900 tracking-tight leading-tight break-words">
@@ -52,7 +52,7 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
             </h2>
 
             <p className="text-sm sm:text-base text-slate-600 leading-relaxed font-medium break-words">
-              Paste your private calendar feed URL (Canvas, Blackboard, Brightspace, Moodle) to import deadlines as a one-time snapshot. Direct OAuth integrations are on the roadmap.
+              The current LMS calendar screen is a preview. Production account imports are not enabled. Direct OAuth integrations remain planned.
             </p>
 
             <ul className="space-y-3 pt-1 text-xs sm:text-sm font-semibold text-slate-700 w-full min-w-0">
@@ -60,7 +60,7 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
                 <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-rose-100 flex items-center justify-center shrink-0 mt-0.5">
                   <div className="h-2 w-2 rounded-full bg-rose-600" />
                 </div>
-                <span className="flex-1 min-w-0 break-words leading-snug">Import calendar deadlines as a one-time snapshot after setup</span>
+                <span className="flex-1 min-w-0 break-words leading-snug">Calendar feed imports require a future production release</span>
               </li>
               <li className="flex items-start gap-2.5 sm:gap-3 w-full min-w-0">
                 <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-rose-100 flex items-center justify-center shrink-0 mt-0.5">
@@ -78,7 +78,7 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
                 <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5">
                   <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
                 </div>
-                <span className="flex-1 min-w-0 break-words leading-snug">100% academic integrity safe (we never submit or message professors)</span>
+                <span className="flex-1 min-w-0 break-words leading-snug">Check your school's rules before using AI with course material</span>
               </li>
             </ul>
 
@@ -122,7 +122,7 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
                 <h3 className="text-xs sm:text-sm font-black text-slate-900 truncate">LMS Import Status</h3>
                 <div className="inline-flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-2 py-0.5 text-[10px] sm:text-xs font-bold text-amber-700 shrink-0">
                   <CheckCircle2 className="h-3 w-3 text-amber-600" />
-                  <span>iCal snapshot pending setup</span>
+                  <span>LMS connection not enabled</span>
                 </div>
               </div>
 
@@ -393,7 +393,7 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
               />
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent p-4 flex flex-col justify-end text-white">
                 <span className="text-[10px] font-black uppercase tracking-wider text-amber-400">Campus Wide</span>
-                <p className="text-xs font-bold leading-tight">Synchronized across 6,000+ Colleges</p>
+                <p className="text-xs font-bold leading-tight">Designed for students across institutions</p>
               </div>
             </div>
 
@@ -416,7 +416,7 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
         <div className="pt-4 border-t border-slate-200/60 dark:border-slate-800 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs font-bold text-slate-500 dark:text-slate-400 w-full min-w-0">
           <div className="flex items-center gap-2 shrink-0">
             <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
-            <span>100% Academic Integrity Safe</span>
+            <span>Review your school's academic integrity rules</span>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <Award className="h-4 w-4 text-blue-600 shrink-0" />
