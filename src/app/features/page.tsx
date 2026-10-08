@@ -120,7 +120,7 @@ export default function FeaturesPage() {
         </h1>
 
         <p className="text-base sm:text-lg text-slate-600 dark:text-slate-300 max-w-2xl mx-auto font-medium">
-          Say goodbye to syllabus scavenger hunts. SyllabiQ parses your course documents, builds your unified timeline, syncs seamlessly to Google Cloud and Google Calendar, and alerts your phone before anything is due.
+          Say goodbye to syllabus scavenger hunts. SyllabiQ offers a workspace for reviewing course information and planning tasks. Google Calendar and Cloud integrations should be treated as previews until tested and enabled for your account.
         </p>
 
         {/* View Switcher Tabs */}
@@ -170,7 +170,7 @@ export default function FeaturesPage() {
                   Drop PDFs, Word documents (.docx), or photos of printed syllabi. Vision models extract instructor office hours, grading weight distributions, and every single deadline into a normalized timeline.
                 </p>
                 <div className="pt-1 text-[11px] font-bold text-indigo-600 dark:text-indigo-400">
-                  ✓ Supports Canvas, Blackboard, Brightspace &amp; Moodle
+                  LMS connections planned, not active
                 </div>
               </div>
 
@@ -184,7 +184,7 @@ export default function FeaturesPage() {
                   Store term papers, lab reports, homework drafts, and thesis documents safely on Google Cloud Storage (GCS). Features versioning, MD5 checksum integrity, AI abstract summaries, and 1-click Google Docs launch.
                 </p>
                 <div className="pt-1 text-[11px] font-bold text-blue-600 dark:text-blue-400">
-                  ✓ 50 GB High-Durability Cloud Storage
+                  Cloud storage availability requires verification
                 </div>
               </div>
 
@@ -240,7 +240,7 @@ export default function FeaturesPage() {
                   Connect with classmates at your university enrolled in the same lectures. Share conceptual homework hints, lecture notes, and study guides with upvotes and direct link sharing.
                 </p>
                 <div className="pt-1 text-[11px] font-bold text-rose-600 dark:text-rose-400">
-                  ✓ Zero ghostwriting · 100% Honor Code compliant
+                  Check your institution's academic integrity policy
                 </div>
               </div>
             </div>
@@ -524,7 +524,7 @@ export default function FeaturesPage() {
                   <div className="space-y-2">
                     <h3 className="text-base font-black text-slate-900 dark:text-white">Student Athletes &amp; Leaders</h3>
                     <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed">
-                      Navigating travel games, morning practices, executive board meetings, and exams. Synchronize your master academic schedule bidirectionally with Google Calendar and never miss an away-game due date.
+                      Navigating travel games, morning practices, executive board meetings, and exams. Keep a master schedule and check changes against course announcements. Live Google Calendar synchronization is not currently enabled.
                     </p>
                   </div>
                   <div className="pt-2 text-[11px] font-bold text-blue-600 dark:text-blue-400 border-t border-slate-100 dark:border-slate-800">
@@ -604,11 +604,11 @@ export default function FeaturesPage() {
                 },
                 {
                   q: "How does the Google Cloud Storage (GCS) Paper Vault work?",
-                  a: "The Google Cloud Vault securely backs up your term papers, lab reports, homework drafts, and cheat sheets to enterprise Google Cloud Storage with 99.999999999% durability. You get versioning (v1.0 Draft to v2.0 Final), AI-generated abstracts, and 1-click links to open Word or text files directly in Google Docs."
+                  a: "Cloud Vault availability and retention need to be confirmed before relying on it for document backups. You get versioning (v1.0 Draft to v2.0 Final), AI-generated abstracts, and 1-click links to open Word or text files directly in Google Docs."
                 },
                 {
                   q: "Is SyllabiQ 100% compliant with my university's Academic Integrity Code?",
-                  a: "Yes, 100%. SyllabiQ does NOT write papers, solve exam problems, or provide ghostwriting services. In the Campus Peer Hub, shared hints are strictly conceptual and moderated. Our tool is purely an academic organization and scheduling assistant."
+                  a: "Academic rules vary by course and institution. Check the current rules before uploading, sharing or using AI with coursework."
                 },
                 {
                   q: "How does the first month free, then $5/month subscription work?",
@@ -616,7 +616,7 @@ export default function FeaturesPage() {
                 },
                 {
                   q: "How does Google Calendar and Google Sheets sync work?",
-                  a: "SyllabiQ creates dedicated sub-calendars for each course with custom color coding and emojis. Any deadline added or edited in SyllabiQ immediately syncs to your Google Calendar on your phone. You can also export a live master tracker to Google Sheets."
+                  a: "The Google Calendar and Google Sheets modules currently provide previews, not verified live synchronization to your accounts."
                 },
                 {
                   q: "Can I customize the background wallpaper and toggle dark mode?",
