@@ -1,32 +1,17 @@
 import { NextResponse } from "next/server";
 import { GoogleSheetsService } from "@/lib/google/sheets-sync";
-import { GoogleCalendarSyncService } from "@/lib/google/calendar-sync";
 
+// This is a local planning preview. The current service only generates event
+// payloads and placeholder spreadsheet IDs, without Google OAuth or API writes.
 export async function GET() {
   const sheetData = GoogleSheetsService.getMasterTrackerSheetRows();
-  return NextResponse.json({ success: true, sheetData });
+  return NextResponse.json({ preview: true, connectedToGoogle: false, sheetData });
 }
 
-export async function POST(req: Request) {
-  try {
-    const body = await req.json().catch(() => ({}));
-    const action = body.action || "sync_all";
-
-    if (action === "provision_sheet") {
-      const res = await GoogleSheetsService.provisionSpreadsheet();
-      return NextResponse.json({ success: true, ...res });
-    }
-
-    // Sync all Google Calendars with smart milestones
-    const calResult = await GoogleCalendarSyncService.syncAllCourseCalendars();
-    const sheetData = GoogleSheetsService.getMasterTrackerSheetRows();
-
-    return NextResponse.json({
-      success: true,
-      calendar: calResult,
-      sheet: sheetData
-    });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
-  }
+export async function POST() {
+  return NextResponse.json({
+    error: "Google Calendar and Google Sheets synchronization is not yet connected. No Google account was updated or spreadsheet created.",
+    preview: true,
+    connectedToGoogle: false
+  }, { status: 501 });
 }
