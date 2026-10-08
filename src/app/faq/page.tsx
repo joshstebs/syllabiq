@@ -21,11 +21,11 @@ export default function FAQPage() {
     },
     {
       q: "How does the Google Cloud Storage (GCS) Paper Vault work?",
-      a: "The Google Cloud Vault securely backs up your term papers, lab reports, homework drafts, and cheat sheets to enterprise Google Cloud Storage with 99.999999999% durability. You get versioning (v1.0 Draft to v2.0 Final), AI-generated abstracts, and 1-click links to open Word or text files directly in Google Docs."
+      a: "Cloud Vault capabilities depend on whether the storage service is configured and working for your account. Do not treat it as your only backup. Check the current app and privacy terms before uploading documents."
     },
     {
-      q: "Is SyllabiQ 100% compliant with my university's Academic Integrity Code?",
-      a: "Yes, 100%. SyllabiQ does NOT write papers, solve exam problems, or provide ghostwriting services. In the Campus Peer Hub, shared hints are strictly conceptual and moderated. Our tool is purely an academic organization and scheduling assistant."
+      q: "Is SyllabiQ permitted under my university's academic integrity code?",
+      a: "Rules differ between institutions and courses. Review your school's current AI and academic integrity policies, especially before sharing, recording or uploading course material."
     },
     {
       q: "How does the $5/month subscription and 1st Month Free Trial work?",
@@ -33,7 +33,7 @@ export default function FAQPage() {
     },
     {
       q: "How does Google Calendar and Google Sheets sync work?",
-      a: "SyllabiQ creates dedicated sub-calendars for each course with custom color coding and emojis. Any deadline added or edited in SyllabiQ immediately syncs to your Google Calendar on your phone. You can also export a live master tracker to Google Sheets."
+      a: "The current Google Calendar and Google Sheets modules are previews and do not establish real account-connected synchronization. Check deadlines in the original course materials."
     },
     {
       q: "Can I customize the background wallpaper and toggle dark mode?",
@@ -41,7 +41,7 @@ export default function FAQPage() {
     },
     {
       q: "Can I connect my Canvas or Blackboard account?",
-      a: "SyllabiQ currently supports one-time iCalendar/WebCal snapshots. Live Canvas, Blackboard Learn, Brightspace D2L, and Moodle imports are planned and will require institution-approved OAuth/API connections."
+      a: "The current production version does not save one-time iCalendar/WebCal imports to a persistent student account. Direct Canvas, Blackboard Learn, Brightspace D2L, and Moodle imports are not enabled. Do not rely on this feature for deadlines yet."
     },
     {
       q: "Who built SyllabiQ?",
@@ -96,7 +96,7 @@ export default function FAQPage() {
           </h1>
 
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 leading-relaxed">
-            Everything you need to know about syllabi parsing, cloud storage, privacy, and subscriptions.
+            Understand syllabus planning, cloud and integration readiness, privacy, and subscriptions.
           </p>
         </div>
 
