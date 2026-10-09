@@ -170,7 +170,7 @@ export function StripePaywallModal({ onClose, onOpenAuthModal, onSubscriptionUpd
             </div>
 
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              Unlock Unlimited SyllabiQ Pro
+              Start Your SyllabiQ Pro Trial
             </h2>
 
             <p className="text-xs sm:text-sm text-slate-600 font-medium">
@@ -244,7 +244,7 @@ export function StripePaywallModal({ onClose, onOpenAuthModal, onSubscriptionUpd
                 <Smartphone className="h-3.5 w-3.5 text-blue-500" />
                 <span>Phone SMS &amp; Mobile Push Alerts</span>
               </div>
-              <div className="col-span-2 text-center text-slate-400">—</div>
+              <div className="col-span-2 text-center text-slate-400">-</div>
               <div className="col-span-2 text-center text-blue-600 font-black">Instant</div>
             </div>
 

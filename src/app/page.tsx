@@ -205,8 +205,8 @@ export default function SyllabiQDashboard() {
               }
             }
           }
-          // Webhook hasn't landed yet — open the modal with an activating note.
-          setPaywallNotice("Payment confirmed — your Pro trial is activating. This usually takes a few seconds; refresh if it doesn't appear.");
+          // Webhook hasn't landed yet - open the modal with an activating note.
+          setPaywallNotice("Payment confirmed - your Pro trial is activating. This usually takes a few seconds; refresh if it doesn't appear.");
           setShowPaywallModal(true);
         } catch (err) {
           console.error("Checkout verification failed", err);

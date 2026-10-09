@@ -226,7 +226,7 @@ export default function FeaturesPage() {
                   Personalize courses with academic emojis (💻, 📈, 🧬, ⚖️) and preset pastel palettes. Switch between 10 curated academic wallpapers or upload your own background photo with blur and dimmer sliders.
                 </p>
                 <div className="pt-1 text-[11px] font-bold text-purple-600 dark:text-purple-400">
-                  ✓ Light &amp; Dark Mode seamless synchronization
+                  ✓ Light &amp; Dark Mode sync
                 </div>
               </div>
 

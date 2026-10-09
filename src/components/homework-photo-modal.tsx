@@ -210,7 +210,7 @@ export function HomeworkPhotoModal({
               className="rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-extrabold text-xs px-4 py-2.5 shadow-sm transition cursor-pointer flex items-center gap-1.5 shrink-0"
             >
               <Zap className="h-3.5 w-3.5 fill-white" />
-              <span>Unlock Unlimited Pro ($0 First Month)</span>
+              <span>Start Pro Trial ($0 First Month)</span>
             </button>
           </div>
         )}

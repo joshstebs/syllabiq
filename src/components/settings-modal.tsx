@@ -44,23 +44,23 @@ const EMOJI_AVATARS = [
 
 const TIME_ZONE_OPTIONS = [
   // North America
-  { label: "Eastern Time (EST / EDT) — New York, Toronto, Boston, Miami", value: "America/New_York", group: "North America" },
-  { label: "Central Time (CST / CDT) — Chicago, Dallas, Austin, Winnipeg", value: "America/Chicago", group: "North America" },
-  { label: "Mountain Time (MST / MDT) — Denver, Phoenix, Calgary, Salt Lake", value: "America/Denver", group: "North America" },
-  { label: "Pacific Time (PST / PDT) — Los Angeles, Vancouver, Seattle, SF", value: "America/Los_Angeles", group: "North America" },
-  { label: "Atlantic Time (AST / ADT) — Halifax, Moncton, Puerto Rico", value: "America/Halifax", group: "North America" },
-  { label: "Newfoundland Time (NST / NDT) — St. John's", value: "America/St_Johns", group: "North America" },
-  { label: "Alaska Time (AKST / AKDT) — Anchorage, Fairbanks", value: "America/Anchorage", group: "North America" },
-  { label: "Hawaii-Aleutian Time (HST) — Honolulu", value: "Pacific/Honolulu", group: "North America" },
+  { label: "Eastern Time (EST / EDT) - New York, Toronto, Boston, Miami", value: "America/New_York", group: "North America" },
+  { label: "Central Time (CST / CDT) - Chicago, Dallas, Austin, Winnipeg", value: "America/Chicago", group: "North America" },
+  { label: "Mountain Time (MST / MDT) - Denver, Phoenix, Calgary, Salt Lake", value: "America/Denver", group: "North America" },
+  { label: "Pacific Time (PST / PDT) - Los Angeles, Vancouver, Seattle, SF", value: "America/Los_Angeles", group: "North America" },
+  { label: "Atlantic Time (AST / ADT) - Halifax, Moncton, Puerto Rico", value: "America/Halifax", group: "North America" },
+  { label: "Newfoundland Time (NST / NDT) - St. John's", value: "America/St_Johns", group: "North America" },
+  { label: "Alaska Time (AKST / AKDT) - Anchorage, Fairbanks", value: "America/Anchorage", group: "North America" },
+  { label: "Hawaii-Aleutian Time (HST) - Honolulu", value: "Pacific/Honolulu", group: "North America" },
   // International
-  { label: "UTC / GMT — Universal Time Coordinated, London, Dublin, Lisbon", value: "UTC", group: "International" },
-  { label: "Central European Time (CET / CEST) — Paris, Berlin, Rome, Madrid", value: "Europe/Paris", group: "International" },
-  { label: "Eastern European Time (EET / EEST) — Athens, Helsinki, Bucharest", value: "Europe/Athens", group: "International" },
-  { label: "India Standard Time (IST) — New Delhi, Mumbai, Bengaluru", value: "Asia/Kolkata", group: "International" },
-  { label: "China / Singapore (CST / SGT) — Beijing, Singapore, Hong Kong", value: "Asia/Singapore", group: "International" },
-  { label: "Japan & Korea (JST / KST) — Tokyo, Seoul", value: "Asia/Tokyo", group: "International" },
-  { label: "Australian Eastern Time (AEST / AEDT) — Sydney, Melbourne, Brisbane", value: "Australia/Sydney", group: "International" },
-  { label: "New Zealand Time (NZST / NZDT) — Auckland, Wellington", value: "Pacific/Auckland", group: "International" }
+  { label: "UTC / GMT - Universal Time Coordinated, London, Dublin, Lisbon", value: "UTC", group: "International" },
+  { label: "Central European Time (CET / CEST) - Paris, Berlin, Rome, Madrid", value: "Europe/Paris", group: "International" },
+  { label: "Eastern European Time (EET / EEST) - Athens, Helsinki, Bucharest", value: "Europe/Athens", group: "International" },
+  { label: "India Standard Time (IST) - New Delhi, Mumbai, Bengaluru", value: "Asia/Kolkata", group: "International" },
+  { label: "China / Singapore (CST / SGT) - Beijing, Singapore, Hong Kong", value: "Asia/Singapore", group: "International" },
+  { label: "Japan & Korea (JST / KST) - Tokyo, Seoul", value: "Asia/Tokyo", group: "International" },
+  { label: "Australian Eastern Time (AEST / AEDT) - Sydney, Melbourne, Brisbane", value: "Australia/Sydney", group: "International" },
+  { label: "New Zealand Time (NZST / NZDT) - Auckland, Wellington", value: "Pacific/Auckland", group: "International" }
 ];
 
 const SCHOOL_SUGGESTIONS = [
@@ -727,10 +727,10 @@ export function SettingsModal({ isOpen, onClose, courses = [], tasks = [] }: Pro
                     onChange={(e) => setDefaultDueTime(e.target.value)}
                     className="w-full bg-slate-50 dark:bg-slate-900 border border-slate-300 dark:border-slate-700 rounded-xl px-3 py-2 text-xs font-semibold focus:outline-none"
                   >
-                    <option value="23:59">11:59 PM — End of Day (Canvas Standard)</option>
-                    <option value="17:00">5:00 PM — End of Business Day</option>
-                    <option value="09:00">9:00 AM — Morning Class Start</option>
-                    <option value="12:00">12:00 PM — Noon</option>
+                    <option value="23:59">11:59 PM - End of Day (Canvas Standard)</option>
+                    <option value="17:00">5:00 PM - End of Business Day</option>
+                    <option value="09:00">9:00 AM - Morning Class Start</option>
+                    <option value="12:00">12:00 PM - Noon</option>
                   </select>
                   <p className="text-[10px] text-slate-400">
                     Applied when a syllabus lists a due date without an explicit hour.

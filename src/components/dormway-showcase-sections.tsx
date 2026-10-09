@@ -304,7 +304,7 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
             Why we built SyllabiQ
           </h2>
           <p className="text-sm sm:text-lg text-slate-700 font-medium max-w-2xl mx-auto break-words">
-            Keeping track of what&apos;s due shouldn&apos;t be a second job. Upload a syllabus and get a semester plan — deadlines, readings, and study tasks, organized automatically. No more hunting through messy Canvas modules and 12-page PDFs just to know what&apos;s due.
+            Keeping track of what&apos;s due shouldn&apos;t be a second job. Upload a syllabus and get a semester plan: deadlines, readings, and study tasks, organized automatically. No more hunting through messy Canvas modules and 12-page PDFs just to know what&apos;s due.
           </p>
         </div>
 
@@ -336,7 +336,7 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
             </div>
             <h4 className="text-sm font-black text-slate-900 dark:text-white">Deadlines in your calendar</h4>
             <p className="text-xs text-slate-600 dark:text-slate-300 font-medium leading-relaxed break-words">
-              Import deadlines straight into the calendar you already use. Organization only — SyllabiQ never does your coursework for you.
+              Import deadlines straight into the calendar you already use. Organization only: SyllabiQ never does your coursework for you.
             </p>
           </div>
         </div>
