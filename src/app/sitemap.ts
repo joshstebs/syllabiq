@@ -15,6 +15,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8
     },
     {
+      url: 'https://syllabiq.ca/guides/ontario-colleges-universities',
+      lastModified: new Date('2026-10-09'),
+      changeFrequency: 'monthly',
+      priority: 0.8
+    },
+    {
+      url: 'https://syllabiq.ca/guides/syllabus-deadline-checklist',
+      lastModified: new Date('2026-10-09'),
+      changeFrequency: 'monthly',
+      priority: 0.8
+    },
+    {
       url: 'https://syllabiq.ca/features',
       lastModified: new Date(),
       changeFrequency: 'monthly',
