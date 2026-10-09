@@ -91,7 +91,7 @@ export default function HarbourAndMainBrandingPage() {
       hex: "#F8F6F2",
       bgClass: "bg-[#F8F6F2]",
       textClass: "text-slate-900 border border-slate-300",
-      description: "Clean canvas background reflecting tactile paper, morning coastal light, and effortless reading."
+      description: "Clean canvas background reflecting tactile paper, morning coastal light, and comfortable reading."
     }
   ];
 
@@ -145,7 +145,7 @@ export default function HarbourAndMainBrandingPage() {
             </h1>
 
             <p className="text-sm sm:text-base text-slate-600 dark:text-slate-300 max-w-2xl mx-auto font-medium leading-relaxed">
-              At Harbour &amp; Main, we craft ultra-high-performance web software, community-focused applications, and bespoke digital experiences designed to empower local economies and students for brighter tomorrows.
+              At Harbour &amp; Main, we craft high-performance web software, community-focused applications, and bespoke digital experiences designed to support local economies and students for brighter tomorrows.
             </p>
 
             <div className="pt-2 flex flex-wrap items-center justify-center gap-3">

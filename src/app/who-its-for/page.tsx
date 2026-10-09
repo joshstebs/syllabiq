@@ -70,7 +70,7 @@ export default function WhoItsForPage() {
           <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/40 to-transparent p-6 sm:p-10 flex flex-col justify-end">
             <div className="inline-flex items-center space-x-2 rounded-full bg-blue-500/20 border border-blue-400/40 px-3.5 py-1 text-xs font-bold text-blue-300 w-fit mb-2">
               <Sparkles className="h-3.5 w-3.5" />
-              <span>Campus Community Across 120+ Universities</span>
+              <span>Campus Community, Student Focus</span>
             </div>
             <h2 className="text-2xl sm:text-4xl font-black tracking-tight text-white max-w-2xl leading-tight">
               Designed for the Students Shaping Tomorrow
