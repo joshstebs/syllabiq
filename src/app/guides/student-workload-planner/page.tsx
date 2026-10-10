@@ -3,7 +3,7 @@ import Link from "next/link";
 import WorkloadPlanner from "./workload-planner";
 
 export const metadata: Metadata = {
-  title: "Student Workload Planner: Estimate a Realistic Study Week | SyllabiQ",
+  title: "Student Workload Planner: Estimate a Realistic Study Week",
   description: "Estimate assignment and study hours, compare them with your actual weekly capacity, and turn the result into a source-checked semester plan.",
   alternates: { canonical: "/guides/student-workload-planner" },
   openGraph: {
