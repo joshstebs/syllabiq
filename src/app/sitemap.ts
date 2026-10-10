@@ -2,65 +2,16 @@ import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
-    {
-      url: 'https://syllabiq.ca',
-      lastModified: new Date(),
-      changeFrequency: 'weekly',
-      priority: 1.0
-    },
-    {
-      url: 'https://syllabiq.ca/guides/student-organization-apps',
-      lastModified: new Date('2026-10-08'),
-      changeFrequency: 'monthly',
-      priority: 0.8
-    },
-    {
-      url: 'https://syllabiq.ca/guides/ontario-colleges-universities',
-      lastModified: new Date('2026-10-09'),
-      changeFrequency: 'monthly',
-      priority: 0.8
-    },
-    {
-      url: 'https://syllabiq.ca/guides/syllabus-deadline-checklist',
-      lastModified: new Date('2026-10-09'),
-      changeFrequency: 'monthly',
-      priority: 0.8
-    },
-    {
-      url: 'https://syllabiq.ca/features',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8
-    },
-    {
-      url: 'https://syllabiq.ca/faq',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.7
-    },
-    {
-      url: 'https://syllabiq.ca/who-its-for',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.8
-    },
-    {
-      url: 'https://syllabiq.ca/harbour-and-main',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.6
-    },
-    {
-      url: 'https://syllabiq.ca/privacy',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.4
-    },
-    {
-      url: 'https://syllabiq.ca/terms',
-      lastModified: new Date(),
-      changeFrequency: 'monthly',
-      priority: 0.4
-    }
+    { url: 'https://syllabiq.ca', lastModified: new Date(), changeFrequency: 'weekly', priority: 1.0 },
+    { url: 'https://syllabiq.ca/guides/student-organization-apps', lastModified: new Date('2026-10-08'), changeFrequency: 'monthly', priority: 0.8 },
+    { url: 'https://syllabiq.ca/guides/ontario-colleges-universities', lastModified: new Date('2026-10-09'), changeFrequency: 'monthly', priority: 0.8 },
+    { url: 'https://syllabiq.ca/guides/syllabus-deadline-checklist', lastModified: new Date('2026-10-09'), changeFrequency: 'monthly', priority: 0.8 },
+    { url: 'https://syllabiq.ca/guides/student-workload-planner', lastModified: new Date('2026-10-10'), changeFrequency: 'monthly', priority: 0.8 },
+    { url: 'https://syllabiq.ca/features', lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: 'https://syllabiq.ca/faq', lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
+    { url: 'https://syllabiq.ca/who-its-for', lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
+    { url: 'https://syllabiq.ca/harbour-and-main', lastModified: new Date(), changeFrequency: 'monthly', priority: 0.6 },
+    { url: 'https://syllabiq.ca/privacy', lastModified: new Date(), changeFrequency: 'monthly', priority: 0.4 },
+    { url: 'https://syllabiq.ca/terms', lastModified: new Date(), changeFrequency: 'monthly', priority: 0.4 },
   ];
 }
