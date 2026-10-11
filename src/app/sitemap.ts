@@ -6,6 +6,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: 'https://syllabiq.ca/guides/student-organization-apps', lastModified: new Date('2026-10-08'), changeFrequency: 'monthly', priority: 0.8 },
     { url: 'https://syllabiq.ca/guides/ontario-colleges-universities', lastModified: new Date('2026-10-09'), changeFrequency: 'monthly', priority: 0.8 },
     { url: 'https://syllabiq.ca/guides/syllabus-deadline-checklist', lastModified: new Date('2026-10-09'), changeFrequency: 'monthly', priority: 0.8 },
+    { url: 'https://syllabiq.ca/guides/ontario-application-document-tracker', lastModified: new Date('2026-10-11'), changeFrequency: 'monthly', priority: 0.8 },
     { url: 'https://syllabiq.ca/guides/student-workload-planner', lastModified: new Date('2026-10-10'), changeFrequency: 'monthly', priority: 0.8 },
     { url: 'https://syllabiq.ca/features', lastModified: new Date(), changeFrequency: 'monthly', priority: 0.8 },
     { url: 'https://syllabiq.ca/faq', lastModified: new Date(), changeFrequency: 'monthly', priority: 0.7 },
