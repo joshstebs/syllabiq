@@ -57,7 +57,7 @@ export default function StudentWorkloadPlannerPage() {
           <li>Leave space for meals, sleep, travel, work, care responsibilities and recovery.</li>
           <li>Keep the source URL or document name beside any deadline you may need to recheck.</li>
         </ul>
-        <p className="mt-4">Use the <Link className={link} href="/guides/syllabus-deadline-checklist">syllabus deadline checklist</Link> before building the week. For app choices and reminder testing, see the <Link className={link} href="/guides/student-organization-apps">student organization app comparison</Link>.</p>
+        <p className="mt-4">Use the <Link className={link} href="/guides/syllabus-deadline-checklist">syllabus deadline checklist</Link> before building the week. For assignment teams, use the <Link className={link} href="/guides/group-project-planner">group project worksheet</Link>. For app choices and reminder testing, see the <Link className={link} href="/guides/student-organization-apps">student organization app comparison</Link>.</p>
       </section>
 
       <section className="mt-9 space-y-3">
