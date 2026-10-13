@@ -1,58 +1,31 @@
 import { NextResponse } from "next/server";
-import { getStore } from "@/lib/storage";
-
-function formatIcsDate(date: Date): string {
-  return date.toISOString().replace(/[-:]/g, "").split(".")[0] + "Z";
-}
+import { getCurrentUser, isDatabaseConfigured } from "@/lib/server/auth";
+import { prisma } from "@/lib/server/prisma";
+import { createCalendarExport } from "@/lib/calendar-export";
 
 export async function GET() {
   try {
-    const store = getStore();
-    const tasks = store.tasks;
-
-    const icsContent = [
-      "BEGIN:VCALENDAR",
-      "VERSION:2.0",
-      "PRODID:-//SyllabiQ//Academic Schedule Feed//EN",
-      "CALSCALE:GREGORIAN",
-      "METHOD:PUBLISH",
-      "X-WR-CALNAME:SyllabiQ Master Semester Schedule",
-      "X-WR-TIMEZONE:UTC"
-    ];
-
-    for (const task of tasks) {
-      const dueDate = new Date(task.dueDate);
-      const startDate = new Date(dueDate.getTime() - (task.estimatedHours || 2) * 3600 * 1000);
-      const now = new Date();
-
-      const summary = `[${task.courseCode}] ${task.title}`;
-      const description = `${task.description || ""}\\n\\nType: ${task.type.toUpperCase()}\\nWeight: ${task.weightPercent}%\\nStatus: ${task.status}\\nManaged by SyllabiQ (syllabiq.ca)`;
-
-      icsContent.push(
-        "BEGIN:VEVENT",
-        `UID:syllabiq-${task.id}@syllabiq.ca`,
-        `DTSTAMP:${formatIcsDate(now)}`,
-        `DTSTART:${formatIcsDate(startDate)}`,
-        `DTEND:${formatIcsDate(dueDate)}`,
-        `SUMMARY:${summary}`,
-        `DESCRIPTION:${description}`,
-        `STATUS:${task.status === "DONE" ? "COMPLETED" : "CONFIRMED"}`,
-        `CATEGORIES:${task.courseCode},${task.type.toUpperCase()}`,
-        "END:VEVENT"
-      );
+    if (!isDatabaseConfigured()) {
+      return NextResponse.json({ error: "Account services are not configured" }, { status: 503 });
     }
+    const user = await getCurrentUser();
+    if (!user) return NextResponse.json({ error: "Sign in to export your deadlines" }, { status: 401 });
 
-    icsContent.push("END:VCALENDAR");
-
-    return new Response(icsContent.join("\r\n"), {
-      status: 200,
+    const tasks = await prisma.task.findMany({
+      where: { course: { userId: user.id } },
+      select: { id: true, title: true, dueDate: true, course: { select: { code: true } } },
+      orderBy: { dueDate: "asc" }
+    });
+    return new Response(createCalendarExport(tasks), {
       headers: {
         "Content-Type": "text/calendar; charset=utf-8",
-        "Content-Disposition": 'attachment; filename="syllabiq-semester.ics"',
-        "Cache-Control": "no-cache, no-store, must-revalidate"
+        "Content-Disposition": 'attachment; filename="syllabiq-deadlines.ics"',
+        "Cache-Control": "private, no-store",
+        "X-Content-Type-Options": "nosniff"
       }
     });
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (error) {
+    console.error("Calendar export failed", error);
+    return NextResponse.json({ error: "Calendar export is unavailable. Please try again." }, { status: 500 });
   }
 }

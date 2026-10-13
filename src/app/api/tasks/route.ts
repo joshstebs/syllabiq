@@ -50,11 +50,12 @@ export async function POST(req: Request) {
     if (user) {
       if (!body.taskId) {
         if (!body.title) return NextResponse.json({ error: "Task title is required" }, { status: 400 });
-        const course = await prisma.course.findFirst({ where: { userId: user.id }, orderBy: { code: "asc" } });
+        const course = await prisma.course.findFirst({ where: { userId: user.id, ...(body.courseId ? { id: body.courseId } : {}) }, orderBy: { code: "asc" } });
+        if (!course && body.courseId) return NextResponse.json({ error: "Course not found" }, { status: 404 });
         if (!course) return NextResponse.json({ error: "Create a course first" }, { status: 400 });
         const task = await prisma.task.create({
           data: {
-            courseId: body.courseId || course.id,
+            courseId: course.id,
             title: body.title,
             description: body.description || "",
             type: String(body.type || "ASSIGNMENT").toUpperCase() as PrismaTaskType,
