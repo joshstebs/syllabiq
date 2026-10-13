@@ -123,7 +123,7 @@ export function Footer({
                     onClick={onOpenCalendarSync}
                     className="hover:text-blue-600 dark:hover:text-blue-400 font-medium transition text-left cursor-pointer flex items-center gap-2 group"
                   >
-                    <span>Google Calendar 2-Way Sync</span>
+                    <span>Export Calendar (.ics)</span>
                     <span className="text-[9px] bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-bold px-1.5 py-0.2 rounded group-hover:bg-blue-200 dark:group-hover:bg-blue-900 transition-colors">
                       LIVE
                     </span>
@@ -133,7 +133,7 @@ export function Footer({
                     href="/#schedule"
                     className="hover:text-blue-600 dark:hover:text-blue-400 font-medium transition text-left cursor-pointer flex items-center gap-2"
                   >
-                    <span>Google Calendar 2-Way Sync</span>
+                    <span>Export Calendar (.ics)</span>
                     <span className="text-[9px] bg-blue-100 dark:bg-blue-950 text-blue-700 dark:text-blue-300 font-bold px-1.5 py-0.2 rounded">
                       LIVE
                     </span>
