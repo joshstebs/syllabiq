@@ -1,17 +1,11 @@
-import type { Metadata } from 'next'
+import type { Metadata } from 'next';
+import type { ReactNode } from 'react';
 
 export const metadata: Metadata = {
-  title: 'SyllabiQ Privacy Policy',
-  description: 'Read SyllabiQ\'s published privacy information about student accounts and course-related data.',
+  title: 'Privacy Policy | SyllabiQ',
   alternates: { canonical: '/privacy' },
-  openGraph: {
-    type: 'website',
-    url: 'https://syllabiq.ca/privacy',
-    title: 'SyllabiQ Privacy Policy',
-    description: 'Read SyllabiQ\'s published privacy information about student accounts and course-related data.',
-  },
-}
+};
 
-export default function PublicPageLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return children
+export default function PrivacyLayout({ children }: { children: ReactNode }) {
+  return children;
 }

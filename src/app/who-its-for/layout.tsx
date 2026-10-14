@@ -1,17 +1,24 @@
-import type { Metadata } from 'next'
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Who SyllabiQ Is For',
-  description: 'See how college and university students can use SyllabiQ to review syllabus deadlines and organize coursework.',
-  alternates: { canonical: '/who-its-for' },
-  openGraph: {
-    type: 'website',
-    url: 'https://syllabiq.ca/who-its-for',
-    title: 'Who SyllabiQ Is For',
-    description: 'See how college and university students can use SyllabiQ to review syllabus deadlines and organize coursework.',
+  title: 'Who It\'s For',
+  description: 'SyllabiQ is built for STEM students, pre-med, humanities majors, student athletes, graduate students, and first-year college students.',
+  alternates: {
+    canonical: '/who-its-for'
   },
-}
+  openGraph: {
+    title: 'Who It\'s For',
+    description: 'SyllabiQ is built for STEM students, pre-med, humanities majors, student athletes, graduate students, and first-year college students.',
+    url: 'https://syllabiq.ca/who-its-for',
+    siteName: 'SyllabiQ',
+    type: 'website'
+  }
+};
 
-export default function PublicPageLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return children
+export default function WhoItsForLayout({
+  children
+}: {
+  children: React.ReactNode;
+}) {
+  return children;
 }

@@ -1,17 +1,24 @@
-import type { Metadata } from 'next'
+import { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'About Harbour & Main',
-  description: 'Learn about Harbour & Main, the independent Windsor–Essex team behind the SyllabiQ planning project.',
-  alternates: { canonical: '/harbour-and-main' },
-  openGraph: {
-    type: 'website',
-    url: 'https://syllabiq.ca/harbour-and-main',
-    title: 'About Harbour & Main',
-    description: 'Learn about Harbour & Main, the independent Windsor–Essex team behind the SyllabiQ planning project.',
+  title: 'Harbour and Main - SyllabiQ',
+  description: 'Harbour and Main builds beautiful, high-performance websites and web applications for local businesses and academic communities.',
+  alternates: {
+    canonical: '/harbour-and-main'
   },
-}
+  openGraph: {
+    title: 'Harbour and Main - SyllabiQ',
+    description: 'Harbour and Main builds beautiful, high-performance websites and web applications for local businesses and academic communities.',
+    url: 'https://syllabiq.ca/harbour-and-main',
+    siteName: 'SyllabiQ',
+    type: 'website'
+  }
+};
 
-export default function PublicPageLayout({ children }: Readonly<{ children: React.ReactNode }>) {
-  return children
+export default function HarbourAndMainLayout({
+  children
+}: {
+  children: React.ReactNode;
+}) {
+  return children;
 }
