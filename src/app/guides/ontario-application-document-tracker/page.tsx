@@ -3,7 +3,7 @@ import Link from 'next/link';
 import ApplicationDocumentTracker from './application-document-tracker';
 
 export const metadata: Metadata = {
-  title: 'Ontario College and University Application Document Tracker',
+  title: 'Ontario Application Document Tracker',
   description: 'Track transcripts, supporting documents, senders, deadlines and receipt status for Ontario college and university applications.',
   alternates: { canonical: '/guides/ontario-application-document-tracker' },
   openGraph: {

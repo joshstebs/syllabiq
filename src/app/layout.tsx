@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     default: "SyllabiQ - Your Whole Semester Organized In Seconds",
     template: "%s | SyllabiQ"
   },
-  description: "Explore SyllabiQ, a syllabus-focused student planning workspace. Review course deadlines against source documents. Live LMS and Google Calendar sync are not currently enabled.",
+  description: "Plan course tasks and review deadlines from your syllabus with SyllabiQ. Live LMS and Google Calendar synchronization is not currently enabled.",
   keywords: ["syllabus planner", "academic calendar", "college organization", "student planner", "deadline tracker", "syllabus organizer", "Google Calendar student planner"],
   authors: [{ name: "Harbour & Main" }],
   creator: "Harbour & Main",
