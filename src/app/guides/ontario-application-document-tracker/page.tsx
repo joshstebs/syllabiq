@@ -21,11 +21,11 @@ export default function OntarioApplicationDocumentTrackerPage() {
   const reviewed = 'October 11, 2026';
   const jsonLd = {
     '@context': 'https://schema.org',
-    '@type': 'Article',
+    '@type': 'WebPage',
     headline: 'Ontario College and University Application Document Tracker',
     dateModified: '2026-10-11',
-    author: { '@type': 'Organization', name: 'SyllabiQ' },
-    publisher: { '@type': 'Organization', name: 'SyllabiQ' },
+    author: { '@type': 'Organization', name: 'SyllabiQ', logo: 'https://harbourandmain.com/assets/syllabiq-logo.webp' },
+    publisher: { '@type': 'Organization', name: 'SyllabiQ', logo: 'https://harbourandmain.com/assets/syllabiq-logo.webp' },
     mainEntityOfPage: 'https://syllabiq.ca/guides/ontario-application-document-tracker',
   };
 
