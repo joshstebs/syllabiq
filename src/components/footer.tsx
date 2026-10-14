@@ -41,12 +41,12 @@ export function Footer({
             </div>
 
             <p className="text-xs leading-relaxed text-slate-500 dark:text-slate-400">
-              The high-performance academic productivity operating system. Ingests syllabi, builds automated schedules, syncs to Google Calendar &amp; Sheets, and safeguards student success.
+              A syllabus-focused planning workspace for reviewing course deadlines, organizing tasks, and checking details against the original documents. Live Google Calendar and LMS sync are not currently enabled.
             </p>
 
             <div className="flex items-center space-x-2 text-[11px] font-bold text-emerald-600 dark:text-emerald-400">
               <ShieldCheck className="h-4 w-4" />
-              <span>100% Academic Integrity Protected</span>
+              <span>Verify deadlines against course sources</span>
             </div>
           </div>
 
@@ -229,6 +229,18 @@ export function Footer({
             </div>
           </div>
         </div>
+
+        <nav aria-label="Free student planning guides" className="border-t border-slate-200 dark:border-slate-800 pt-6">
+          <h4 className="text-xs font-extrabold uppercase tracking-wider text-slate-900 dark:text-slate-200">Free student planning guides</h4>
+          <ul className="mt-3 grid gap-2 text-xs sm:grid-cols-2 lg:grid-cols-3">
+            <li><Link href="/guides/student-organization-apps" className="hover:underline">Compare organization apps</Link></li>
+            <li><Link href="/guides/syllabus-deadline-checklist" className="hover:underline">Syllabus deadline checklist</Link></li>
+            <li><Link href="/guides/student-workload-planner" className="hover:underline">Student workload planner</Link></li>
+            <li><Link href="/guides/group-project-planner" className="hover:underline">Group project worksheet</Link></li>
+            <li><Link href="/guides/ontario-colleges-universities" className="hover:underline">Ontario colleges and universities</Link></li>
+            <li><Link href="/guides/ontario-application-document-tracker" className="hover:underline">Application document tracker</Link></li>
+          </ul>
+        </nav>
 
         {/* Bottom Bar with Harbour and Main Company Logo */}
         <div className="border-t border-slate-200/80 dark:border-slate-800/80 pt-8 flex flex-col sm:flex-row items-center justify-between gap-6">
