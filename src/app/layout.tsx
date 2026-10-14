@@ -75,7 +75,8 @@ const softwareJsonLd = {
   creator: {
     "@type": "Organization",
     name: "Harbour & Main",
-    url: "https://harbourandmain.com"
+    url: "https://harbourandmain.com",
+    logo: "https://harbourandmain.com/assets/logo.svg"
   }
 };
 
