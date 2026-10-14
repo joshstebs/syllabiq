@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Student Organization Apps Compared: Calendar, MyStudyLife and SyllabiQ",
+  title: "Student Planning Apps Compared",
   description: "A practical comparison of Google Calendar with Tasks, MyStudyLife and syllabus-first planning, including a weekly deadline-checking routine.",
   alternates: { canonical: "/guides/student-organization-apps" },
   openGraph: {
