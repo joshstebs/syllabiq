@@ -1,24 +1,17 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'FAQ',
-  description: 'Frequently asked questions about SyllabiQ including syllabus formats, Google Cloud storage, academic integrity, and subscription details.',
-  alternates: {
-    canonical: '/faq'
-  },
+  title: 'SyllabiQ Frequently Asked Questions',
+  description: 'Answers about SyllabiQ student planning, importing course materials, deadline verification and current integration availability.',
+  alternates: { canonical: '/faq' },
   openGraph: {
-    title: 'FAQ',
-    description: 'Frequently asked questions about SyllabiQ including syllabus formats, Google Cloud storage, academic integrity, and subscription details.',
+    type: 'website',
     url: 'https://syllabiq.ca/faq',
-    siteName: 'SyllabiQ',
-    type: 'website'
-  }
-};
+    title: 'SyllabiQ Frequently Asked Questions',
+    description: 'Answers about SyllabiQ student planning, importing course materials, deadline verification and current integration availability.',
+  },
+}
 
-export default function FAQLayout({
-  children
-}: {
-  children: React.ReactNode;
-}) {
-  return children;
+export default function PublicPageLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return children
 }

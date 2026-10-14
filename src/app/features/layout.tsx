@@ -1,24 +1,17 @@
-import { Metadata } from 'next';
+import type { Metadata } from 'next'
 
 export const metadata: Metadata = {
-  title: 'Features',
-  description: 'Explore SyllabiQ\'s comprehensive feature suite including AI syllabus parsing, Google Cloud integration, and smart academic scheduling.',
-  alternates: {
-    canonical: '/features'
-  },
+  title: 'SyllabiQ Features',
+  description: 'Explore the syllabus-first student planner, deadline review, task organization and current feature limitations.',
+  alternates: { canonical: '/features' },
   openGraph: {
-    title: 'Features',
-    description: 'Explore SyllabiQ\'s comprehensive feature suite including AI syllabus parsing, Google Cloud integration, and smart academic scheduling.',
+    type: 'website',
     url: 'https://syllabiq.ca/features',
-    siteName: 'SyllabiQ',
-    type: 'website'
-  }
-};
+    title: 'SyllabiQ Features',
+    description: 'Explore the syllabus-first student planner, deadline review, task organization and current feature limitations.',
+  },
+}
 
-export default function FeaturesLayout({
-  children
-}: {
-  children: React.ReactNode;
-}) {
-  return children;
+export default function PublicPageLayout({ children }: Readonly<{ children: React.ReactNode }>) {
+  return children
 }
