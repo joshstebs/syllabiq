@@ -1,7 +1,7 @@
-import ical from "node-ical";
 import { getStore, saveStore, addActivityLog } from "../storage";
-import { LMSProvider, TaskItem, TaskType } from "../types";
+import { LMSProvider, TaskItem } from "../types";
 import { findDuplicateInCollection } from "./deduplication";
+import { parseIcalEvents } from "./ical-import";
 
 export interface LMSSyncResult {
   provider: LMSProvider;
@@ -20,25 +20,21 @@ export class UniversalLMSSyncService {
     provider: LMSProvider = "ICAL_FEED"
   ): Promise<LMSSyncResult> {
     const store = getStore();
-    const parsed = ical.sync.parseICS(rawIcsContent);
+    const events = parseIcalEvents(rawIcsContent);
 
     let totalFound = 0;
     let syncedNew = 0;
     let deduplicated = 0;
     const details: string[] = [];
 
-    for (const key of Object.keys(parsed)) {
-      const ev: any = parsed[key];
-      if (!ev || ev.type !== "VEVENT" || !ev.summary) continue;
-
+    for (const event of events) {
       totalFound++;
-      const title = ev.summary.trim();
-      const dueDate = ev.end ? new Date(ev.end).toISOString() : new Date().toISOString();
-      const description = (ev.description as string) || "";
+      const title = event.title;
+      const dueDate = event.dueDate.toISOString();
+      const description = event.description;
 
       // Deduce course code from title (e.g. "[CS 3110] HW 1" or "CS3110: HW 1")
-      const courseMatch = title.match(/\[?([A-Z]{2,4}\s?[0-9]{3,4})\]?/i);
-      const courseCode = courseMatch ? courseMatch[1].toUpperCase() : "GEN 101";
+      const courseCode = event.courseCode;
 
       // Find or assign course
       let course = store.courses.find((c) => c.code.toLowerCase() === courseCode.toLowerCase());
@@ -63,7 +59,7 @@ export class UniversalLMSSyncService {
         // Merge metadata into existing task
         const existing = store.tasks.find((t) => t.id === dupMatch.match.id);
         if (existing) {
-          existing.lmsTaskId = ev.uid || `lms-${Date.now()}`;
+          existing.lmsTaskId = event.uid || `lms-${Date.now()}`;
           existing.lmsSource = provider;
           if (description && !existing.description) {
             existing.description = description;
@@ -79,7 +75,7 @@ export class UniversalLMSSyncService {
           courseName: course.name,
           courseColor: course.colorHex,
           title,
-          type: UniversalLMSSyncService.inferType(title),
+          type: event.taskType,
           dueDate,
           estimatedHours: 2.5,
           weightPercent: 5.0,
@@ -87,7 +83,7 @@ export class UniversalLMSSyncService {
           gradeReceived: null,
           gradeMax: 100,
           description,
-          lmsTaskId: ev.uid || `lms-${Date.now()}`,
+          lmsTaskId: event.uid || `lms-${Date.now()}`,
           lmsSource: provider
         };
         store.tasks.push(newTask);
@@ -186,14 +182,5 @@ export class UniversalLMSSyncService {
     );
 
     return { provider, totalFound, syncedNew, deduplicated, details };
-  }
-
-  private static inferType(title: string): TaskType {
-    const l = title.toLowerCase();
-    if (l.includes("exam") || l.includes("midterm") || l.includes("final")) return "exam";
-    if (l.includes("quiz")) return "quiz";
-    if (l.includes("read") || l.includes("chapter")) return "reading";
-    if (l.includes("project") || l.includes("paper")) return "project";
-    return "assignment";
   }
 }
