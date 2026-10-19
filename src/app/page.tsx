@@ -71,6 +71,7 @@ import { StoryCardModal } from "@/components/story-card-modal";
 import { ClassGroupsModal } from "@/components/class-groups-modal";
 import { SettingsModal } from "@/components/settings-modal";
 import { Footer } from "@/components/footer";
+import { MarketingHomepage } from "@/components/marketing-homepage";
 import { useAuth } from "@/lib/auth-context";
 
 const LANDING_FAQS = [
@@ -100,7 +101,7 @@ const LANDING_FAQS = [
   }
 ];
 
-export default function SyllabiQDashboard() {
+function SyllabiQDashboard() {
   const { user, refreshUser } = useAuth();
   const [courses, setCourses] = useState<Course[]>([]);
   const [tasks, setTasks] = useState<TaskItem[]>([]);
@@ -1312,4 +1313,17 @@ export default function SyllabiQDashboard() {
       />
     </div>
   );
+}
+
+/**
+ * Homepage router: visitors get the marketing page; logged-in users get
+ * their dashboard. The dashboard above is unchanged product code.
+ */
+export default function HomePage() {
+  const { user } = useAuth();
+  const isLoggedIn = !!user && user.id !== "guest-visitor";
+  if (isLoggedIn) {
+    return <SyllabiQDashboard />;
+  }
+  return <MarketingHomepage />;
 }
