@@ -88,6 +88,7 @@ model Course {
   colorHex         String   @default("#6366F1")
   term             String? // e.g. "Fall 2026"
   googleCalendarId String? // Dedicated secondary Google Calendar ID
+  calendarSyncToken String? // Incremental sync token for this course's calendar
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
 
@@ -220,6 +221,9 @@ model GoogleSyncState {
   sheetsSyncEnabled   Boolean   @default(true)
   calendarSyncEnabled Boolean   @default(true)
   lastSyncedAt        DateTime?
+  calendarMode        String    @default("per-course") // "per-course" | "combined"
+  combinedCalendarId  String? // Google Calendar ID for combined mode
+  combinedCalendarSyncToken String? // Incremental sync token for combined calendar
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
