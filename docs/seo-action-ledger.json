@@ -1,0 +1,46 @@
+{
+  "updatedAt": "2026-10-19",
+  "site": "syllabiq.ca",
+  "actions": [
+    {
+      "id": "syllabiq-college-exam-study-planner-20261019",
+      "dedupeKey": "content:college-exam-study-planner",
+      "category": "content",
+      "page": "https://syllabiq.ca/guides/college-exam-study-planner",
+      "queryEvidence": ["student exam study planner", "college study schedule"],
+      "observation": "SyllabiQ had 12 impressions and 0 clicks in the latest settled 28-day window through 2026-10-17. Existing guides covered workload, organization, applications and group projects, but not an exam-specific planning workflow.",
+      "evidence": {
+        "gscProperty": "sc-domain:syllabiq.ca",
+        "window": "2026-09-20 to 2026-10-17",
+        "source": "Google Search Console API via GSC Wizard",
+        "baseline": {"clicks": 0, "impressions": 12, "ctr": 0, "averagePosition": 6.25}
+      },
+      "proposedChange": "Publish an original exam planning guide with coverage mapping, realistic time budgeting, practice feedback and source verification.",
+      "priority": "medium",
+      "confidence": "medium",
+      "effort": "low",
+      "status": "monitoring",
+      "implementationCommits": [
+        "14c97d25738f30aae597880f8467a13905fc5a7b",
+        "5bd78580514a861d3b5eeb3e70c5f2402a93522a",
+        "ebf0e56b14322ab8719cb557a50786f30a52b472"
+      ],
+      "deployment": {
+        "project": "syllabiq",
+        "deploymentId": "dpl_4KH169p89xE5fTkwRjshE5hBaLLN",
+        "state": "READY",
+        "verifiedAt": "2026-10-19T12:16:00Z"
+      },
+      "verification": {
+        "route": "https://syllabiq.ca/guides/college-exam-study-planner",
+        "gscInspection": "URL is unknown to Google",
+        "inspectionAt": "2026-10-19",
+        "sitemapSubmittedAt": "2026-10-19T12:16:36Z",
+        "indexed": false,
+        "rankingGain": "unknown"
+      },
+      "followUp": "Recheck sitemap processing and URL inspection after Google has recrawled the site. Review settled search performance after 28 days.",
+      "owner": "Josh"
+    }
+  ]
+}
