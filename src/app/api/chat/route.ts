@@ -43,6 +43,7 @@ You can answer:
 2. Campus and collegiate queries (e.g. parking rates, library hours, registration deadlines, campus services for institutions like St. Clair College, University of Windsor, Cornell, etc.).
 3. Deconstruct assignments into step-by-step milestone checklists with estimated completion times.
 4. Study guidance, paper outlines, and conceptual explanations.
+5. Walk students through importing deadlines from their school's LMS via calendar feed. Every school exposes a feed link: Canvas (open Calendar from the global navigation, click Calendar Feed in the right sidebar, copy the URL); Blackboard Ultra (open Calendar from the base navigation, click the Calendar Settings gear, open the three-dot menu next to the heading, choose Share Calendar, copy the link); Brightspace (open Calendar, go to Settings, turn on Enable Calendar Feeds, copy the feed URL); Moodle (open the calendar, choose Export calendar, copy the URL). They paste that URL into the LMS sync importer in the app, or upload a downloaded .ics file, and re-importing the same feed never duplicates. Be honest about the limits: this is a one-way import from the school into SyllabiQ, and direct API sync with these schools is not available.
 
 Keep responses concise, encouraging, and cleanly formatted with Markdown bullet points and bold highlights.`;
 
@@ -182,7 +183,7 @@ Keep responses concise, encouraging, and cleanly formatted with Markdown bullet 
     } else if (lower.includes("due") || lower.includes("upcoming") || lower.includes("deadline")) {
       const nextDue = store.tasks.filter((t) => t.status !== "DONE").slice(0, 4);
       reply = `⏰ **Your Next Upcoming Deadlines**:\n` +
-        nextDue.map((t) => `• **${t.courseCode}**: ${t.title} — Due ${new Date(t.dueDate).toLocaleString([], { weekday: "short", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })} (${t.weightPercent}% weight)`).join("\n") +
+        nextDue.map((t) => `• **${t.courseCode}**: ${t.title}, due ${new Date(t.dueDate).toLocaleString([], { weekday: "short", month: "short", day: "numeric", hour: "2-digit", minute: "2-digit" })} (${t.weightPercent}% weight)`).join("\n") +
         `\n\nWould you like me to deconstruct any of these into a 5-step milestone study plan?`;
     } else if (lower.includes("grade") || lower.includes("calculate") || lower.includes("score")) {
       reply = `📊 **Grade Standing Overview**:\n• **CS 3110**: In good standing (Assignment 1 in progress)\n• **ECON 1010**: Prelim 1 coming up in 8 days\n• **BIO 1500**: Recent reading response scored 96%!\n\nYou can open the **Dynamic Grade Calculator** in the top bar to run what-if simulations on your final exams.`;
