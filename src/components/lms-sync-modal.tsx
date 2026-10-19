@@ -18,12 +18,31 @@ const PROVIDERS: { id: LMSProvider; name: string; emoji: string; generic?: boole
   { id: "ICAL_FEED", name: "Other .ics feed", emoji: "📅", generic: true }
 ];
 
-const FEED_INSTRUCTIONS: Record<LMSProvider, string> = {
-  CANVAS: "In Canvas, open Calendar, then click Calendar Feed in the sidebar and copy the feed URL.",
-  BLACKBOARD: "In Blackboard, open Calendar and look for a share or export option that gives you an iCal link. If your school only offers a file download, save the .ics file and upload it below.",
-  BRIGHTSPACE: "In Brightspace, open Calendar, go to Settings, turn on Enable Calendar Feeds, then copy the feed URL for your calendars.",
-  MOODLE: "In Moodle, open the calendar, choose Export calendar, and copy the generated URL.",
-  ICAL_FEED: "Paste any iCalendar (.ics) feed URL from your school or planner, or upload an .ics file."
+const FEED_INSTRUCTIONS: Record<LMSProvider, string[]> = {
+  CANVAS: [
+    "In Canvas, open Calendar from the global navigation on the left.",
+    "In the right sidebar, click Calendar Feed.",
+    "Copy the feed URL shown there, then paste it below."
+  ],
+  BLACKBOARD: [
+    "In Blackboard Ultra, select Calendar from the base navigation.",
+    "Click the Calendar Settings gear icon.",
+    "Open the menu next to the Calendar Settings heading (the three dots) and choose Share Calendar.",
+    "Copy the link. It covers your course events one year back and one year forward."
+  ],
+  BRIGHTSPACE: [
+    "In Brightspace, open the Calendar.",
+    "Go to Settings and turn on Enable Calendar Feeds.",
+    "Copy the feed URL for your calendars, then paste it below."
+  ],
+  MOODLE: [
+    "In Moodle, open the calendar.",
+    "Choose Export calendar.",
+    "Copy the generated URL, then paste it below."
+  ],
+  ICAL_FEED: [
+    "Paste any iCalendar (.ics) feed URL from your school or planner below, or upload an .ics file."
+  ]
 };
 
 export function LMSSyncModal({ onClose, onSyncComplete }: Props) {
@@ -139,7 +158,11 @@ export function LMSSyncModal({ onClose, onSyncComplete }: Props) {
                 </span>
               </div>
 
-              <p className="text-[11px] text-slate-500 leading-relaxed">{FEED_INSTRUCTIONS[provider]}</p>
+              <ol className="text-[11px] text-slate-500 leading-relaxed space-y-1 list-decimal list-inside">
+                {FEED_INSTRUCTIONS[provider].map((step, i) => (
+                  <li key={i}>{step}</li>
+                ))}
+              </ol>
 
               <div className="flex items-center space-x-2 bg-white rounded-xl px-3.5 py-2.5 border border-slate-300 focus-within:border-blue-500 shadow-2xs">
                 <LinkIcon className="h-4 w-4 text-slate-400 shrink-0" />
