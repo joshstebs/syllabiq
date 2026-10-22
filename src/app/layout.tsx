@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     default: "SyllabiQ - Your Whole Semester Organized In Seconds",
     template: "%s | SyllabiQ"
   },
-  description: "Plan course tasks and review deadlines from your syllabus with SyllabiQ. Live LMS and Google Calendar synchronization is not currently enabled.",
+  description: "Plan course tasks, review syllabus deadlines, and import dated coursework from supported LMS calendar feeds with SyllabiQ.",
   keywords: ["syllabus planner", "academic calendar", "college organization", "student planner", "deadline tracker", "syllabus organizer", "Google Calendar student planner"],
   authors: [{ name: "Harbour & Main" }],
   creator: "Harbour & Main",
@@ -35,7 +35,7 @@ export const metadata: Metadata = {
     locale: "en_CA",
     url: canonicalUrl,
     title: "SyllabiQ - Your Whole Semester Organized In Seconds",
-    description: "Explore syllabus-first planning and keep a reviewable course deadline checklist. Live LMS and Google sync are not yet enabled.",
+    description: "Explore syllabus-first planning, reviewable deadline checklists, and LMS calendar-feed imports. Direct LMS account sync and Google sync are not enabled.",
     siteName: "SyllabiQ",
     images: [
       {
@@ -65,7 +65,7 @@ const softwareJsonLd = {
   url: canonicalUrl,
   applicationCategory: "EducationalApplication",
   operatingSystem: "Web",
-  description: "A student planning workspace for organizing course tasks and reviewing syllabus deadlines. Live external calendar sync is not enabled.",
+  description: "A student planning workspace for organizing course tasks, reviewing syllabus deadlines, and importing dated coursework from iCalendar feeds. Direct LMS account sync and Google sync are not enabled.",
   offers: {
     "@type": "Offer",
     price: "5.00",
