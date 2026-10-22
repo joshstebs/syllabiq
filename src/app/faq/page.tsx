@@ -17,7 +17,7 @@ export default function FAQPage() {
   const FAQS = [
     {
       q: "What syllabus file formats does SyllabiQ support?",
-      a: "SyllabiQ accepts PDF files (.pdf), Microsoft Word documents (.docx), plain text (.txt), Markdown (.md), and photo scans / phone screenshots (JPEG, PNG, HEIC). Our multimodal parser accurately identifies tabular grading breakdowns, weekly schedules, and policies."
+      a: "SyllabiQ accepts PDF files (.pdf), Microsoft Word documents (.docx), plain text (.txt), Markdown (.md), and photo scans or phone screenshots (JPEG, PNG, HEIC). Extraction can require correction, so compare every date and grade weight with the original syllabus."
     },
     {
       q: "How does the Google Cloud Storage (GCS) Paper Vault work?",
@@ -41,7 +41,7 @@ export default function FAQPage() {
     },
     {
       q: "Can I connect my Canvas or Blackboard account?",
-      a: "The current production version does not save one-time iCalendar/WebCal imports to a persistent student account. Direct Canvas, Blackboard Learn, Brightspace D2L, and Moodle imports are not enabled. Do not rely on this feature for deadlines yet."
+      a: "You can import dated coursework through a Canvas, Blackboard, Brightspace, Moodle, or other iCalendar feed URL, or upload an .ics file. This is not direct LMS account access or continuous two-way synchronization. Re-import after changes and verify every deadline against your official course information."
     },
     {
       q: "Who built SyllabiQ?",
