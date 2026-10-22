@@ -55,7 +55,7 @@ export default function PrivacyPage() {
             <div className="text-sm text-slate-700 dark:text-slate-300 space-y-3">
               <p><strong>Account Information:</strong> When you register, we collect your name, email address, school affiliation (optional), major (optional), and graduation year (optional).</p>
               <p><strong>Course and Assignment Data:</strong> Syllabus files you upload, course names, assignment titles, due dates, and task status (completed/pending).</p>
-              <p><strong>Calendar Integration:</strong> If you connect Google Calendar or import an iCal feed, we temporarily process calendar event data to sync deadlines. We do not store your full Google credentials.</p>
+              <p><strong>Calendar Integration:</strong> If you connect Google Calendar, we create and update deadline events in dedicated SyllabiQ calendars in your Google account, and read changes you make to those calendars to keep your tasks in sync. Your Google OAuth tokens are encrypted before storage and are never logged or shared. Disconnecting removes the stored tokens and revokes our access at Google; the calendars remain in your Google account unless you delete them there.</p>
               <p><strong>Usage Analytics:</strong> We collect anonymized usage metrics (feature clicks, page views) to improve the product experience.</p>
             </div>
           </section>
@@ -78,7 +78,7 @@ export default function PrivacyPage() {
             <h2 className="text-2xl font-black text-slate-900 dark:text-white">Third-Party Services</h2>
             <div className="text-sm text-slate-700 dark:text-slate-300 space-y-3">
               <p><strong>Stripe:</strong> Payment processing. Stripe handles credit card data securely; we never see your full card number.</p>
-              <p><strong>Google OAuth:</strong> If you connect Google Calendar or Google Sheets, we use OAuth tokens with limited scopes. You can revoke access anytime from your Google account settings.</p>
+              <p><strong>Google OAuth:</strong> If you connect Google Calendar or Google Sheets, we use OAuth tokens with limited scopes (calendar events, account profile). Tokens are encrypted at rest. You can disconnect anytime from Settings in the app, which revokes our access at Google, or from your Google account settings.</p>
               <p><strong>Hosting:</strong> SyllabiQ is hosted on Vercel with data stored in secure cloud infrastructure.</p>
             </div>
           </section>
