@@ -96,13 +96,14 @@
         "02e1a58e4e4c60cfd389f3af5d45e62b56c1f5a4",
         "e3eadad51c0f7dc400155e1dd4a4e0f26f3f5991",
         "1afb22f8f468a0e8f5e42ec61d1c842bd491947e",
-        "61ddd8cbe2b4d2d26dd6bf637be99d183b8f4aa9"
+        "61ddd8cbe2b4d2d26dd6bf637be99d183b8f4aa9",
+        "a1cc8e1a68b67a5f57deb68477e361c1c600754d"
       ],
       "deployment": {
         "project": "syllabiq",
-        "deploymentId": "dpl_CeTS3UcwHombhRYmGLNbiAS8Vf9Z",
+        "deploymentId": "dpl_SaAPofqHep3ZLQWWvKmjiHGd2KPn",
         "state": "READY",
-        "deploymentUrl": "https://syllabiq-3ohozv8sp-stebs-co.vercel.app",
+        "deploymentUrl": "https://syllabiq-5w62ng7q6-stebs-co.vercel.app",
         "verifiedAt": "2026-10-22"
       },
       "verification": {
@@ -112,7 +113,9 @@
         "sitemapContainsRoute": true,
         "indexed": "unknown",
         "rankingGain": "unknown",
-        "note": "Google inspection unavailable because the GSC Wizard subscription is inactive."
+        "note": "Google inspection unavailable because the GSC Wizard subscription is inactive.",
+        "privacyRouteStatus": 200,
+        "privacyDisclosureUpdated": true
       },
       "followUp": "After GSC access returns, inspect the guide and hub. Review crawl/deployment status after 7 days and like-for-like settled search performance after 28 days."
     },
@@ -139,9 +142,9 @@
       ],
       "deployment": {
         "project": "syllabiq",
-        "deploymentId": "dpl_CeTS3UcwHombhRYmGLNbiAS8Vf9Z",
+        "deploymentId": "dpl_SaAPofqHep3ZLQWWvKmjiHGd2KPn",
         "state": "READY",
-        "deploymentUrl": "https://syllabiq-3ohozv8sp-stebs-co.vercel.app",
+        "deploymentUrl": "https://syllabiq-5w62ng7q6-stebs-co.vercel.app",
         "verifiedAt": "2026-10-22"
       },
       "verification": {
