@@ -99,7 +99,7 @@ const FAQS = [
   },
   {
     q: "Can I sync Google Calendar or connect my LMS?",
-    a: "What works today: upload PDF, Word, text, Markdown, and photo scans, and export your deadlines in a calendar-ready format. Live LMS and Google sync are not available yet. They are planned, and this page will say so plainly until they ship."
+    a: "What works today: upload syllabus files and import dated coursework through a Canvas, Blackboard, Brightspace, Moodle, or other iCalendar feed. Direct LMS account sync and Google sync are not available. Always verify imported deadlines against the original course source."
   },
   {
     q: "Can I use SyllabiQ under my school's academic integrity policy?",
@@ -425,9 +425,9 @@ export function MarketingHomepage() {
               </p>
               <h2 className="mt-3 text-2xl font-black tracking-tight sm:text-3xl">What works today</h2>
               <p className="mt-4 text-base leading-relaxed text-white/80">
-                What works today: upload PDF, Word, text, Markdown, and photo scans, and export your
-                deadlines in a calendar-ready format. Live LMS and Google sync are not available
-                yet. They are planned, and this page will say so plainly until they ship.
+                What works today: upload PDF, Word, text, Markdown, and photo scans, and import
+                dated coursework through supported LMS calendar feeds. Direct LMS account sync and
+                Google sync are not available. Verify imported deadlines against the original course source.
               </p>
             </Reveal>
           </div>
