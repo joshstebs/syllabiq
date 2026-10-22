@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-19",
+  "updatedAt": "2026-10-22",
   "site": "syllabiq.ca",
   "actions": [
     {
@@ -7,13 +7,21 @@
       "dedupeKey": "content:college-exam-study-planner",
       "category": "content",
       "page": "https://syllabiq.ca/guides/college-exam-study-planner",
-      "queryEvidence": ["student exam study planner", "college study schedule"],
+      "queryEvidence": [
+        "student exam study planner",
+        "college study schedule"
+      ],
       "observation": "SyllabiQ had 12 impressions and 0 clicks in the latest settled 28-day window through 2026-10-17. Existing guides covered workload, organization, applications and group projects, but not an exam-specific planning workflow.",
       "evidence": {
         "gscProperty": "sc-domain:syllabiq.ca",
         "window": "2026-09-20 to 2026-10-17",
         "source": "Google Search Console API via GSC Wizard",
-        "baseline": {"clicks": 0, "impressions": 12, "ctr": 0, "averagePosition": 6.25}
+        "baseline": {
+          "clicks": 0,
+          "impressions": 12,
+          "ctr": 0,
+          "averagePosition": 6.25
+        }
       },
       "proposedChange": "Publish an original exam planning guide with coverage mapping, realistic time budgeting, practice feedback and source verification.",
       "priority": "medium",
@@ -41,6 +49,119 @@
       },
       "followUp": "Recheck sitemap processing and URL inspection after Google has recrawled the site. Review settled search performance after 28 days.",
       "owner": "Josh"
+    },
+    {
+      "id": "syllabiq-lms-calendar-feed-guide-20261022",
+      "dedupeKey": "content:lms-calendar-feed-import",
+      "category": "content-and-accuracy",
+      "page": "https://syllabiq.ca/guides/lms-calendar-feed-import",
+      "queryIntent": [
+        "Canvas calendar feed import",
+        "Blackboard calendar import",
+        "Brightspace iCal feed",
+        "Moodle calendar export"
+      ],
+      "observation": "Production supports iCalendar feed URL and .ics imports, but public homepage and FAQ copy still described LMS import as unavailable.",
+      "evidence": {
+        "repositoryFiles": [
+          "src/components/lms-sync-modal.tsx",
+          "src/app/api/lms/sync/route.ts"
+        ],
+        "officialSources": [
+          "https://community.canvaslms.com/t5/Student-Guide/How-do-I-view-the-Calendar-iCal-feed-to-subscribe-to-an-external/ta-p/331",
+          "https://help.blackboard.com/Learn/Instructor/Ultra/Courses/Calendar",
+          "https://community.d2l.com/brightspace/kb/articles/33719-manage-course-events-with-the-calendar-tool",
+          "https://docs.moodle.org/en/Using_Calendar"
+        ],
+        "gscCurrentStatus": "blocked: subscription_required",
+        "previousSettledBaseline": {
+          "window": "2026-09-20 to 2026-10-17",
+          "clicks": 0,
+          "impressions": 13,
+          "ctr": 0,
+          "averagePosition": 6.54,
+          "note": "Low volume; directional only. Current run could not refresh this baseline."
+        }
+      },
+      "proposedChange": "Publish a practical feed-import guide and align public metadata, homepage and FAQ copy with the working one-way import while distinguishing it from direct or continuous synchronization.",
+      "expectedMechanism": "Resolve an intent and entity mismatch, provide crawlable factual instructions, and improve internal consistency for students and search systems.",
+      "priority": "high",
+      "confidence": "high",
+      "effort": "medium",
+      "owner": "Josh",
+      "status": "monitoring",
+      "implementationCommits": [
+        "46885c2e1fc9b09ccc02e17f094ec9fcf7565ed9",
+        "4aa357765c079f0a66b0101639fcc25130250fd2",
+        "02e1a58e4e4c60cfd389f3af5d45e62b56c1f5a4",
+        "e3eadad51c0f7dc400155e1dd4a4e0f26f3f5991",
+        "1afb22f8f468a0e8f5e42ec61d1c842bd491947e",
+        "61ddd8cbe2b4d2d26dd6bf637be99d183b8f4aa9"
+      ],
+      "deployment": {
+        "project": "syllabiq",
+        "deploymentId": "dpl_CeTS3UcwHombhRYmGLNbiAS8Vf9Z",
+        "state": "READY",
+        "deploymentUrl": "https://syllabiq-3ohozv8sp-stebs-co.vercel.app",
+        "verifiedAt": "2026-10-22"
+      },
+      "verification": {
+        "routeStatus": 200,
+        "canonicalRoute": "https://syllabiq.ca/guides/lms-calendar-feed-import",
+        "renderedTitle": "Import Canvas, Blackboard, Brightspace or Moodle Calendars | SyllabiQ",
+        "sitemapContainsRoute": true,
+        "indexed": "unknown",
+        "rankingGain": "unknown",
+        "note": "Google inspection unavailable because the GSC Wizard subscription is inactive."
+      },
+      "followUp": "After GSC access returns, inspect the guide and hub. Review crawl/deployment status after 7 days and like-for-like settled search performance after 28 days."
+    },
+    {
+      "id": "syllabiq-guide-hub-20261022",
+      "dedupeKey": "technical:guides-hub",
+      "category": "internal-linking",
+      "page": "https://syllabiq.ca/guides",
+      "queryIntent": [
+        "SyllabiQ guides",
+        "student planning guides"
+      ],
+      "observation": "The marketing footer linked to /guides, but that route returned no source page. Existing guides had no central crawlable index.",
+      "proposedChange": "Create a guide hub with descriptive internal links to all existing public guides and include it in the sitemap.",
+      "expectedMechanism": "Repair the internal link destination and provide a stable crawl path and user-facing index for related resources.",
+      "priority": "high",
+      "confidence": "high",
+      "effort": "low",
+      "owner": "Josh",
+      "status": "monitoring",
+      "implementationCommits": [
+        "041edc33d3df8a7697d02ab49fda0c65cfaf9a67",
+        "27f670b6129c3db0d2956b15b9bd83451312c381"
+      ],
+      "deployment": {
+        "project": "syllabiq",
+        "deploymentId": "dpl_CeTS3UcwHombhRYmGLNbiAS8Vf9Z",
+        "state": "READY",
+        "deploymentUrl": "https://syllabiq-3ohozv8sp-stebs-co.vercel.app",
+        "verifiedAt": "2026-10-22"
+      },
+      "verification": {
+        "routeStatus": 200,
+        "canonicalRoute": "https://syllabiq.ca/guides",
+        "sitemapContainsRoute": true,
+        "indexed": "unknown",
+        "rankingGain": "unknown"
+      },
+      "followUp": "Verify indexing when GSC access is restored and monitor whether guide pages gain additional impressions."
+    }
+  ],
+  "measurementBlockers": [
+    {
+      "id": "gsc-wizard-subscription-20261022",
+      "observedAt": "2026-10-22",
+      "status": "blocked",
+      "observation": "Every GSC Wizard request returned payment_required because the trial ended or no active subscription exists.",
+      "effect": "Current settled Search Console baselines, URL inspection and sitemap submission could not be refreshed. Missing metrics are unknown, not zero.",
+      "nextAction": "Restore the existing GSC Wizard subscription, then rerun the settled baseline and URL inspections."
     }
   ]
 }
