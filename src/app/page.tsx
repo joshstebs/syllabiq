@@ -85,7 +85,7 @@ const LANDING_FAQS = [
   },
   {
     q: "Can I connect Canvas or another learning platform?",
-    a: "Direct Canvas, Blackboard, Brightspace and Moodle synchronization is not available in the current production release. The calendar-feed import screen is a preview, not a working account sync."
+    a: "SyllabiQ can import dated coursework from a Canvas, Blackboard, Brightspace, Moodle, or other iCalendar feed. It does not connect directly to your LMS account and does not continuously synchronize changes. Re-import after updates and verify deadlines against your official course source."
   },
   {
     q: "Can I use SyllabiQ under my school's academic integrity policy?",
