@@ -20,12 +20,14 @@ import {
   Shield,
   Trash2,
   Building2,
-  BookOpen
+  BookOpen,
+  RefreshCw
 } from "lucide-react";
 import confetti from "canvas-confetti";
 import { useAuth } from "@/lib/auth-context";
 import { useTheme } from "./theme-provider";
 import { Course, TaskItem } from "@/lib/types";
+import { GoogleCalendarSettings } from "./google-calendar-settings";
 
 interface Props {
   isOpen: boolean;
@@ -34,7 +36,7 @@ interface Props {
   tasks?: TaskItem[];
 }
 
-type TabType = "PROFILE" | "THEME" | "TIMEZONE" | "ACADEMIC";
+type TabType = "PROFILE" | "THEME" | "TIMEZONE" | "ACADEMIC" | "CALENDAR";
 
 const EMOJI_AVATARS = [
   "👨‍💼", "🧑‍🎓", "👩‍🔬", "🧑‍💻", "🎓", "⚡",
@@ -338,6 +340,18 @@ export function SettingsModal({ isOpen, onClose, courses = [], tasks = [] }: Pro
             >
               <Calendar className="h-3.5 w-3.5" />
               <span>Academic &amp; Data</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab("CALENDAR")}
+              className={`flex items-center space-x-1.5 px-3 py-2 rounded-xl transition cursor-pointer whitespace-nowrap ${
+                activeTab === "CALENDAR"
+                  ? "bg-white dark:bg-slate-800 text-blue-600 dark:text-blue-400 shadow-xs"
+                  : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white"
+              }`}
+            >
+              <RefreshCw className="h-3.5 w-3.5" />
+              <span>Google Calendar</span>
             </button>
           </div>
 
@@ -791,6 +805,9 @@ export function SettingsModal({ isOpen, onClose, courses = [], tasks = [] }: Pro
               </div>
             </div>
           )}
+
+          {/* TAB 5: GOOGLE CALENDAR SYNC */}
+          {activeTab === "CALENDAR" && <GoogleCalendarSettings />}
 
           {/* Footer Save / Cancel Controls */}
           <div className="flex items-center justify-between pt-4 border-t border-slate-100 dark:border-slate-800">

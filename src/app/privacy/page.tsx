@@ -55,7 +55,8 @@ export default function PrivacyPage() {
             <div className="text-sm text-slate-700 dark:text-slate-300 space-y-3">
               <p><strong>Account Information:</strong> When you register, we collect your name, email address, school affiliation (optional), major (optional), and graduation year (optional).</p>
               <p><strong>Course and Assignment Data:</strong> Syllabus files you upload, course names, assignment titles, due dates, and task status (completed/pending).</p>
-              <p><strong>Calendar-feed import:</strong> If you import an iCalendar feed URL or .ics file, we process its event data and save the resulting course tasks to your account. Treat private feed URLs as sensitive. Direct Google Calendar synchronization is not enabled in the reviewed release.</p>
+              <p><strong>Calendar-feed import:</strong> If you import an iCalendar feed URL or .ics file, we process its event data and save the resulting course tasks to your account. Treat private feed URLs as sensitive.</p>
+              <p><strong>Calendar Integration:</strong> If you connect Google Calendar, we create and update deadline events in dedicated SyllabiQ calendars in your Google account, and read changes you make to those calendars to keep your tasks in sync. Your Google OAuth tokens are encrypted before storage and are never logged or shared. Disconnecting removes the stored tokens and revokes our access at Google; the calendars remain in your Google account unless you delete them there.</p>
               <p><strong>Usage Analytics:</strong> We collect anonymized usage metrics (feature clicks, page views) to improve the product experience.</p>
             </div>
           </section>
@@ -65,7 +66,7 @@ export default function PrivacyPage() {
             <div className="text-sm text-slate-700 dark:text-slate-300 space-y-3">
               <p>We use your data to:</p>
               <ul className="list-disc pl-6 space-y-2">
-                <li>Provide core features (syllabus parsing, deadline tracking, and calendar-feed imports)</li>
+                <li>Provide core features (syllabus parsing, deadline tracking, calendar sync, and calendar-feed imports)</li>
                 <li>Process subscription payments via Stripe (we do not store payment card details)</li>
                 <li>Send account notifications and service announcements</li>
                 <li>Improve product features and fix bugs</li>
@@ -78,7 +79,7 @@ export default function PrivacyPage() {
             <h2 className="text-2xl font-black text-slate-900 dark:text-white">Third-Party Services</h2>
             <div className="text-sm text-slate-700 dark:text-slate-300 space-y-3">
               <p><strong>Stripe:</strong> Payment processing. Stripe handles credit card data securely; we never see your full card number.</p>
-              <p><strong>Google integrations:</strong> Direct Google Calendar and Google Sheets account synchronization is not enabled in the reviewed release. The current iCalendar import does not require Google authorization.</p>
+              <p><strong>Google OAuth:</strong> If you connect Google Calendar or Google Sheets, we use OAuth tokens with limited scopes (calendar events, account profile). Tokens are encrypted at rest. You can disconnect anytime from Settings in the app, which revokes our access at Google, or from your Google account settings. The iCalendar feed import does not require Google authorization.</p>
               <p><strong>Hosting:</strong> SyllabiQ is hosted on Vercel with data stored in secure cloud infrastructure.</p>
             </div>
           </section>

@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createSession, isDatabaseConfigured } from "@/lib/server/auth";
 import { prisma } from "@/lib/server/prisma";
+import { saveGoogleTokens } from "@/lib/server/google-tokens";
 
 export async function GET(req: Request) {
   const { searchParams, origin } = new URL(req.url);
@@ -51,7 +52,12 @@ export async function GET(req: Request) {
     }
 
     const tokens = await tokenRes.json();
-    const accessToken = tokens.access_token;
+    const accessToken = tokens.access_token as string | undefined;
+    const refreshToken = tokens.refresh_token as string | undefined;
+    const expiresIn = tokens.expires_in as number | undefined;
+    if (!accessToken) {
+      return NextResponse.redirect(`${origin}/?auth_error=${encodeURIComponent("Token exchange failed")}`);
+    }
 
     // Fetch user profile info. Fail closed: if the userinfo fetch fails,
     // nobody gets a session — never fall back to a default identity.
@@ -82,8 +88,23 @@ export async function GET(req: Request) {
       update: { name: userName, avatarUrl: userPicture || undefined },
       create: { email: userEmail.toLowerCase(), name: userName, avatarUrl: userPicture || undefined }
     });
+
+    // Persist Google tokens so calendar sync can act on the user's behalf.
+    // If Google omits refresh_token on re-consent, the stored one is kept.
+    // A token-save failure never blocks sign-in; the user can reconnect
+    // calendar sync from Settings.
+    let calendarWarning: string | null = null;
+    try {
+      await saveGoogleTokens(user.id, { accessToken, refreshToken, expiresIn });
+    } catch (tokenErr) {
+      console.error("Failed to persist Google tokens");
+      calendarWarning = "calendar_not_saved";
+    }
+
     await createSession(user.id);
-    const response = NextResponse.redirect(`${origin}/`);
+    const response = NextResponse.redirect(
+      `${origin}/${calendarWarning ? `?calendar_warning=${calendarWarning}` : ""}`
+    );
     response.cookies.delete("syllabiq_oauth_state");
     return response;
   } catch (err: unknown) {
