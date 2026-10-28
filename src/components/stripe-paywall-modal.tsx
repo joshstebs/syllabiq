@@ -26,7 +26,6 @@ interface BillingState {
   currentPeriodEnd?: string | null;
   semesterPrice?: number;
   stripeSubscriptionId?: string;
-  currentPeriodEnd?: string | null;
 }
 
 interface Props {
