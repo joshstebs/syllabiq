@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import {
   activateFromCheckoutSession,
   billingLineItem,
+  currentSemesterWindow,
   getOrCreateStripeCustomer,
   cancelStripeSubscription,
   isBillingConfigured,
@@ -16,7 +17,7 @@ import { checkRateLimit, getClientIp, rateLimitedResponse } from "@/lib/server/r
  *
  * POST (authed):
  *   { action: "subscribe" } -> creates a Stripe Checkout Session
- *     (subscription mode, 30-day trial, $5/mo price from STRIPE_PRICE_ID)
+ *     (one-time $8 CAD semester pass; no automatic renewal)
  *     and returns { url } for the client to redirect to.
  *   { action: "cancel" } -> cancels the Stripe subscription at period end.
  * GET ?session_id=... (authed):
@@ -58,7 +59,7 @@ export async function POST(req: Request) {
 
   if (!isBillingConfigured()) {
     return NextResponse.json(
-      { error: "Billing is not configured yet. The site owner needs to set STRIPE_SECRET_KEY and STRIPE_PRICE_ID." },
+      { error: "Billing is not configured yet. The site owner needs to set STRIPE_SECRET_KEY." },
       { status: 503 }
     );
   }
@@ -72,16 +73,24 @@ export async function POST(req: Request) {
     const customerId = await getOrCreateStripeCustomer(user);
     const site = siteUrl(req);
 
+    const semester = currentSemesterWindow();
     const session = await stripe.checkout.sessions.create({
-      mode: "subscription",
+      mode: "payment",
       customer: customerId,
       client_reference_id: user.id,
-      line_items: [billingLineItem()],
-      subscription_data: {
-        trial_period_days: 30,
-        metadata: { userId: user.id }
+      line_items: [billingLineItem(semester.label)],
+      payment_intent_data: {
+        metadata: {
+          userId: user.id,
+          semesterLabel: semester.label,
+          periodEnd: semester.endsAt.toISOString()
+        }
       },
-      metadata: { userId: user.id },
+      metadata: {
+        userId: user.id,
+        semesterLabel: semester.label,
+        periodEnd: semester.endsAt.toISOString()
+      },
       success_url: `${site}/?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${site}/?checkout=cancelled`
     });
@@ -130,6 +139,9 @@ export async function GET(req: Request) {
 
     if (session.status !== "complete") {
       return NextResponse.json({ error: "Checkout isn't complete yet" }, { status: 400 });
+    }
+    if (session.mode === "payment" && session.payment_status !== "paid") {
+      return NextResponse.json({ error: "Semester payment is not complete yet" }, { status: 400 });
     }
 
     // Verified directly with Stripe: this completed Checkout Session belongs
