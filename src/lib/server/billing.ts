@@ -79,6 +79,67 @@ export function billingLineItem(semesterLabel: string): Stripe.Checkout.SessionC
   };
 }
 
+export interface SemesterWindow {
+  label: string;
+  startsAt: Date;
+  endsAt: Date;
+}
+
+/** Select the defined academic block using Toronto calendar dates. */
+export function currentSemesterWindow(now = new Date()): SemesterWindow {
+  const dateParts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Toronto",
+    year: "numeric",
+    month: "2-digit"
+  }).formatToParts(now);
+  const year = Number(dateParts.find((part) => part.type === "year")?.value);
+  const month = Number(dateParts.find((part) => part.type === "month")?.value);
+
+  let startYear = year;
+  let startMonth = 9;
+  let endYear = year + 1;
+  let endMonth = 2;
+  if (month === 1) {
+    startYear = year - 1;
+    endYear = year;
+  } else if (month >= 2 && month <= 4) {
+    startMonth = 2;
+    endYear = year;
+    endMonth = 5;
+  } else if (month >= 5 && month <= 7) {
+    startMonth = 5;
+    endYear = year;
+    endMonth = 8;
+  }
+
+  const torontoMidnight = (targetYear: number, targetMonth: number) => {
+    const utcNoon = new Date(Date.UTC(targetYear, targetMonth - 1, 1, 12));
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "America/Toronto",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      hourCycle: "h23"
+    }).formatToParts(utcNoon);
+    const value = (type: string) => Number(parts.find((part) => part.type === type)?.value);
+    const observedUtc = Date.UTC(value("year"), value("month") - 1, value("day"), value("hour"), value("minute"));
+    const offset = observedUtc - utcNoon.getTime();
+    return new Date(Date.UTC(targetYear, targetMonth - 1, 1) - offset);
+  };
+
+  const startsAt = torontoMidnight(startYear, startMonth);
+  const endsAt = torontoMidnight(endYear, endMonth);
+  const displayEnd = new Date(endsAt.getTime() - 1000);
+  const format = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "America/Toronto",
+    month: "long",
+    year: "numeric"
+  });
+  return { label: `${format.format(startsAt)}–${format.format(displayEnd)}`, startsAt, endsAt };
+}
+
 export function siteUrl(req?: Request): string {
   if (process.env.NEXT_PUBLIC_APP_URL) return process.env.NEXT_PUBLIC_APP_URL.replace(/\/$/, "");
   if (req) return new URL(req.url).origin;
@@ -136,6 +197,9 @@ export async function applyVerifiedSubscription(sub: Stripe.Subscription) {
   if (!customerId) return null;
   const user = await prisma.user.findUnique({ where: { stripeCustomerId: customerId } });
   if (!user) return null;
+  if (user.subscriptionStatus === "SEMESTER_ACTIVE" && user.currentPeriodEnd && user.currentPeriodEnd.getTime() > Date.now()) {
+    return user;
+  }
   return prisma.user.update({
     where: { id: user.id },
     data: subscriptionPatch(sub)
@@ -150,6 +214,17 @@ export async function applyVerifiedSubscription(sub: Stripe.Subscription) {
 export async function refreshVerifiedSubscription(
   user: BillingUser
 ): Promise<EffectiveSubscription> {
+  if (user.subscriptionStatus === "SEMESTER_ACTIVE") {
+    if (user.currentPeriodEnd && user.currentPeriodEnd.getTime() > Date.now()) {
+      return effectiveSubscription(user);
+    }
+    const expired = await prisma.user.update({
+      where: { id: user.id },
+      data: { subscriptionTier: "FREE", subscriptionStatus: "EXPIRED", stripeSubscriptionId: null, trialEndsAt: null }
+    });
+    return effectiveSubscription(expired);
+  }
+
   const stripe = stripeClient();
   if (!stripe || (!user.stripeSubscriptionId && !user.stripeCustomerId)) {
     return effectiveSubscription(user);
@@ -217,6 +292,28 @@ export async function activateFromCheckoutSession(
 
   if (customerId && !user.stripeCustomerId) {
     await prisma.user.update({ where: { id: user.id }, data: { stripeCustomerId: customerId } });
+  }
+
+  if (session.mode === "payment") {
+    const periodEnd = new Date(session.metadata?.periodEnd ?? "");
+    const paidCorrectAmount =
+      session.payment_status === "paid" &&
+      session.amount_total === 800 &&
+      session.currency?.toLowerCase() === "cad";
+    if (!paidCorrectAmount || Number.isNaN(periodEnd.getTime())) return null;
+    const isCurrent = periodEnd.getTime() > Date.now();
+    const updated = await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        stripeCustomerId: customerId ?? user.stripeCustomerId,
+        stripeSubscriptionId: null,
+        subscriptionTier: isCurrent ? "PRO" : "FREE",
+        subscriptionStatus: isCurrent ? "SEMESTER_ACTIVE" : "EXPIRED",
+        trialEndsAt: null,
+        currentPeriodEnd: periodEnd
+      }
+    });
+    return effectiveSubscription(updated);
   }
 
   const sub = await subscriptionFromSession(stripe, session);
