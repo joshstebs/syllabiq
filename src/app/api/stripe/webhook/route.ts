@@ -68,13 +68,18 @@ export async function POST(req: Request) {
         if (customerId) {
           const user = await prisma.user.findUnique({ where: { stripeCustomerId: customerId } });
           if (user) {
+            const semesterPassActive =
+              user.subscriptionStatus === "SEMESTER_ACTIVE" &&
+              Boolean(user.currentPeriodEnd && user.currentPeriodEnd.getTime() > Date.now());
             await prisma.user.update({
               where: { id: user.id },
-              data: {
-                subscriptionTier: "FREE",
-                subscriptionStatus: "CANCELLED",
-                stripeSubscriptionId: null
-              }
+              data: semesterPassActive
+                ? { stripeSubscriptionId: null }
+                : {
+                    subscriptionTier: "FREE",
+                    subscriptionStatus: "CANCELLED",
+                    stripeSubscriptionId: null
+                  }
             });
           } else {
             console.warn(`Stripe webhook: customer.subscription.deleted for unknown customer (event ${event.id})`);
