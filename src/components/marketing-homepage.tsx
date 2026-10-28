@@ -1,19 +1,27 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Link from "next/link";
 import {
-  Upload,
-  SearchCheck,
-  CalendarCheck,
-  Flame,
+  motion,
+  AnimatePresence,
+  useScroll,
+  useTransform
+} from "framer-motion";
+import {
+  ArrowDown,
+  ArrowRight,
+  CalendarDays,
   Check,
   ChevronDown,
   ChevronUp,
-  Send,
-  ShieldCheck,
   FileText,
-  ArrowRight
+  Flame,
+  GraduationCap,
+  SearchCheck,
+  ShieldCheck,
+  Upload,
+  WandSparkles
 } from "lucide-react";
 import { AuthModal } from "./auth-modal";
 import { WorkloadHeatmap } from "./workload-heatmap";
@@ -23,10 +31,30 @@ import {
   SAMPLE_WEEK
 } from "@/lib/sample-semester";
 
-/* ------------------------------------------------------------------ */
-/* Scroll reveal: one signature moment, fully static when the visitor  */
-/* prefers reduced motion.                                             */
-/* ------------------------------------------------------------------ */
+const spring = { type: "spring" as const, stiffness: 120, damping: 20, mass: 0.8 };
+const FAQS = [
+  {
+    q: "What syllabus files can I use?",
+    a: "SyllabiQ accepts PDF, Word, text, and Markdown files, along with photo scans and phone screenshots. Review dates and grade details against the source document before relying on them."
+  },
+  {
+    q: "Does SyllabiQ connect directly to Canvas or Blackboard?",
+    a: "Direct LMS account sync is not available. You can import dated coursework from a supported LMS calendar feed, including Canvas, Blackboard, Brightspace, and Moodle, then verify it against the course source."
+  },
+  {
+    q: "Can I sync Google Calendar?",
+    a: "Live Google Calendar sync is not available in this release. SyllabiQ can create calendar-ready exports of your plan."
+  },
+  {
+    q: "How does pricing work?",
+    a: "SyllabiQ Pro includes a first month free, then costs $5 CAD per month. You can cancel from account settings."
+  },
+  {
+    q: "Does SyllabiQ do my coursework?",
+    a: "No. It helps organize course information and deadlines. Check your institution's rules before using AI tools with course materials."
+  }
+];
+
 function Reveal({
   children,
   className = "",
@@ -36,592 +64,339 @@ function Reveal({
   className?: string;
   delay?: number;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      setVisible(true);
-      return;
-    }
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setVisible(true);
-            observer.disconnect();
-          }
-        });
-      },
-      { threshold: 0.15 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
   return (
-    <div
-      ref={ref}
-      className={`${className} transition-all duration-700 ease-out ${
-        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
-      } motion-reduce:opacity-100 motion-reduce:translate-y-0 motion-reduce:transition-none`}
-      style={delay ? { transitionDelay: `${delay}ms` } : undefined}
+    <motion.div
+      className={className}
+      initial={{ y: 42, opacity: 0, filter: "blur(8px)" }}
+      whileInView={{ y: 0, opacity: 1, filter: "blur(0px)" }}
+      viewport={{ once: true, amount: 0.16 }}
+      transition={{ ...spring, delay }}
     >
       {children}
-    </div>
+    </motion.div>
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* Small labelled-sample tag used on every demo block.                 */
-/* ------------------------------------------------------------------ */
 function SampleTag() {
   return (
-    <span className="inline-flex items-center rounded-full bg-[#F4F5FB] border border-[#E2E8F0] px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-[#0F1B2D]/60">
-      Sample semester shown
+    <span className="sq-tag">
+      <span className="sq-tag-dot" />
+      Sample preview
     </span>
   );
 }
 
-/* ------------------------------------------------------------------ */
-/* FAQ data: trimmed to the five questions the proposal keeps.         */
-/* ------------------------------------------------------------------ */
-const FAQS = [
-  {
-    q: "What syllabus file formats does SyllabiQ support?",
-    a: "SyllabiQ accepts PDF files (.pdf), Word documents (.docx), plain text (.txt), Markdown (.md), and photo scans or phone camera screenshots (JPEG, PNG, HEIC)."
-  },
-  {
-    q: "How accurate is the extraction? Should I double check?",
-    a: "SyllabiQ reads your syllabus, it does not replace it. Always check extracted dates and grade weights against your original document before you rely on them. Results may require correction."
-  },
-  {
-    q: "Can I sync Google Calendar or connect my LMS?",
-    a: "What works today: upload syllabus files and import dated coursework through a Canvas, Blackboard, Brightspace, Moodle, or other iCalendar feed. Direct LMS account sync and Google sync are not available. Always verify imported deadlines against the original course source."
-  },
-  {
-    q: "Can I use SyllabiQ under my school's academic integrity policy?",
-    a: "SyllabiQ organizes your coursework. It never does your coursework for you. Check your school rules on AI use with course material."
-  },
-  {
-    q: "How does the first month free, then $5 per month work?",
-    a: "You get full SyllabiQ access free for your first month. Then it is $5.00 per month. Cancel anytime with one click. No commitments."
-  }
-];
+function TossDemo() {
+  const [tossed, setTossed] = useState(false);
+  const files = [
+    { code: "PSYCH 101", title: "Introduction to Psychology", pages: "08 pages", angle: -5 },
+    { code: "CALC II", title: "Multivariable Calculus", pages: "12 pages", angle: 2 },
+    { code: "HIST 203", title: "Cold War Histories", pages: "06 pages", angle: 6 }
+  ];
 
-/* ------------------------------------------------------------------ */
-/* The marketing homepage. Rendered to visitors; the logged-in         */
-/* dashboard lives separately and is untouched by this redesign.       */
-/* ------------------------------------------------------------------ */
+  return (
+    <div className="sq-demo" aria-label="Interactive sample syllabus preview">
+      <div className="sq-demo-top">
+        <div className="sq-window-dots" aria-hidden="true"><i /><i /><i /></div>
+        <span>SYLLABIQ / SAMPLE PARSE</span>
+        <span className="sq-live-pill">DEMO</span>
+      </div>
+      <div className="sq-dropzone">
+        {!tossed ? (
+          <>
+            <span className="sq-drop-label"><Upload size={13} /> TOSS A SAMPLE IN</span>
+            <span className="sq-drop-hint">Drag a paper into the frame or tap to see the transformation</span>
+          </>
+        ) : (
+          <motion.div className="sq-extracted" initial={{ scale: .88, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={spring}>
+            <span className="sq-check"><Check size={17} /></span>
+            <span><b>Sample semester organized</b><small>Deadlines and course details, ready to review</small></span>
+          </motion.div>
+        )}
+      </div>
+      <div className="sq-demo-stage">
+        <AnimatePresence mode="wait">
+          {!tossed ? (
+            <motion.div key="papers" className="sq-paper-stack" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, scale: .9, filter: "blur(8px)" }} transition={spring}>
+              {files.map((file, index) => (
+                <motion.button
+                  key={file.code}
+                  type="button"
+                  drag
+                  dragMomentum={false}
+                  dragElastic={0.16}
+                  onDragEnd={() => setTossed(true)}
+                  onClick={() => setTossed(true)}
+                  whileDrag={{ scale: 1.06, rotate: 3 }}
+                  whileHover={{ y: -5, rotate: file.angle / 2 }}
+                  whileTap={{ scale: .98 }}
+                  initial={{ rotate: file.angle, y: index * 7 }}
+                  className="sq-paper"
+                  style={{ zIndex: files.length - index }}
+                  aria-label={`Toss sample ${file.code} syllabus`}
+                >
+                  <span className="sq-paper-icon"><FileText size={20} /></span>
+                  <span className="sq-paper-copy"><b>{file.code}</b><small>{file.title}</small></span>
+                  <span className="sq-paper-pages">{file.pages}</span>
+                  <span className="sq-paper-lines"><i /><i /><i /></span>
+                </motion.button>
+              ))}
+              <button type="button" className="sq-toss-button" onClick={() => setTossed(true)}>
+                Toss the sample syllabi <ArrowRight size={15} />
+              </button>
+            </motion.div>
+          ) : (
+            <motion.div
+              key="calendar"
+              className="sq-calendar"
+              initial="hidden"
+              animate="show"
+              variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
+            >
+              <div className="sq-calendar-head">
+                <span><CalendarDays size={16} /> SAMPLE WEEK</span>
+                <button type="button" onClick={() => setTossed(false)}>Reset</button>
+              </div>
+              <div className="sq-weekdays">{["MON", "TUE", "WED", "THU", "FRI", "SAT", "SUN"].map(day => <span key={day}>{day}</span>)}</div>
+              <div className="sq-event-list">
+                {SAMPLE_WEEK.map((item) => (
+                  <motion.div key={item.course + item.title} className="sq-event" layout variants={{ hidden: { y: 18, opacity: 0, filter: "blur(5px)" }, show: { y: 0, opacity: 1, filter: "blur(0px)", transition: spring } }}>
+                    <span className="sq-event-mark" style={{ backgroundColor: item.color }} />
+                    <span className="sq-event-copy"><b>{item.title}</b><small>{item.course} · {item.kind}</small></span>
+                    <span className="sq-event-time">{item.when}</span>
+                  </motion.div>
+                ))}
+              </div>
+              <p className="sq-sample-note">Illustrative sample data · your files are processed in your account</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+      <div className="sq-demo-foot"><span>DRAG · DROP · REVIEW</span><span>Sample only — no document is uploaded</span></div>
+    </div>
+  );
+}
+
 export function MarketingHomepage() {
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
-
-  const scrollTo = (id: string) => {
-    const el = document.getElementById(id);
-    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
-  };
+  const painRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({ target: painRef, offset: ["start end", "end start"] });
+  const firstCard = useTransform(scrollYProgress, [0, .42, .68], [0, -5, -14]);
+  const secondCard = useTransform(scrollYProgress, [0, .42, .68], [0, 3, -5]);
+  const thirdCard = useTransform(scrollYProgress, [0, .42, .68], [0, -2, -9]);
 
   return (
-    <div className="min-h-screen bg-white text-[#0F1B2D] antialiased">
-      {/* ============ NAV ============ */}
-      <header className="sticky top-0 z-40 border-b border-[#E2E8F0] bg-white/90 backdrop-blur-md">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <Link href="/" className="flex items-center gap-2.5" aria-label="SyllabiQ home">
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-[#4338CA] text-white shadow-sm">
-              <Send className="h-4 w-4" aria-hidden="true" />
-            </span>
-            <span className="text-lg font-black tracking-tight">
-              Syllabi<span className="text-[#4338CA]">Q</span>
-            </span>
+    <div className="sq-marketing min-h-screen antialiased">
+      <div className="sq-grain" aria-hidden="true" />
+      <header className="sq-nav">
+        <div className="sq-wrap sq-nav-inner">
+          <Link href="/" className="sq-brand" aria-label="SyllabiQ home">
+            <span className="sq-brand-mark"><GraduationCap size={19} /></span>
+            <span>SyllabiQ<span className="sq-brand-period">.</span></span>
           </Link>
-          <nav className="hidden items-center gap-7 text-sm font-semibold text-[#0F1B2D]/70 sm:flex" aria-label="Primary">
-            <button onClick={() => scrollTo("how-it-works")} className="transition hover:text-[#4338CA]">
-              How it works
-            </button>
-            <button onClick={() => scrollTo("pricing")} className="transition hover:text-[#4338CA]">
-              Pricing
-            </button>
-            <button onClick={() => scrollTo("faq")} className="transition hover:text-[#4338CA]">
-              FAQ
-            </button>
+          <nav className="sq-nav-links" aria-label="Primary navigation">
+            <a href="#how-it-works">How it works</a>
+            <a href="#features">What it finds</a>
+            <a href="#pricing">Pricing</a>
           </nav>
-          <button
-            onClick={() => setShowAuthModal(true)}
-            className="rounded-full bg-[#4338CA] px-5 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-[#3730A3] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:ring-offset-2"
-          >
-            Log in
-          </button>
+          <button className="sq-nav-cta" onClick={() => setShowAuthModal(true)}>Log in <ArrowRight size={14} /></button>
         </div>
       </header>
 
       <main>
-        {/* ============ HERO ============ */}
-        <section className="relative overflow-hidden">
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute inset-0 opacity-60"
-            style={{
-              backgroundImage:
-                "linear-gradient(to right, rgba(67,56,202,0.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(67,56,202,0.05) 1px, transparent 1px)",
-              backgroundSize: "28px 28px"
-            }}
-          />
-          <div className="relative mx-auto max-w-6xl px-4 pb-14 pt-12 sm:px-6 sm:pt-20">
-            <Reveal className="mx-auto max-w-3xl text-center">
-              <SampleTag />
-              <h1 className="mt-5 text-4xl font-black leading-[1.08] tracking-tight sm:text-6xl">
-                Never wonder what is due this semester.
-              </h1>
-              <p className="mx-auto mt-5 max-w-2xl text-base leading-relaxed text-[#0F1B2D]/70 sm:text-lg">
-                Upload a syllabus and SyllabiQ builds your semester plan: every deadline, exam, and grade
-                weight, organized in one place. Review what it found, then get on with your term.
-              </p>
-              <p className="mt-4 text-sm font-semibold text-[#0F1B2D]/60">
-                First month free, then $5 per month. Cancel anytime with one click. No commitments.
-              </p>
-              <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <button
-                  onClick={() => setShowAuthModal(true)}
-                  className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#4338CA] px-8 py-3.5 text-base font-bold text-white shadow-md shadow-[#4338CA]/25 transition hover:bg-[#3730A3] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:ring-offset-2 sm:w-auto"
-                >
-                  Try it free today
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </button>
-                <button
-                  onClick={() => scrollTo("sample-demo")}
-                  className="inline-flex w-full items-center justify-center rounded-full border border-[#E2E8F0] bg-white px-8 py-3.5 text-base font-bold text-[#0F1B2D] transition hover:border-[#4338CA] hover:text-[#4338CA] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:ring-offset-2 sm:w-auto"
-                >
-                  See a sample semester
-                </button>
+        <section className="sq-hero sq-wrap">
+          <div className="sq-hero-copy">
+            <Reveal>
+              <p className="sq-eyebrow"><span /> A calmer way to plan your term</p>
+              <h1>From syllabus PDFs<br />to your entire <em>semester.</em></h1>
+              <p className="sq-hero-sub">Drop in your course syllabi. SyllabiQ finds dates, exams, grade details, and more, then organizes them into a semester plan you can actually use.</p>
+              <div className="sq-hero-actions">
+                <button className="sq-primary" onClick={() => setShowAuthModal(true)}>Organize my semester <ArrowRight size={17} /></button>
+                <a className="sq-secondary" href="#how-it-works">See how it works <ArrowDown size={15} /></a>
               </div>
-            </Reveal>
-
-            {/* Sample week preview */}
-            <Reveal delay={150} className="mx-auto mt-12 max-w-4xl">
-              <div className="rounded-2xl border border-[#E2E8F0] bg-[#F4F5FB] p-4 sm:p-6">
-                <div className="mb-4 flex items-center justify-between">
-                  <p className="text-xs font-black uppercase tracking-wider text-[#0F1B2D]/50">
-                    Your week in SyllabiQ
-                  </p>
-                  <SampleTag />
-                </div>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-                  {SAMPLE_WEEK.map((item) => (
-                    <div
-                      key={item.course}
-                      className="rounded-xl border border-[#E2E8F0] bg-white p-4 shadow-sm"
-                    >
-                      <div className="flex items-center gap-2">
-                        <span
-                          className="h-2.5 w-2.5 rounded-full"
-                          style={{ backgroundColor: item.color }}
-                          aria-hidden="true"
-                        />
-                        <span className="text-xs font-black uppercase tracking-wide text-[#0F1B2D]/60">
-                          {item.course} · {item.kind}
-                        </span>
-                      </div>
-                      <p className="mt-2 text-sm font-bold leading-snug">{item.title}</p>
-                      <p className="mt-1 text-xs font-semibold text-[#0F1B2D]/55">{item.when}</p>
-                    </div>
-                  ))}
-                </div>
+              <p className="sq-trust"><ShieldCheck size={14} /> Start with an account · first month free, then $5 CAD/month</p>
+              <div className="sq-supported">
+                <span>PDF</span><span>DOCX</span><span>PHONE SCANS</span><i /> Review every result before it becomes your plan
               </div>
             </Reveal>
           </div>
+          <Reveal delay={0.12} className="sq-hero-demo"><TossDemo /></Reveal>
+          <div className="sq-hero-index" aria-hidden="true">01 <span>—</span> PAPER TO PLAN</div>
         </section>
 
-        {/* ============ BEFORE / AFTER ============ */}
-        <section id="sample-demo" className="scroll-mt-20 border-t border-[#E2E8F0]">
-          <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-            <Reveal className="mx-auto max-w-2xl text-center">
-              <p className="text-xs font-black uppercase tracking-wider text-[#4338CA]">
-                One syllabus in, one semester out
-              </p>
-              <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
-                See what one PDF becomes
-              </h2>
-              <p className="mt-3 text-base leading-relaxed text-[#0F1B2D]/70">
-                This is the {SAMPLE_COURSE.code} sample: twelve deadlines, four policy rules, and
-                four grade-weight categories, pulled from a single file.
-              </p>
+        <section ref={painRef} className="sq-pain">
+          <div className="sq-wrap sq-pain-grid">
+            <Reveal className="sq-pain-intro">
+              <p className="sq-kicker">THE MESS IS FAMILIAR</p>
+              <h2>Your syllabus<br />is not a <em>calendar.</em></h2>
+              <p>Important details hide in long documents, and every instructor lays things out differently. One missed date can turn a manageable week upside down.</p>
             </Reveal>
+            <div className="sq-pain-cards">
+              <motion.article style={{ y: firstCard }} className="sq-pain-card sq-pain-yellow">
+                <span className="sq-card-number">01 / DEADLINES</span>
+                <h3>Midterm buried<br />on page four.</h3>
+                <div className="sq-paper-snippet">The midterm examination will be held <mark>October 12 at 2:30 PM</mark> and will cover chapters one through four.</div>
+              </motion.article>
+              <motion.article style={{ y: secondCard }} className="sq-pain-card sq-pain-blue">
+                <span className="sq-card-number">02 / OFFICE HOURS</span>
+                <h3>Help is there.<br />Somewhere.</h3>
+                <div className="sq-margin-note">“Tuesdays, 3–4 pm, or by appointment”<span>— para. 3</span></div>
+              </motion.article>
+              <motion.article style={{ y: thirdCard }} className="sq-pain-card sq-pain-ink">
+                <span className="sq-card-number">03 / FORMATS</span>
+                <h3>Five ways to<br />write one date.</h3>
+                <div className="sq-date-scraps"><span>Oct 12</span><span>10/12</span><span>Week 6</span></div>
+              </motion.article>
+            </div>
+          </div>
+        </section>
 
-            <div className="mt-10 grid grid-cols-1 gap-5 lg:grid-cols-2">
-              {/* Before */}
-              <Reveal>
-                <div className="h-full rounded-2xl border border-[#E2E8F0] bg-white p-5 sm:p-6 shadow-sm">
-                  <div className="flex items-center gap-2.5">
-                    <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-[#F4F5FB] text-[#0F1B2D]/60">
-                      <FileText className="h-4.5 w-4.5" aria-hidden="true" />
-                    </span>
-                    <div>
-                      <p className="text-sm font-black">Before: a long syllabus PDF</p>
-                      <p className="text-xs text-[#0F1B2D]/55">Deadlines buried among policy pages</p>
-                    </div>
-                  </div>
-                  <div className="mt-4 space-y-2 text-[13px] leading-relaxed text-[#0F1B2D]/60">
-                    <p className="rounded-lg bg-[#F4F5FB] p-3">
-                      ...the final examination, worth thirty percent of the final grade, will be held
-                      during the examination period. Students should consult the registrar...
-                    </p>
-                    <p className="rounded-lg bg-[#F4F5FB] p-3">
-                      ...problem sets are due Fridays at 11:59 PM unless otherwise noted. The lowest
-                      score will be dropped at the end of term. Late submissions lose ten percent per
-                      day...
-                    </p>
-                    <p className="rounded-lg bg-[#F4F5FB] p-3">
-                      ...the term paper, worth thirty percent, proceeds in three stages: topic proposal,
-                      first draft, and final submission. Details appear in sections 4.2 through 4.5...
-                    </p>
-                    <p className="pt-1 text-xs font-semibold">
-                      The student copies dates into a calendar by hand and hopes nothing was missed.
-                    </p>
-                  </div>
-                </div>
+        <section id="how-it-works" className="sq-how sq-wrap">
+          <Reveal className="sq-section-heading">
+            <p className="sq-kicker">A SMALLER ADMIN JOB</p>
+            <h2>Three steps. <em>Then get on with it.</em></h2>
+          </Reveal>
+          <div className="sq-steps">
+            {[
+              { n: "01", tag: "DROP", icon: Upload, title: "Add your syllabi", body: "Bring in PDFs, Word documents, text files, or photos of a printed syllabus." },
+              { n: "02", tag: "SCAN", icon: SearchCheck, title: "Review what it found", body: "Check extracted deadlines and grade details against each original course document." },
+              { n: "03", tag: "LIVE", icon: CalendarDays, title: "Plan your weeks", body: "See what's coming, spot busy stretches, and make calendar-ready exports." }
+            ].map((step, i) => (
+              <Reveal key={step.n} delay={i * .08}>
+                <article className={`sq-step sq-step-${i + 1}`}>
+                  <div className="sq-step-top"><span>{step.n}</span><span className="sq-step-tag">{step.tag}</span></div>
+                  <div className="sq-step-icon"><step.icon size={23} /></div>
+                  <h3>{step.title}</h3>
+                  <p>{step.body}</p>
+                  <span className="sq-step-rule" />
+                </article>
               </Reveal>
+            ))}
+          </div>
+          <p className="sq-accuracy"><ShieldCheck size={16} /> SyllabiQ helps organize information; always verify dates with your instructor or official course source.</p>
+        </section>
 
-              {/* After */}
-              <Reveal delay={120}>
-                <div className="h-full rounded-2xl border-2 border-[#4338CA]/20 bg-[#F4F5FB] p-5 sm:p-6 shadow-sm">
-                  <div className="flex items-center justify-between gap-2">
-                    <p className="text-sm font-black">After: every deadline in date order</p>
-                    <SampleTag />
-                  </div>
-                  <ul className="mt-4 space-y-2.5">
-                    {[
-                      { t: "Midterm Exam", w: "25%", d: "Oct 12 · In class", crunch: true },
-                      { t: "Final Term Paper", w: "30%", d: "Dec 18 · 11:59 PM", crunch: true },
-                      { t: "7 problem sets", w: "25% total", d: "Fridays · Lowest dropped", crunch: false },
-                      { t: "Participation", w: "20%", d: "Weekly", crunch: false }
-                    ].map((row) => (
-                      <li
-                        key={row.t}
-                        className="flex items-center justify-between gap-3 rounded-xl border border-[#E2E8F0] bg-white px-4 py-3"
-                      >
-                        <div className="flex items-center gap-3">
-                          <span
-                            className="flex h-8 w-8 items-center justify-center rounded-lg text-white"
-                            style={{ backgroundColor: SAMPLE_COURSE.colorHex }}
-                            aria-hidden="true"
-                          >
-                            <Check className="h-4 w-4" />
-                          </span>
-                          <div>
-                            <p className="text-sm font-bold leading-tight">
-                              {row.t}
-                              {row.crunch && (
-                                <span className="ml-2 inline-flex items-center gap-1 rounded-full bg-[#D97706]/10 px-2 py-0.5 text-[11px] font-bold text-[#D97706]">
-                                  <Flame className="h-3 w-3" aria-hidden="true" />
-                                  Crunch week
-                                </span>
-                              )}
-                            </p>
-                            <p className="text-xs text-[#0F1B2D]/55">{row.d}</p>
-                          </div>
-                        </div>
-                        <span className="shrink-0 rounded-full bg-[#4338CA]/10 px-2.5 py-1 text-xs font-black text-[#4338CA]">
-                          {row.w}
-                        </span>
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="mt-4 text-xs leading-relaxed text-[#0F1B2D]/55">
-                    Grade weights attached to every item. Crunch weeks flagged before they arrive, not
-                    during them.
-                  </p>
-                </div>
+        <section id="features" className="sq-features">
+          <div className="sq-wrap">
+            <Reveal className="sq-section-heading sq-feature-heading">
+              <p className="sq-kicker">SEE THE SHAPE OF YOUR TERM</p>
+              <h2>More than a list<br />of <em>due dates.</em></h2>
+              <p>Pull the pieces together before the busy weeks arrive.</p>
+            </Reveal>
+            <div className="sq-bento">
+              <Reveal className="sq-bento-large">
+                <article className="sq-feature sq-feature-conflict">
+                  <span className="sq-feature-label"><CalendarDays size={14} /> COURSE LOAD</span>
+                  <h3>Find your crunch weeks<br />before they find you.</h3>
+                  <p>A workload view helps you see when deadlines start to bunch up.</p>
+                  <div className="sq-heatmap-frame"><SampleTag /><WorkloadHeatmap tasks={SAMPLE_TASKS} /></div>
+                </article>
+              </Reveal>
+              <Reveal delay={.08} className="sq-bento-side">
+                <article className="sq-feature sq-feature-deadlines">
+                  <span className="sq-feature-label"><WandSparkles size={14} /> COURSE DETAILS</span>
+                  <h3>Deadlines and grade weights, together.</h3>
+                  <p>Keep key assessments and their course context in one place for review.</p>
+                  <div className="sq-grade-row"><span>Midterm exam</span><b>25%</b><i /></div>
+                  <div className="sq-grade-row"><span>Final paper</span><b>30%</b><i /></div>
+                  <div className="sq-grade-row"><span>Problem sets</span><b>25%</b><i /></div>
+                  <div className="sq-grade-row"><span>Participation</span><b>20%</b><i /></div>
+                </article>
+                <article className="sq-feature sq-feature-export">
+                  <span className="sq-feature-label"><ArrowRight size={14} /> TAKE IT WITH YOU</span>
+                  <h3>A plan you can carry forward.</h3>
+                  <p>Export your semester in a calendar-ready format when you need it.</p>
+                  <div className="sq-export-stamp">.ICS <ArrowRight size={16} /></div>
+                </article>
               </Reveal>
             </div>
           </div>
         </section>
 
-        {/* ============ HOW IT WORKS ============ */}
-        <section id="how-it-works" className="scroll-mt-20 border-t border-[#E2E8F0] bg-[#F4F5FB]">
-          <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-            <Reveal className="mx-auto max-w-2xl text-center">
-              <p className="text-xs font-black uppercase tracking-wider text-[#4338CA]">How it works</p>
-              <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
-                Three steps to a calm semester
-              </h2>
-            </Reveal>
-            <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3">
-              {[
-                {
-                  icon: Upload,
-                  title: "Drop in a syllabus",
-                  body: "Upload a PDF, Word document, text file, or a phone scan of any course syllabus. No account needed to see the sample above."
-                },
-                {
-                  icon: SearchCheck,
-                  title: "Review what was extracted",
-                  body: "SyllabiQ pulls every due date, exam, and grade weight into one plan. Check it against your original document before you rely on it."
-                },
-                {
-                  icon: CalendarCheck,
-                  title: "Use the plan",
-                  body: "Get crunch-week warnings before pileups happen, and a week view that always answers what is due next."
-                }
-              ].map((step, i) => (
-                <Reveal key={step.title} delay={i * 100}>
-                  <div className="h-full rounded-2xl border border-[#E2E8F0] bg-white p-6 shadow-sm">
-                    <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-[#4338CA] text-white">
-                      <step.icon className="h-5 w-5" aria-hidden="true" />
-                    </span>
-                    <p className="mt-4 text-xs font-black uppercase tracking-wider text-[#0F1B2D]/45">
-                      Step {i + 1}
-                    </p>
-                    <h3 className="mt-1 text-lg font-black">{step.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-[#0F1B2D]/70">{step.body}</p>
-                  </div>
-                </Reveal>
+        <section className="sq-sample-proof">
+          <div className="sq-marquee" aria-label="SyllabiQ features">
+            <div className="sq-marquee-track">
+              {["Deadlines, found", "Grade details, together", "Crunch weeks, visible", "Review before you rely", "Deadlines, found", "Grade details, together", "Crunch weeks, visible", "Review before you rely"].map((item, i) => (
+                <span key={i}>{item}<i>✳</i></span>
               ))}
             </div>
-            <Reveal className="mx-auto mt-8 max-w-2xl">
-              <p className="rounded-xl border border-[#E2E8F0] bg-white px-5 py-4 text-center text-sm leading-relaxed text-[#0F1B2D]/70">
-                <span className="font-bold text-[#0F1B2D]">Accuracy note: </span>
-                SyllabiQ reads your syllabus, it does not replace it. Always check extracted dates
-                and grade weights against your original document before you rely on them.
-              </p>
-            </Reveal>
+          </div>
+          <div className="sq-wrap sq-sample-note-row">
+            <span className="sq-proof-mark">SQ / FIELD NOTE</span>
+            <p>This page shows a sample semester. Your uploaded documents are handled inside your account, where you can review and edit what SyllabiQ extracts.</p>
+            <a href="#pricing">View plan details <ArrowRight size={14} /></a>
           </div>
         </section>
 
-        {/* ============ CRUNCH WEEKS ============ */}
-        <section className="border-t border-[#E2E8F0]">
-          <div className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-20">
-            <Reveal className="mx-auto max-w-2xl text-center">
-              <p className="text-xs font-black uppercase tracking-wider text-[#4338CA]">
-                The distinctive part
-              </p>
-              <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
-                Crunch weeks, flagged before they hit
-              </h2>
-              <p className="mt-3 text-base leading-relaxed text-[#0F1B2D]/70">
-                SyllabiQ spots the weeks where a large share of your final grade comes due, so you
-                can start preparing early instead of getting blindsided.
-              </p>
-            </Reveal>
-            <Reveal delay={120} className="mt-10">
-              <div className="rounded-2xl border border-[#E2E8F0] bg-white p-4 shadow-sm sm:p-6">
-                <div className="mb-4 flex justify-center">
-                  <SampleTag />
-                </div>
-                <WorkloadHeatmap tasks={SAMPLE_TASKS} />
-              </div>
-            </Reveal>
-          </div>
+        <section id="pricing" className="sq-pricing sq-wrap">
+          <Reveal className="sq-pricing-copy">
+            <p className="sq-kicker">STUDENT-PRICED, NO LONG CONTRACT</p>
+            <h2>Make room for<br /><em>the semester.</em></h2>
+            <p>Try SyllabiQ Pro for the first month, then $5 CAD/month. Cancel from your account settings.</p>
+            <button className="sq-primary" onClick={() => setShowAuthModal(true)}>Start with a free month <ArrowRight size={17} /></button>
+            <p className="sq-pricing-note"><ShieldCheck size={14} /> Secure checkout is handled by Stripe when you choose Pro.</p>
+          </Reveal>
+          <Reveal delay={.1} className="sq-price-card">
+            <div className="sq-price-head"><span>SYLLABIQ PRO</span><span>MONTH TO MONTH</span></div>
+            <div className="sq-price"><sup>$</sup>5<span>CAD / month</span></div>
+            <p className="sq-price-trial">First month free</p>
+            <div className="sq-price-rule" />
+            {["Unlimited syllabus uploads", "Deadline and grade detail review", "Workload heatmap", "Calendar-ready exports"].map(item => <p className="sq-price-line" key={item}><Check size={15} /> {item}</p>)}
+            <button onClick={() => setShowAuthModal(true)} className="sq-price-button">Create your account <ArrowRight size={15} /></button>
+            <p className="sq-price-fine">Your plan and billing details are shown before checkout.</p>
+          </Reveal>
         </section>
 
-        {/* ============ WHAT WORKS TODAY ============ */}
-        <section className="border-t border-[#E2E8F0] bg-[#0F1B2D] text-white">
-          <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6 sm:py-16">
+        <section className="sq-faq">
+          <div className="sq-wrap sq-faq-grid">
             <Reveal>
-              <p className="text-xs font-black uppercase tracking-wider text-white/60">
-                Honest status, updated October 2026
-              </p>
-              <h2 className="mt-3 text-2xl font-black tracking-tight sm:text-3xl">What works today</h2>
-              <p className="mt-4 text-base leading-relaxed text-white/80">
-                What works today: upload PDF, Word, text, Markdown, and photo scans, and import
-                dated coursework through supported LMS calendar feeds. Direct LMS account sync and
-                Google sync are not available. Verify imported deadlines against the original course source.
-              </p>
+              <p className="sq-kicker">GOOD QUESTIONS</p>
+              <h2>Before you<br /><em>drop a PDF.</em></h2>
+              <p className="sq-faq-help">Need more detail? Visit the <Link href="/faq">help centre</Link>.</p>
             </Reveal>
-          </div>
-        </section>
-
-        {/* ============ WHY WE BUILT IT ============ */}
-        <section className="border-t border-[#E2E8F0]">
-          <div className="mx-auto max-w-3xl px-4 py-14 text-center sm:px-6 sm:py-20">
-            <Reveal>
-              <p className="text-xs font-black uppercase tracking-wider text-[#4338CA]">
-                Why we built it
-              </p>
-              <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
-                Keeping track of what is due should not be a second job
-              </h2>
-              <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-[#0F1B2D]/70">
-                Upload a syllabus and get a semester plan: deadlines, readings, and study tasks,
-                organized automatically. No more hunting through messy LMS modules and 12-page PDFs
-                just to know what is due.
-              </p>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* ============ PRICING ============ */}
-        <section id="pricing" className="scroll-mt-20 border-t border-[#E2E8F0] bg-[#F4F5FB]">
-          <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6 sm:py-20">
-            <Reveal className="text-center">
-              <p className="text-xs font-black uppercase tracking-wider text-[#4338CA]">Pricing</p>
-              <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
-                One plan, one price
-              </h2>
-            </Reveal>
-            <Reveal delay={100} className="mt-8">
-              <div className="rounded-2xl border-2 border-[#4338CA]/20 bg-white p-8 text-center shadow-sm">
-                <p className="text-5xl font-black tracking-tight">
-                  $5<span className="text-xl font-bold text-[#0F1B2D]/60">/month</span>
-                </p>
-                <p className="mt-3 text-sm font-semibold text-[#0F1B2D]/60">
-                  First month free, then $5 per month. Cancel anytime with one click. No commitments.
-                </p>
-                <ul className="mx-auto mt-6 max-w-md space-y-2.5 text-left text-sm">
-                  {[
-                    "Unlimited syllabus uploads and deadline extraction",
-                    "Crunch-week warnings and grade-weight tracking",
-                    "Calendar-ready exports of your semester plan",
-                    "Works on iPhone, Android, iPad, and laptop"
-                  ].map((item) => (
-                    <li key={item} className="flex items-start gap-2.5">
-                      <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-[#067647]/10">
-                        <Check className="h-3 w-3 text-[#067647]" aria-hidden="true" />
-                      </span>
-                      <span className="text-[#0F1B2D]/80">{item}</span>
-                    </li>
-                  ))}
-                </ul>
-                <button
-                  onClick={() => setShowAuthModal(true)}
-                  className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-full bg-[#4338CA] px-8 py-3.5 text-base font-bold text-white shadow-md shadow-[#4338CA]/25 transition hover:bg-[#3730A3] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#4338CA] focus-visible:ring-offset-2 sm:w-auto"
-                >
-                  Try it free today
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </button>
-                <p className="mx-auto mt-5 flex max-w-md items-start justify-center gap-2 text-xs leading-relaxed text-[#0F1B2D]/60">
-                  <ShieldCheck className="mt-0.5 h-4 w-4 shrink-0 text-[#067647]" aria-hidden="true" />
-                  <span>
-                    SyllabiQ organizes your coursework. It never does your coursework for you. Check
-                    your school rules on AI use with course material.
-                  </span>
-                </p>
-              </div>
-            </Reveal>
-          </div>
-        </section>
-
-        {/* ============ FAQ ============ */}
-        <section id="faq" className="scroll-mt-20 border-t border-[#E2E8F0]">
-          <div className="mx-auto max-w-3xl px-4 py-14 sm:px-6 sm:py-20">
-            <Reveal className="text-center">
-              <p className="text-xs font-black uppercase tracking-wider text-[#4338CA]">FAQ</p>
-              <h2 className="mt-3 text-3xl font-black tracking-tight sm:text-4xl">
-                Got questions? We have answers.
-              </h2>
-            </Reveal>
-            <div className="mt-8 space-y-3">
+            <div className="sq-faq-list">
               {FAQS.map((faq, idx) => {
                 const isOpen = openFaqIndex === idx;
                 return (
-                  <Reveal key={faq.q} delay={idx * 60}>
-                    <div className="overflow-hidden rounded-2xl border border-[#E2E8F0] bg-white transition">
-                      <button
-                        type="button"
-                        onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
-                        aria-expanded={isOpen}
-                        className="flex w-full cursor-pointer items-center justify-between gap-3 p-4 text-left font-bold text-sm text-[#0F1B2D] transition hover:bg-[#F4F5FB] sm:p-5 sm:text-base"
-                      >
-                        <span className="leading-snug">{faq.q}</span>
-                        <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#F4F5FB] text-[#0F1B2D]/60">
-                          {isOpen ? (
-                            <ChevronUp className="h-4 w-4" aria-hidden="true" />
-                          ) : (
-                            <ChevronDown className="h-4 w-4" aria-hidden="true" />
-                          )}
-                        </span>
+                  <Reveal key={faq.q} delay={idx * .035}>
+                    <div className="sq-faq-item">
+                      <button type="button" onClick={() => setOpenFaqIndex(isOpen ? null : idx)} aria-expanded={isOpen}>
+                        <span>{faq.q}</span>{isOpen ? <ChevronUp size={17} /> : <ChevronDown size={17} />}
                       </button>
-                      {isOpen && (
-                        <div className="border-t border-[#E2E8F0] px-4 pb-5 pt-3 text-sm leading-relaxed text-[#0F1B2D]/70 sm:px-5 sm:text-base">
-                          {faq.a}
-                        </div>
-                      )}
+                      <AnimatePresence initial={false}>
+                        {isOpen && <motion.div className="sq-faq-answer" initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }} transition={spring}>{faq.a}</motion.div>}
+                      </AnimatePresence>
                     </div>
                   </Reveal>
                 );
               })}
             </div>
-            <Reveal className="mt-8 text-center">
-              <p className="text-sm text-[#0F1B2D]/60">
-                Have a specific question not covered here?{" "}
-                <Link
-                  href="/faq"
-                  className="font-bold text-[#4338CA] underline-offset-4 hover:underline"
-                >
-                  Visit the full help center
-                </Link>
-              </p>
-            </Reveal>
           </div>
         </section>
 
-        {/* ============ FINAL CTA ============ */}
-        <section className="border-t border-[#E2E8F0] bg-[#0F1B2D] text-white">
-          <div className="mx-auto max-w-3xl px-4 py-16 text-center sm:px-6 sm:py-20">
+        <section className="sq-final">
+          <div className="sq-wrap sq-final-inner">
             <Reveal>
-              <h2 className="text-3xl font-black tracking-tight sm:text-4xl">
-                Never wonder what is due this semester.
-              </h2>
-              <p className="mt-4 text-sm font-semibold text-white/60">
-                First month free, then $5 per month. Cancel anytime with one click. No commitments.
-              </p>
-              <button
-                onClick={() => setShowAuthModal(true)}
-                className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-[#4338CA] px-10 py-4 text-base font-bold text-white shadow-lg shadow-[#4338CA]/30 transition hover:bg-[#3730A3] focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0F1B2D]"
-              >
-                Try it free today
-                <ArrowRight className="h-4 w-4" aria-hidden="true" />
-              </button>
+              <p className="sq-kicker">YOUR PAPERS CAN WAIT</p>
+              <h2>Stop hunting through syllabi.<br /><em>Start living your semester.</em></h2>
+              <p>Turn course documents into a plan you can review, adjust, and use.</p>
+              <button className="sq-primary" onClick={() => setShowAuthModal(true)}>Organize my semester <ArrowRight size={17} /></button>
             </Reveal>
+            <div className="sq-final-note"><span>01</span><span>DROP → REVIEW → PLAN</span><span>SYLLABIQ.CA</span></div>
           </div>
         </section>
       </main>
 
-      {/* ============ FOOTER ============ */}
-      <footer className="border-t border-[#E2E8F0] bg-white">
-        <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6">
-          <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-center">
-            <div className="flex items-center gap-2.5">
-              <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-[#4338CA] text-white">
-                <Send className="h-3.5 w-3.5" aria-hidden="true" />
-              </span>
-              <span className="text-base font-black tracking-tight">
-                Syllabi<span className="text-[#4338CA]">Q</span>
-              </span>
-            </div>
-            <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-semibold text-[#0F1B2D]/60" aria-label="Footer">
-              <Link href="/features" className="transition hover:text-[#4338CA]">
-                Features
-              </Link>
-              <Link href="/guides" className="transition hover:text-[#4338CA]">
-                Guides
-              </Link>
-              <Link href="/faq" className="transition hover:text-[#4338CA]">
-                Help center
-              </Link>
-              <Link href="/privacy" className="transition hover:text-[#4338CA]">
-                Privacy
-              </Link>
-              <Link href="/terms" className="transition hover:text-[#4338CA]">
-                Terms
-              </Link>
-            </nav>
-          </div>
-          <div className="mt-8 flex flex-col gap-2 border-t border-[#E2E8F0] pt-6 text-xs text-[#0F1B2D]/50 sm:flex-row sm:items-center sm:justify-between">
-            <p>© 2026 SyllabiQ by Harbour &amp; Main. All rights reserved.</p>
-            <p className="flex items-center gap-1.5">
-              <ShieldCheck className="h-3.5 w-3.5 text-[#067647]" aria-hidden="true" />
-              Verify deadlines against your course sources.
-            </p>
-          </div>
+      <footer className="sq-footer">
+        <div className="sq-wrap sq-footer-inner">
+          <Link href="/" className="sq-brand"><span className="sq-brand-mark"><GraduationCap size={17} /></span><span>SyllabiQ<span className="sq-brand-period">.</span></span></Link>
+          <nav aria-label="Footer navigation"><Link href="/features">Features</Link><Link href="/guides">Guides</Link><Link href="/faq">Help</Link><Link href="/privacy">Privacy</Link><Link href="/terms">Terms</Link></nav>
+          <p>© 2026 SyllabiQ by Harbour &amp; Main · Verify dates against your course source.</p>
         </div>
       </footer>
 
-      {showAuthModal && (
-        <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
-      )}
+      {showAuthModal && <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />}
     </div>
   );
 }
