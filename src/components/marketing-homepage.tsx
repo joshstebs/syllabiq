@@ -45,7 +45,7 @@ const FAQS = [
   },
   {
     q: "How does pricing work?",
-    a: "SyllabiQ Pro includes a first month free, then costs $5 CAD per month. You can cancel from account settings."
+    a: "SyllabiQ Pro costs $8 CAD for each semester: September–January, February–April, or May–July. Each pass ends with its semester and does not renew automatically."
   },
   {
     q: "Does SyllabiQ do my coursework?",
@@ -213,7 +213,7 @@ export function MarketingHomepage() {
                 <button className="sq-primary" onClick={() => setShowAuthModal(true)}>Organize my semester <ArrowRight size={17} /></button>
                 <a className="sq-secondary" href="#how-it-works">See how it works <ArrowDown size={15} /></a>
               </div>
-              <p className="sq-trust"><ShieldCheck size={14} /> Start with an account · first month free, then $5 CAD/month</p>
+              <p className="sq-trust"><ShieldCheck size={14} /> Start with an account · $8 CAD for each semester</p>
               <div className="sq-supported">
                 <span>PDF</span><span>DOCX</span><span>PHONE SCANS</span><i /> Review every result before it becomes your plan
               </div>
@@ -331,16 +331,16 @@ export function MarketingHomepage() {
           <Reveal className="sq-pricing-copy">
             <p className="sq-kicker">STUDENT-PRICED, NO LONG CONTRACT</p>
             <h2>Make room for<br /><em>the semester.</em></h2>
-            <p>Try SyllabiQ Pro for the first month, then $5 CAD/month. Cancel from your account settings.</p>
-            <button className="sq-primary" onClick={() => setShowAuthModal(true)}>Start with a free month <ArrowRight size={17} /></button>
+            <p>Get SyllabiQ Pro for $8 CAD per semester. Passes cover September–January, February–April, or May–July and do not renew automatically.</p>
+            <button className="sq-primary" onClick={() => setShowAuthModal(true)}>Get the semester pass <ArrowRight size={17} /></button>
             <p className="sq-pricing-note"><ShieldCheck size={14} /> Secure checkout is handled by Stripe when you choose Pro.</p>
           </Reveal>
           <Reveal delay={.1} className="sq-price-card">
             <div className="sq-price-head"><span>SYLLABIQ PRO</span><span>MONTH TO MONTH</span></div>
-            <div className="sq-price"><sup>$</sup>5<span>CAD / month</span></div>
-            <p className="sq-price-trial">First month free</p>
+            <div className="sq-price"><sup>$</sup>8<span>CAD / semester</span></div>
+            <p className="sq-price-trial">One-time payment · no auto-renewal</p>
             <div className="sq-price-rule" />
-            {["Unlimited syllabus uploads", "Deadline and grade detail review", "Workload heatmap", "Calendar-ready exports"].map(item => <p className="sq-price-line" key={item}><Check size={15} /> {item}</p>)}
+            {["Unlimited syllabus uploads", "Deadline and grade detail review", "Workload heatmap", "Calendar-ready exports", "Access through the selected semester"].map(item => <p className="sq-price-line" key={item}><Check size={15} /> {item}</p>)}
             <button onClick={() => setShowAuthModal(true)} className="sq-price-button">Create your account <ArrowRight size={15} /></button>
             <p className="sq-price-fine">Your plan and billing details are shown before checkout.</p>
           </Reveal>
