@@ -22,10 +22,10 @@ export interface EffectiveSubscription {
   currentPeriodEnd: string | null;
   stripeCustomerId: string | null;
   stripeSubscriptionId: string | null;
-  monthlyPrice: number;
+  semesterPrice: number;
 }
 
-const PRO_STATUSES = new Set(["TRIALING", "ACTIVE", "PAST_DUE"]);
+const PRO_STATUSES = new Set(["TRIALING", "ACTIVE", "PAST_DUE", "SEMESTER_ACTIVE"]);
 
 type BillingUser = Pick<
   User,
@@ -43,15 +43,17 @@ type BillingUser = Pick<
 export function effectiveSubscription(user: BillingUser): EffectiveSubscription {
   const tier: SubscriptionTier = user.subscriptionTier === "PRO" ? "PRO" : "FREE";
   const status = user.subscriptionStatus ?? "NONE";
+  const periodIsCurrent = !user.currentPeriodEnd || user.currentPeriodEnd.getTime() > Date.now();
+  const isPro = tier === "PRO" && PRO_STATUSES.has(status) && periodIsCurrent;
   return {
     tier,
     status,
-    isPro: tier === "PRO" && PRO_STATUSES.has(status),
+    isPro,
     trialEndsAt: user.trialEndsAt ? user.trialEndsAt.toISOString() : null,
     currentPeriodEnd: user.currentPeriodEnd ? user.currentPeriodEnd.toISOString() : null,
     stripeCustomerId: user.stripeCustomerId ?? null,
     stripeSubscriptionId: user.stripeSubscriptionId ?? null,
-    monthlyPrice: 5.0
+    semesterPrice: 8.0
   };
 }
 
@@ -62,23 +64,15 @@ export function stripeClient(): Stripe | null {
   return new Stripe(key, { apiVersion: "2026-08-26.dahlia" });
 }
 
-/** Optional reusable Stripe Price ID. Checkout falls back to inline recurring price data. */
-export function billingPriceId(): string | null {
-  return process.env.STRIPE_PRICE_ID || process.env.STRIPE_PRO_PRICE_ID || null;
-}
-
-export function billingLineItem(): Stripe.Checkout.SessionCreateParams.LineItem {
-  const priceId = billingPriceId();
-  if (priceId) return { price: priceId, quantity: 1 };
-
+/** One-time $8 CAD checkout item for a single academic semester. */
+export function billingLineItem(semesterLabel: string): Stripe.Checkout.SessionCreateParams.LineItem {
   return {
     price_data: {
-      currency: (process.env.STRIPE_CURRENCY || "usd").toLowerCase(),
-      unit_amount: 500,
-      recurring: { interval: "month" },
+      currency: "cad",
+      unit_amount: 800,
       product_data: {
-        name: "SyllabiQ Pro",
-        description: "SyllabiQ Pro monthly subscription after a 30-day free trial"
+        name: "SyllabiQ Semester Pass",
+        description: `One-time access for ${semesterLabel}. No automatic renewal.`
       }
     },
     quantity: 1
