@@ -24,7 +24,9 @@ interface BillingState {
   isPro?: boolean;
   trialEndsAt?: string | null;
   currentPeriodEnd?: string | null;
-  monthlyPrice?: number;
+  semesterPrice?: number;
+  stripeSubscriptionId?: string;
+  currentPeriodEnd?: string | null;
 }
 
 interface Props {
@@ -166,11 +168,11 @@ export function StripePaywallModal({ onClose, onOpenAuthModal, onSubscriptionUpd
           <div className="text-center space-y-2 max-w-lg mx-auto">
             <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs font-black uppercase tracking-wider shadow-xs">
               <Sparkles className="h-3.5 w-3.5" />
-              <span>1st Month 100% Free · $5 / Month After</span>
+              <span>$8 CAD · One Payment Per Semester</span>
             </div>
 
             <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              Start Your SyllabiQ Pro Trial
+              Get Your SyllabiQ Semester Pass
             </h2>
 
             <p className="text-xs sm:text-sm text-slate-600 font-medium">
@@ -182,22 +184,22 @@ export function StripePaywallModal({ onClose, onOpenAuthModal, onSubscriptionUpd
           <div className="rounded-2xl border border-blue-200 bg-blue-50/70 p-4 flex items-center justify-between">
             <div className="space-y-0.5">
               <div className="text-xs font-black uppercase tracking-wider text-blue-700">
-                Current Promotion
+                Semester Pass
               </div>
               <div className="text-base sm:text-lg font-black text-slate-900">
-                First month free, then $5/mo
+                $8 CAD for the selected semester
               </div>
               <div className="text-[11px] text-slate-500 font-medium">
-                No commitment. Cancel anytime in 1 click.
+                One-time payment. No automatic renewal.
               </div>
             </div>
 
             <div className="text-right">
               <div className="text-2xl sm:text-3xl font-black text-blue-600">
-                $0<span className="text-xs text-slate-500 font-semibold">.00</span>
+                $8<span className="text-xs text-slate-500 font-semibold">.00</span>
               </div>
               <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                Due Today
+                CAD · Due Today
               </div>
             </div>
           </div>
@@ -282,9 +284,7 @@ export function StripePaywallModal({ onClose, onOpenAuthModal, onSubscriptionUpd
               </div>
 
               <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                Your first month is free, then $5/month. Your card is collected securely by
-                Stripe and <span className="font-bold text-slate-800">won&apos;t be charged until your 30-day trial ends</span>.
-                Cancel anytime in 1 click.
+                Pay $8 CAD once for the selected semester. Access ends with that semester and does not renew automatically.
               </p>
 
               <button
@@ -297,13 +297,13 @@ export function StripePaywallModal({ onClose, onOpenAuthModal, onSubscriptionUpd
                   {isProcessing
                     ? "Redirecting to Stripe…"
                     : isGuest
-                      ? "Sign In to Start Your Free Month"
-                      : "Start First Free Month ($0.00 Today)"}
+                      ? "Sign In to Continue"
+                      : "Buy Semester Pass — $8 CAD"}
                 </span>
               </button>
 
               <p className="text-[10px] text-center text-slate-400 font-medium">
-                By starting, you agree to $5/month after your first free month unless cancelled. Cancel anytime in 1 click from your settings or the billing portal.
+                By continuing, you agree to a one-time $8 CAD payment for the selected semester. It will not renew automatically.
               </p>
             </div>
           ) : (
@@ -320,27 +320,28 @@ export function StripePaywallModal({ onClose, onOpenAuthModal, onSubscriptionUpd
                     <p className="text-[11px] text-emerald-700 font-medium">
                       {daysLeft !== null
                         ? `${daysLeft} day${daysLeft === 1 ? "" : "s"} remaining in your free trial.`
-                        : "Your Pro subscription is active."}
+                        : "Your Pro access is active."}
                     </p>
                   </div>
                 </div>
               </div>
 
               <div className="flex flex-wrap gap-2">
-                <button
+                {sub?.stripeSubscriptionId && <button
                   onClick={handleManageBilling}
                   disabled={isProcessing}
                   className="rounded-xl bg-slate-900 hover:bg-slate-800 text-white text-xs font-bold px-4 py-2 transition cursor-pointer disabled:opacity-50"
                 >
                   {isProcessing ? "Opening…" : "Manage Billing"}
-                </button>
-                <button
+                </button>}
+                {sub?.stripeSubscriptionId && <button
                   onClick={handleCancel}
                   disabled={isProcessing}
                   className="rounded-xl border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 text-xs font-bold px-4 py-2 transition cursor-pointer disabled:opacity-50"
                 >
                   Cancel Subscription
-                </button>
+                </button>}
+                {!sub?.stripeSubscriptionId && sub?.currentPeriodEnd && <p className="text-[11px] text-emerald-800 font-semibold">Semester pass · no automatic renewal. Access through {new Intl.DateTimeFormat("en-CA", { timeZone: "America/Toronto", dateStyle: "medium" }).format(new Date(new Date(sub.currentPeriodEnd).getTime() - 1000))}.</p>}
               </div>
             </div>
           )}
@@ -352,9 +353,9 @@ export function StripePaywallModal({ onClose, onOpenAuthModal, onSubscriptionUpd
               Stripe Verified
             </span>
             <span>•</span>
-            <span>Cancel Anytime</span>
+            <span>No Auto-Renewal</span>
             <span>•</span>
-            <span>Try It Free Today</span>
+            <span>$8 CAD / Semester</span>
           </div>
         </div>
       </div>
