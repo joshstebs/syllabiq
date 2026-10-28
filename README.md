@@ -12,33 +12,24 @@ npm run build
 
 Without `DATABASE_URL`, a production deployment stays in read-only visitor mode and account/write endpoints return a clear `503` configuration response. Local development may use the existing demo store for UI work; it does not create client-side accounts.
 
-## Stripe billing setup (Pro subscriptions)
+## Stripe billing setup (Pro semester passes)
 
-Checkout is real Stripe billing: a $5/month recurring price with a 30-day
-free trial (card collected at signup, first charge after 30 days). Until the
-env vars below are set, the paywall's subscribe button returns a clear
-"billing not configured" message and nothing charges.
+Checkout charges a one-time **$8 CAD** for one semester: September–January,
+February–April, or May–July. The pass expires at the end of its selected
+semester and does not renew automatically. Checkout uses inline Stripe price
+data, so no recurring Stripe Price ID is needed.
 
-1. In the Stripe dashboard, create a Product "SyllabiQ Pro" with a recurring
-   **$5/month** Price — copy its Price ID (`price_...`).
-2. In the Vercel project env vars (Production), set:
-   - `STRIPE_SECRET_KEY` (secret key)
-   - `STRIPE_PRICE_ID` (the Price ID from step 1)
-3. In Stripe dashboard → Developers → Webhooks, add endpoint
-   `https://syllabiq.ca/api/stripe/webhook` subscribed to:
+1. In the Vercel project env vars (Production), set `STRIPE_SECRET_KEY`
+   to the live secret key.
+2. In Stripe dashboard → Developers → Webhooks, add endpoint
+   `https://syllabiq.ca/api/stripe/webhook` subscribed to
    `checkout.session.completed`, `customer.subscription.created`,
-   `customer.subscription.updated`, `customer.subscription.deleted` —
-   copy the signing secret into `STRIPE_WEBHOOK_SECRET`.
-4. In Stripe dashboard → Settings → Billing → Customer portal, enable the
-   portal so the in-app "Manage Billing" button works.
-5. Deploy the new migration against the production database
-   (`npx prisma migrate deploy` with production `DATABASE_URL`) — Vercel
-   does not run migrations automatically, and the billing routes need the
-   new `users` columns. Then redeploy.
+   `customer.subscription.updated`, and `customer.subscription.deleted`.
+   Copy the signing secret into `STRIPE_WEBHOOK_SECRET`.
+3. Keep the customer portal enabled for legacy monthly subscribers.
 
-How it works: signed-in users check out on Stripe-hosted pages; Pro status
-is driven only by verified webhook events keyed to each user's own
-`stripeCustomerId`. Logged-out visitors keep the shared demo store (FREE).
+New semester passes are one-time payments. Legacy monthly subscriptions
+remain manageable through the customer portal until those subscribers cancel.
 
 ## Getting Started
 
