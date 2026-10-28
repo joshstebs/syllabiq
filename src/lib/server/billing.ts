@@ -41,12 +41,12 @@ type BillingUser = Pick<
 >;
 
 export function effectiveSubscription(user: BillingUser): EffectiveSubscription {
-  const tier: SubscriptionTier = user.subscriptionTier === "PRO" ? "PRO" : "FREE";
+  const storedTier: SubscriptionTier = user.subscriptionTier === "PRO" ? "PRO" : "FREE";
   const status = user.subscriptionStatus ?? "NONE";
   const periodIsCurrent = !user.currentPeriodEnd || user.currentPeriodEnd.getTime() > Date.now();
-  const isPro = tier === "PRO" && PRO_STATUSES.has(status) && periodIsCurrent;
+  const isPro = storedTier === "PRO" && PRO_STATUSES.has(status) && periodIsCurrent;
   return {
-    tier,
+    tier: isPro ? "PRO" : "FREE",
     status,
     isPro,
     trialEndsAt: user.trialEndsAt ? user.trialEndsAt.toISOString() : null,
