@@ -80,8 +80,8 @@ const LANDING_FAQS = [
     a: "SyllabiQ accepts PDF files (.pdf), Word documents (.docx), plain text (.txt), Markdown (.md), and photo scans / phone camera screenshots (JPEG, PNG, HEIC). Review extracted dates and grading details against your original syllabus before relying on them; results may require correction."
   },
   {
-    q: "How does the first month free, then $5/month subscription work?",
-    a: "You get full SyllabiQ Pro access 100% free for your first month ($0 billed today via Stripe). Then Pro is just $5.00/month. You can cancel at any time with a single click in your account settings with zero commitments or hidden fees."
+    q: "How does the $8 per semester plan work?",
+    a: "A semester pass costs $8 CAD one time for September–January, February–April, or May–July. It ends with the selected semester and does not renew automatically."
   },
   {
     q: "Can I connect Canvas or another learning platform?",
@@ -372,7 +372,7 @@ function SyllabiQDashboard() {
             <div className="inline-flex items-center space-x-3 bg-white/95 dark:bg-[#131B2E]/95 border border-slate-200 dark:border-slate-800 rounded-full py-2 px-5 shadow-sm backdrop-blur-xs">
               <div className="text-left text-xs leading-tight">
                 <span className="font-extrabold text-slate-900 dark:text-white block">
-                  First Month Free · Then $5/Month
+                  $8 / Semester · No Auto-Renewal
                 </span>
                 <span className="text-slate-500 dark:text-slate-400 font-medium">
                   Cancel anytime with 1 click. No commitments.
