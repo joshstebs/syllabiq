@@ -68,9 +68,9 @@ const softwareJsonLd = {
   description: "A student planning workspace for organizing course tasks, reviewing syllabus deadlines, and importing dated coursework from iCalendar feeds. Direct LMS account sync and Google sync are not enabled.",
   offers: {
     "@type": "Offer",
-    price: "5.00",
+    price: "8.00",
     priceCurrency: "CAD",
-    description: "SyllabiQ Pro monthly subscription after the introductory free month."
+    description: "One-time SyllabiQ Pro semester pass for $8 CAD. No automatic renewal."
   },
   creator: {
     "@type": "Organization",
