@@ -16,7 +16,6 @@ import {
   ChevronDown,
   ChevronUp,
   FileText,
-  Flame,
   GraduationCap,
   SearchCheck,
   ShieldCheck,
@@ -27,7 +26,6 @@ import { AuthModal } from "./auth-modal";
 import { WorkloadHeatmap } from "./workload-heatmap";
 import {
   SAMPLE_TASKS,
-  SAMPLE_COURSE,
   SAMPLE_WEEK
 } from "@/lib/sample-semester";
 
