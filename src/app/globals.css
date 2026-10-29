@@ -328,6 +328,43 @@ body {
   .sq-final { padding-block: 68px; }.sq-final-inner { align-items: flex-start; flex-direction: column; }.sq-final h2 { font-size: 42px; }.sq-final-note { grid-template-columns: auto auto auto; align-items: center; gap: 15px; }.sq-final-note span:first-child { font-size: 28px; }
   .sq-footer-inner { grid-template-columns: 1fr; gap: 15px; }.sq-footer nav { justify-content: flex-start; flex-wrap: wrap; gap: 12px 17px; }.sq-footer-inner > p { grid-column: auto; font-size: 8px; }
 }
+/* Keep the marketing feature wall inside narrow mobile viewports. */
+@media (max-width: 900px) {
+  .sq-bento,
+  .sq-bento > *,
+  .sq-bento-side,
+  .sq-feature {
+    min-width: 0;
+    max-width: 100%;
+  }
+  .sq-bento {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .sq-bento-side {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto auto;
+  }
+  .sq-grade-row {
+    grid-template-columns: minmax(0, 1fr) auto minmax(40px, 54px);
+  }
+  .sq-grade-row > span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+  .sq-feature-export {
+    padding-bottom: 78px;
+  }
+}
+@media (max-width: 640px) {
+  .sq-bento,
+  .sq-bento-side {
+    width: 100%;
+  }
+  .sq-feature {
+    width: 100%;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sq-marquee-track { animation: none; }
   .sq-marketing *, .sq-marketing *::before, .sq-marketing *::after { scroll-behavior: auto !important; }
