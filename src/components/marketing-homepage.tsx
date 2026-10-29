@@ -45,7 +45,7 @@ const FAQS = [
   },
   {
     q: "How does pricing work?",
-    a: "SyllabiQ Pro costs $8 CAD for each semester: September–January, February–April, or May–July. Each pass ends with its semester and does not renew automatically."
+    a: "SyllabiQ Pro costs $8 CAD for each semester: September to January, February to April, or May to July. Each pass ends with its semester and does not renew automatically."
   },
   {
     q: "Does SyllabiQ do my coursework?",
@@ -170,7 +170,7 @@ function TossDemo() {
           )}
         </AnimatePresence>
       </div>
-      <div className="sq-demo-foot"><span>DRAG · DROP · REVIEW</span><span>Sample only — no document is uploaded</span></div>
+      <div className="sq-demo-foot"><span>DRAG · DROP · REVIEW</span><span>Sample only · no document is uploaded</span></div>
     </div>
   );
 }
@@ -220,7 +220,7 @@ export function MarketingHomepage() {
             </Reveal>
           </div>
           <Reveal delay={0.12} className="sq-hero-demo"><TossDemo /></Reveal>
-          <div className="sq-hero-index" aria-hidden="true">01 <span>—</span> PAPER TO PLAN</div>
+          <div className="sq-hero-index" aria-hidden="true">01 <span> </span> PAPER TO PLAN</div>
         </section>
 
         <section ref={painRef} className="sq-pain">
@@ -232,17 +232,17 @@ export function MarketingHomepage() {
             </Reveal>
             <div className="sq-pain-cards">
               <motion.article style={{ y: firstCard }} className="sq-pain-card sq-pain-yellow">
-                <span className="sq-card-number">01 / DEADLINES</span>
+                <span className="sq-card-number">DEADLINES</span>
                 <h3>Midterm buried<br />on page four.</h3>
                 <div className="sq-paper-snippet">The midterm examination will be held <mark>October 12 at 2:30 PM</mark> and will cover chapters one through four.</div>
               </motion.article>
               <motion.article style={{ y: secondCard }} className="sq-pain-card sq-pain-blue">
-                <span className="sq-card-number">02 / OFFICE HOURS</span>
+                <span className="sq-card-number">OFFICE HOURS</span>
                 <h3>Help is there.<br />Somewhere.</h3>
-                <div className="sq-margin-note">“Tuesdays, 3–4 pm, or by appointment”<span>— para. 3</span></div>
+                <div className="sq-margin-note">“Tuesdays, 3 to 4 pm, or by appointment”</div>
               </motion.article>
               <motion.article style={{ y: thirdCard }} className="sq-pain-card sq-pain-ink">
-                <span className="sq-card-number">03 / FORMATS</span>
+                <span className="sq-card-number">FORMATS</span>
                 <h3>Five ways to<br />write one date.</h3>
                 <div className="sq-date-scraps"><span>Oct 12</span><span>10/12</span><span>Week 6</span></div>
               </motion.article>
@@ -253,13 +253,13 @@ export function MarketingHomepage() {
         <section id="how-it-works" className="sq-how sq-wrap">
           <Reveal className="sq-section-heading">
             <p className="sq-kicker">A SMALLER ADMIN JOB</p>
-            <h2>Three steps. <em>Then get on with it.</em></h2>
+            <h2>A few steps. <em>Then get on with it.</em></h2>
           </Reveal>
           <div className="sq-steps">
             {[
-              { n: "01", tag: "DROP", icon: Upload, title: "Add your syllabi", body: "Bring in PDFs, Word documents, text files, or photos of a printed syllabus." },
-              { n: "02", tag: "SCAN", icon: SearchCheck, title: "Review what it found", body: "Check extracted deadlines and grade details against each original course document." },
-              { n: "03", tag: "LIVE", icon: CalendarDays, title: "Plan your weeks", body: "See what's coming, spot busy stretches, and make calendar-ready exports." }
+              { n: "DROP", tag: "DROP", icon: Upload, title: "Add your syllabi", body: "Bring in PDFs, Word documents, text files, or photos of a printed syllabus." },
+              { n: "SCAN", tag: "SCAN", icon: SearchCheck, title: "Review what it found", body: "Check extracted deadlines and grade details against each original course document." },
+              { n: "LIVE", tag: "LIVE", icon: CalendarDays, title: "Plan your weeks", body: "See what's coming, spot busy stretches, and make calendar-ready exports." }
             ].map((step, i) => (
               <Reveal key={step.n} delay={i * .08}>
                 <article className={`sq-step sq-step-${i + 1}`}>
@@ -331,7 +331,7 @@ export function MarketingHomepage() {
           <Reveal className="sq-pricing-copy">
             <p className="sq-kicker">STUDENT-PRICED, NO LONG CONTRACT</p>
             <h2>Make room for<br /><em>the semester.</em></h2>
-            <p>Get SyllabiQ Pro for $8 CAD per semester. Passes cover September–January, February–April, or May–July and do not renew automatically.</p>
+            <p>Get SyllabiQ Pro for $8 CAD per semester. Passes cover September to January, February to April, or May to July and do not renew automatically.</p>
             <button className="sq-primary" onClick={() => setShowAuthModal(true)}>Get the semester pass <ArrowRight size={17} /></button>
             <p className="sq-pricing-note"><ShieldCheck size={14} /> Secure checkout is handled by Stripe when you choose Pro.</p>
           </Reveal>
@@ -381,7 +381,7 @@ export function MarketingHomepage() {
               <p>Turn course documents into a plan you can review, adjust, and use.</p>
               <button className="sq-primary" onClick={() => setShowAuthModal(true)}>Organize my semester <ArrowRight size={17} /></button>
             </Reveal>
-            <div className="sq-final-note"><span>01</span><span>DROP → REVIEW → PLAN</span><span>SYLLABIQ.CA</span></div>
+            <div className="sq-final-note"><span>DROP → REVIEW → PLAN</span><span>SYLLABIQ.CA</span></div>
           </div>
         </section>
       </main>
