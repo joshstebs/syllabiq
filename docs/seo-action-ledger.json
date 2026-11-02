@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-10-22",
+  "updatedAt": "2026-11-02",
   "site": "syllabiq.ca",
   "actions": [
     {
@@ -155,6 +155,65 @@
         "rankingGain": "unknown"
       },
       "followUp": "Verify indexing when GSC access is restored and monitor whether guide pages gain additional impressions."
+    },
+    {
+      "id": "syllabiq-academic-calendar-and-app-comparison-20261102",
+      "dedupeKey": "content:academic-calendar-deadlines-and-planner-comparison-refresh",
+      "category": "content-and-accuracy",
+      "page": [
+        "https://syllabiq.ca/guides/academic-calendar-deadline-checklist",
+        "https://syllabiq.ca/guides/student-organization-apps",
+        "https://syllabiq.ca/guides"
+      ],
+      "queryIntent": [
+        "academic calendar deadline checklist",
+        "student organization apps comparison",
+        "college add drop withdrawal dates"
+      ],
+      "observation": "SyllabiQ lacked a source-first workflow for high-consequence institutional dates, while the existing planner comparison incorrectly said durable calendar-feed import was unavailable even though production supports one-way feed URL and .ics imports.",
+      "evidence": {
+        "observedAt": "2026-11-02",
+        "gscProperty": "sc-domain:syllabiq.ca",
+        "currentGscStatus": "unknown because GSC tools returned INVALID_ARGUMENT",
+        "lastDurableBaseline": {
+          "window": "2026-09-20 to 2026-10-17",
+          "clicks": 0,
+          "impressions": 13,
+          "ctr": 0,
+          "averagePosition": 6.54,
+          "note": "Low-volume directional baseline, not refreshed this run."
+        },
+        "officialSources": [
+          "https://www.uwindsor.ca/secretariat/282/undergraduate-and-graduate-calendars",
+          "https://www.uwindsor.ca/registrar/events-listing/1000",
+          "https://www.stclaircollege.ca/programs/academic-dates",
+          "https://www.stclaircollege.ca/programs/policies",
+          "https://support.google.com/calendar/answer/9901136",
+          "https://mystudylife.com/tour/"
+        ]
+      },
+      "proposedChange": "Publish an academic-calendar deadline worksheet, correct the planner comparison to describe verified one-way calendar-feed import, and strengthen the guide-hub crawl path.",
+      "expectedMechanism": "Serve distinct student decision intent with verifiable sources while removing a product-capability contradiction.",
+      "priority": "high",
+      "confidence": "high",
+      "effort": "medium",
+      "owner": "Josh",
+      "status": "implemented",
+      "implementationCommits": [
+        "576c7f5ab35af8d240a13db3c126e50005ab1374",
+        "bf3e31eead1edf5d7b485e663ea222cce7856d56",
+        "dedc20559721fb106928b54de791abbdeee710ed",
+        "949f391471b932e6ee6b36c7e2a767e534cb6b21"
+      ],
+      "deployment": {
+        "project": "syllabiq",
+        "state": "pending verification"
+      },
+      "verification": {
+        "indexed": "unknown",
+        "rankingGain": "unknown"
+      },
+      "followUp": "Verify production routes, metadata, sitemap and rendered copy, then review indexing when GSC access returns and settled search performance after 28 days."
     }
   ],
   "measurementBlockers": [
@@ -165,6 +224,14 @@
       "observation": "Every GSC Wizard request returned payment_required because the trial ended or no active subscription exists.",
       "effect": "Current settled Search Console baselines, URL inspection and sitemap submission could not be refreshed. Missing metrics are unknown, not zero.",
       "nextAction": "Restore the existing GSC Wizard subscription, then rerun the settled baseline and URL inspections."
+    },
+    {
+      "id": "gsc-connector-invalid-argument-20261102",
+      "observedAt": "2026-11-02",
+      "status": "blocked",
+      "observation": "Account inventory, property list and cross-site summary each returned INVALID_ARGUMENT from the connected GSC tool.",
+      "effect": "Current settled baselines, query evidence, URL inspection and indexing status could not be refreshed. Missing metrics remain unknown.",
+      "nextAction": "Retry the existing connector on the next run and restore service access if the account or subscription remains unavailable."
     }
   ]
 }
