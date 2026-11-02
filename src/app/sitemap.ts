@@ -2,6 +2,7 @@ import { MetadataRoute } from 'next';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [
+    { url: 'https://syllabiq.ca/guides/academic-calendar-deadline-checklist', lastModified: new Date('2026-11-02'), changeFrequency: 'monthly', priority: 0.9 },
     { url: 'https://syllabiq.ca/guides', lastModified: new Date('2026-10-22'), changeFrequency: 'weekly', priority: 0.9 },
     { url: 'https://syllabiq.ca/guides/lms-calendar-feed-import', lastModified: new Date('2026-10-22'), changeFrequency: 'monthly', priority: 0.9 },
     { url: 'https://syllabiq.ca/guides/college-exam-study-planner', lastModified: new Date('2026-10-19'), changeFrequency: 'monthly', priority: 0.8 },
