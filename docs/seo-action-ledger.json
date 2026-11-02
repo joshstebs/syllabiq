@@ -198,7 +198,7 @@
       "confidence": "high",
       "effort": "medium",
       "owner": "Josh",
-      "status": "implemented",
+      "status": "verified",
       "implementationCommits": [
         "576c7f5ab35af8d240a13db3c126e50005ab1374",
         "bf3e31eead1edf5d7b485e663ea222cce7856d56",
@@ -207,9 +207,35 @@
       ],
       "deployment": {
         "project": "syllabiq",
-        "state": "pending verification"
+        "deploymentId": "dpl_EDZ7gKEEx9vu2BVdhENYYg1c5EMd",
+        "state": "READY",
+        "commit": "f9e83724bbe58dc42d9557046c1e59946ef37328",
+        "deploymentUrl": "https://syllabiq-abw37hdo7-stebs-co.vercel.app",
+        "verifiedAt": "2026-11-02"
       },
       "verification": {
+        "routes": [
+          {
+            "route": "https://syllabiq.ca/guides/academic-calendar-deadline-checklist",
+            "httpStatus": 200,
+            "canonical": "https://syllabiq.ca/guides/academic-calendar-deadline-checklist"
+          },
+          {
+            "route": "https://syllabiq.ca/guides/student-organization-apps",
+            "httpStatus": 200,
+            "canonical": "https://syllabiq.ca/guides/student-organization-apps"
+          },
+          {
+            "route": "https://syllabiq.ca/guides",
+            "httpStatus": 200,
+            "canonical": "https://syllabiq.ca/guides"
+          }
+        ],
+        "renderedHtml": true,
+        "sitemapIncluded": true,
+        "robotsAllowsPublicCrawl": true,
+        "schemaParsedByBuild": true,
+        "verifiedAt": "2026-11-02",
         "indexed": "unknown",
         "rankingGain": "unknown"
       },
