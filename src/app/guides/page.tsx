@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   title: "Student Planning Guides",
-  description: "Browse practical SyllabiQ guides for syllabus deadlines, LMS calendar imports, exam planning, workload, group projects and Ontario post-secondary research.",
+  description: "Browse practical SyllabiQ guides for academic-calendar dates, syllabus deadlines, LMS imports, exam planning, workload and Ontario post-secondary research.",
   alternates: { canonical: "/guides" },
   openGraph: {
     title: "SyllabiQ Student Planning Guides",
@@ -14,6 +14,11 @@ export const metadata: Metadata = {
 };
 
 const guides = [
+  {
+    href: "/guides/academic-calendar-deadline-checklist",
+    title: "Academic calendar deadline checklist",
+    description: "Verify course add, drop, refund, withdrawal, reading week and exam dates using official institution sources."
+  },
   {
     href: "/guides/lms-calendar-feed-import",
     title: "LMS calendar feed import",
