@@ -240,7 +240,7 @@ export default function FeaturesPage() {
                   Connect with classmates at your university enrolled in the same lectures. Share conceptual homework hints, lecture notes, and study guides with upvotes and direct link sharing.
                 </p>
                 <div className="pt-1 text-[11px] font-bold text-rose-600 dark:text-rose-400">
-                  Check your institution's academic integrity policy
+                  Check your institution&#39;s academic integrity policy
                 </div>
               </div>
             </div>

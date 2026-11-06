@@ -53,7 +53,7 @@ export default function TermsPage() {
           <section className="space-y-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#131B2E] p-6 sm:p-8">
             <h2 className="text-2xl font-black text-slate-900 dark:text-white">1. Acceptance of Terms</h2>
             <div className="text-sm text-slate-700 dark:text-slate-300 space-y-3">
-              <p>By accessing or using SyllabiQ ("the Service"), you agree to be bound by these Terms of Service and our Privacy Policy. If you do not agree, do not use the Service.</p>
+              <p>By accessing or using SyllabiQ (&quot;the Service&quot;), you agree to be bound by these Terms of Service and our Privacy Policy. If you do not agree, do not use the Service.</p>
               <p>These terms apply to all users, including free trial users and paid subscribers.</p>
             </div>
           </section>
@@ -77,7 +77,7 @@ export default function TermsPage() {
             <div className="text-sm text-slate-700 dark:text-slate-300 space-y-3">
               <p>You must be at least 13 years old to use SyllabiQ. If you are under 18, you confirm you have parental or guardian consent.</p>
               <p>You are responsible for maintaining the confidentiality of your account credentials. You agree to notify us immediately of any unauthorized use of your account.</p>
-              <p>You may not use the Service for any illegal purpose or in violation of your institution's academic integrity policies.</p>
+              <p>You may not use the Service for any illegal purpose or in violation of your institution&#39;s academic integrity policies.</p>
             </div>
           </section>
 
@@ -118,7 +118,7 @@ export default function TermsPage() {
             <h2 className="text-2xl font-black text-slate-900 dark:text-white">7. Academic Integrity and Disclaimer</h2>
             <div className="text-sm text-slate-700 dark:text-slate-300 space-y-3">
               <p className="font-bold text-slate-900 dark:text-white">SyllabiQ is designed to help you organize and plan your academic workload. It is not a cheating tool.</p>
-              <p>You are solely responsible for ensuring your use of SyllabiQ complies with your institution's honor code and academic policies. We disclaim any liability for academic misconduct arising from misuse of the Service.</p>
+              <p>You are solely responsible for ensuring your use of SyllabiQ complies with your institution&#39;s honor code and academic policies. We disclaim any liability for academic misconduct arising from misuse of the Service.</p>
             </div>
           </section>
 
@@ -133,7 +133,7 @@ export default function TermsPage() {
           <section className="space-y-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#131B2E] p-6 sm:p-8">
             <h2 className="text-2xl font-black text-slate-900 dark:text-white">9. Disclaimers and Limitation of Liability</h2>
             <div className="text-sm text-slate-700 dark:text-slate-300 space-y-3">
-              <p>THE SERVICE IS PROVIDED "AS IS" WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED. WE DO NOT GUARANTEE THAT THE SERVICE WILL BE ERROR-FREE, UNINTERRUPTED, OR SECURE.</p>
+              <p>THE SERVICE IS PROVIDED &quot;AS IS&quot; WITHOUT WARRANTIES OF ANY KIND, EXPRESS OR IMPLIED. WE DO NOT GUARANTEE THAT THE SERVICE WILL BE ERROR-FREE, UNINTERRUPTED, OR SECURE.</p>
               <p>TO THE FULLEST EXTENT PERMITTED BY LAW, HARBOUR & MAIN SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING FROM YOUR USE OF THE SERVICE, INCLUDING MISSED DEADLINES, LOST DATA, OR ACADEMIC PENALTIES.</p>
               <p>OUR TOTAL LIABILITY FOR ANY CLAIM SHALL NOT EXCEED THE AMOUNT YOU PAID IN THE PAST 12 MONTHS (OR $5.00 USD IF GREATER).</p>
             </div>
@@ -150,7 +150,7 @@ export default function TermsPage() {
           <section className="space-y-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#131B2E] p-6 sm:p-8">
             <h2 className="text-2xl font-black text-slate-900 dark:text-white">11. Changes to Terms</h2>
             <div className="text-sm text-slate-700 dark:text-slate-300 space-y-3">
-              <p>We may update these Terms from time to time. We'll notify you of material changes via email or an in-app notification. Continued use of the Service after changes constitutes acceptance of the new Terms.</p>
+              <p>We may update these Terms from time to time. We&#39;ll notify you of material changes via email or an in-app notification. Continued use of the Service after changes constitutes acceptance of the new Terms.</p>
             </div>
           </section>
 

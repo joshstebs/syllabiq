@@ -100,7 +100,7 @@ export default function PrivacyPage() {
                 <li>Access your data by exporting it from your account settings</li>
                 <li>Correct inaccurate information in your profile</li>
                 <li>Delete your account and all associated data</li>
-                <li>Opt out of marketing emails (you'll still receive essential service notifications)</li>
+                <li>Opt out of marketing emails (you&#39;ll still receive essential service notifications)</li>
               </ul>
               <p>For data requests or questions, email us at <a href="mailto:support@syllabiq.ca" className="text-blue-600 dark:text-blue-400 hover:underline font-bold">support@syllabiq.ca</a>.</p>
             </div>
@@ -117,7 +117,7 @@ export default function PrivacyPage() {
           <section className="space-y-4 rounded-2xl border border-slate-200 dark:border-slate-800 bg-white dark:bg-[#131B2E] p-6 sm:p-8">
             <h2 className="text-2xl font-black text-slate-900 dark:text-white">Changes to This Policy</h2>
             <div className="text-sm text-slate-700 dark:text-slate-300 space-y-3">
-              <p>We may update this Privacy Policy periodically. We'll notify you of material changes via email or an in-app banner.</p>
+              <p>We may update this Privacy Policy periodically. We&#39;ll notify you of material changes via email or an in-app banner.</p>
             </div>
           </section>
 

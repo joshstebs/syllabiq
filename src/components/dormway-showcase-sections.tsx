@@ -78,7 +78,7 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
                 <div className="h-5 w-5 sm:h-6 sm:w-6 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 mt-0.5">
                   <ShieldCheck className="h-3.5 w-3.5 text-emerald-600" />
                 </div>
-                <span className="flex-1 min-w-0 break-words leading-snug">Check your school's rules before using AI with course material</span>
+                <span className="flex-1 min-w-0 break-words leading-snug">Check your school&#39;s rules before using AI with course material</span>
               </li>
             </ul>
 
@@ -416,7 +416,7 @@ export function DormwayShowcaseSections({ onOpenCanvas, onOpenUpload }: Props) {
         <div className="pt-4 border-t border-slate-200/60 dark:border-slate-800 flex flex-wrap items-center justify-center gap-3 sm:gap-6 text-xs font-bold text-slate-500 dark:text-slate-400 w-full min-w-0">
           <div className="flex items-center gap-2 shrink-0">
             <ShieldCheck className="h-4 w-4 text-emerald-600 shrink-0" />
-            <span>Review your school's academic integrity rules</span>
+            <span>Review your school&#39;s academic integrity rules</span>
           </div>
           <div className="flex items-center gap-2 shrink-0">
             <Award className="h-4 w-4 text-blue-600 shrink-0" />
