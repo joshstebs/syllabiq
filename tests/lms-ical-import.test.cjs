@@ -9,13 +9,13 @@ function load(path, mocks = {}, globals = {}) {
   const source = ts.transpileModule(fs.readFileSync(path, 'utf8'), {
     compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 }
   }).outputText;
-  const module = { exports: {} };
+  const compiledModule = { exports: {} };
   vm.runInNewContext(source, {
-    module, exports: module.exports, Buffer, Date, URL, AbortSignal, console,
+    module: compiledModule, exports: compiledModule.exports, Buffer, Date, URL, AbortSignal, console,
     ...globals,
     require(name) { if (name in mocks) return mocks[name]; throw Error(`Unexpected dependency: ${name}`); }
   }, { filename: path });
-  return module.exports;
+  return compiledModule.exports;
 }
 
 const jsonResponse = { NextResponse: { json: (body, options) => Response.json(body, options) } };

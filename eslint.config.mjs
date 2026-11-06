@@ -14,6 +14,7 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
   ]),
   {
+    files: ["**/*.{js,jsx,mjs,ts,tsx,mts,cts}"],
     rules: {
       // Existing UI code uses a few intentional hydration effects and legacy
       // untyped integration payloads. Keep them visible without blocking the
@@ -24,7 +25,14 @@ const eslintConfig = defineConfig([
       "react-hooks/set-state-in-effect": "warn",
       "@next/next/no-location-assign-relative-destination": "warn"
     }
-  }
+  },
+  {
+    files: ["tests/**/*.test.cjs"],
+    rules: {
+      // These CommonJS fixtures compile isolated TypeScript modules.
+      "@typescript-eslint/no-require-imports": "off",
+    },
+  },
 ]);
 
 export default eslintConfig;

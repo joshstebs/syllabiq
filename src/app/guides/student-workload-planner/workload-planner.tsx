@@ -27,7 +27,7 @@ export default function WorkloadPlanner() {
   }
 
   return <section className="rounded-2xl border border-slate-200 bg-white p-5 sm:p-7 dark:border-slate-800 dark:bg-slate-900" aria-labelledby="planner-heading">
-    <h2 id="planner-heading" className="text-2xl font-black text-slate-950 dark:text-white">Build this week's workload estimate</h2>
+    <h2 id="planner-heading" className="text-2xl font-black text-slate-950 dark:text-white">Build this week&#39;s workload estimate</h2>
     <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">Enter your own estimates. The calculator stays in this browser session and does not predict grades, completion time or deadline safety.</p>
     <div className="mt-6 space-y-3">
       {tasks.map((task, index) => <div key={task.id} className="grid gap-2 rounded-xl border border-slate-200 p-3 sm:grid-cols-[1fr_9rem_auto] sm:items-end dark:border-slate-700">

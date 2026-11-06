@@ -66,7 +66,7 @@ export default function CollegeExamStudyPlannerPage() {
         </section>
 
         <footer className="mt-12 border-t border-slate-200 pt-6 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-400">
-          This guide provides a planning method, not academic, medical or disability advice. Follow your institution's policies and ask qualified staff about accommodations or course-specific requirements.
+          This guide provides a planning method, not academic, medical or disability advice. Follow your institution&#39;s policies and ask qualified staff about accommodations or course-specific requirements.
         </footer>
       </article>
     </main>
